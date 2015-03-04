@@ -29,7 +29,10 @@
 
     <!-- Custom Fonts -->
     <link href="{{STATIC_URL}}css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
     {% endblock %}
+    <!-- jQuery -->
+    <script src="{{STATIC_URL}}js/jquery.min.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -345,6 +348,7 @@
                                 <div class="clearfix"></div>
                             </div>
                         </a>
+
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -842,8 +846,6 @@
     <!-- /#wrapper -->
 
     {% block "js_scripts" %}
-    <!-- jQuery -->
-    <script src="{{STATIC_URL}}js/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>

@@ -99,7 +99,8 @@ body {
 }
 
 .sidebar ul li a.active {
-    background-color: #eee;
+    background-color: #337AB7;
+    color: white;
 }
 
 .sidebar .arrow {

@@ -13,10 +13,8 @@ urlpatterns = patterns('',
     url(r'^$', 'siscontrole.views.dashboard', name="dashboard_index"),
     url(r'^profile$', 'siscontrole.views.profile', name="user_profile"),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^image_upload', 'siscontrole.views.image_upload', name="image_upload"),
+    url(r'^', include('crop_image.urls')),
     url(r'^main', include('main.urls'),),
-
-
 )
 
 if settings.DEBUG :

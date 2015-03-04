@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django_localflavor_br',
     'bootstrap_form',
     'bootstrap3_datetime',
+    'crop_image',
     'main',
     'financial',
 )
@@ -50,6 +51,7 @@ INSTALLED_APPS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
     os.path.join(BASE_DIR, 'main/templates'),
+    os.path.join(BASE_DIR, 'crop_image/templates'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS.__add__((
