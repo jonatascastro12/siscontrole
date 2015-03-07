@@ -1,0 +1,66 @@
+{% extends "generics/dashboard_detail.html" %}
+{% load i18n %}
+{% load bootstrap_form %}
+
+{% block detail %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-xs-5 col-md-4 col-lg-2">
+                <a href="#" class="thumbnail">
+                  <img data-src="holder.js/100%x180" src="{{ object.person.photo }}" alt="...">
+                </a>
+            </div>
+            <div class="col-xs-7 col-md-8 col-lg-10">
+                <h2>{{ object.person.name }}<br><small>{{ object.get_type_display }} {{ object.get_type_icon|safe }}</small></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-4">
+                <address>
+                    <strong>{% trans "Address" %}</strong>
+                    <br>{{ object.person.address }}{% if object.person.address_number %}, {{ object.person.address_number }}{% endif %}{% if object.person.address_complement %}, {{ object.person.address_complement }}{% endif %}
+                    {% if object.person.neighborhood %}<br>{{ object.person.neighborhood }}{% endif %}
+                    <br>{{ object.person.city }} - {{ object.person.state }}
+                    <br>
+                    {% if object.person.email %}<br><span class="fa fa-envelope"></span> {{ object.person.email }}{% endif %}
+                    {% if object.person.site %}<br><span class="fa fa-link"></span> {{ object.person.site }}{% endif %}
+                    <br>
+                    {% if object.person.phone1 %}<br><span class="fa fa-phone"></span> {{ object.person.phone1 }}{% endif %}
+                    {% if object.person.phone2 %}<br><span class="fa fa-phone"></span> {{ object.person.phone2 }}{% endif %}
+                </address>
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-8">
+                {% if object.person.person_type == "N" %}
+                    <strong>{% trans "Natural Person" %}</strong><br><br>
+                    {% if object.person.marital_status %}<strong>{% trans 'Marital Status' %}: </strong>{{ object.person.get_marital_status_display }}<br>{% endif %}
+                    {% if object.person.birth_date %}<br><strong>{% trans 'Birth Date' %}: </strong>{{ object.person.birth_date}}<br>{% endif %}
+                    {% if object.person.cpf %}<br><strong>{% trans 'CPF' %}: </strong>{{ object.person.cpf}}<br>{% endif %}
+                    {% if object.person.rg %}<strong>{% trans 'RG' %}: </strong>{{ object.person.rg}}<br>{% endif %}
+                {%  else %}
+                    <strong>{% trans "Legal Person" %}</strong><br><br>
+                    {% if object.person.fantasy_name %}<strong>{% trans 'Fantasy Name' %}: </strong>{{ object.person.fantasy_name }}<br>{% endif %}
+                    {% if object.person.contact_name %}<strong>{% trans 'Contact Name' %}: </strong>{{ object.person.contact_name }}<br>{% endif %}
+                    {% if object.person.cnpj %}<br><strong>{% trans 'CNPJ' %}: </strong>{{ object.person.cnpj }}<br>{% endif %}
+
+                {% endif %}
+            </div>
+        </div>
+
+        {%  if object.mabankaccount_set.all|length > 0 %}
+        <div class="panel panel-default">
+          <div class="panel-heading"><span class="fa fa-bank"></span> {% trans "Bankaccounts" %}</div>
+          <div class="panel-body">
+              {% for ab in object.mabankaccount_set.all %}
+                  <strong>{% trans 'Bank' %}: </strong>{{ ab.bank.name }}<br>
+                  <strong>{% trans 'Agency' %}: </strong>{{ ab.agency }}<br>
+                  <strong>{% trans 'Account Number' %}: </strong>{{ ab.number }}<br>
+                  <br>
+              {% endfor %}
+          </div>
+        </div>
+        {%  endif %}
+    </div>
+
+</div>
+{% endblock %}

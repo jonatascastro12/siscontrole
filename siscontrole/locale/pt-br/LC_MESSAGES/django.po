@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-07 11:15-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: .\siscontrole\errors.py:17
+msgid "Only jpg and png format is permitted."
+msgstr ""
+
+#: .\siscontrole\errors.py:21
+msgid "The file is not a image or corrupted."
+msgstr ""
+
+#: .\siscontrole\errors.py:25
+msgid "Image must be at least 512x512 resolution."
+msgstr ""
+
+#: .\siscontrole\errors.py:29
+msgid "Get request is not permitted."
+msgstr ""
+
+#: .\siscontrole\utils.py:14
+msgid "Well done! Member added successfully!"
+msgstr ""
+
+#: .\siscontrole\utils.py:15
+msgid "Well done! Member updated successfully!"
+msgstr ""
+
+#: .\siscontrole\utils.py:16
+msgid "Well done! Members removed successfully!"
+msgstr ""
+
+#: .\siscontrole\views.py:31
+msgid "Overview"
+msgstr ""
+
+#: .\siscontrole\views.py:32
+msgid "Main"
+msgstr ""
+
+#: .\siscontrole\views.py:34
+msgid "Employee"
+msgstr ""
+
+#: .\siscontrole\views.py:35
+msgid "Customer/Supplier"
+msgstr ""
+
+#: .\siscontrole\views.py:36 .\siscontrole\views.py:47
+msgid "Maintenance"
+msgstr ""
+
+#: .\siscontrole\views.py:38
+msgid "Department"
+msgstr ""
+
+#: .\siscontrole\views.py:40
+msgid "Employee Function"
+msgstr ""
+
+#: .\siscontrole\views.py:45
+msgid "Financial"
+msgstr ""
+
+#: .\siscontrole\views.py:49
+msgid "Document type"
+msgstr ""
+
+#: .\siscontrole\views.py:51
+msgid "Dolar"
+msgstr ""
+
+#: .\siscontrole\views.py:52
+msgid "Bank"
+msgstr ""
+
+#: .\siscontrole\views.py:53
+msgid "Current account"
+msgstr ""
+
+#: .\siscontrole\views.py:55
+msgid "Account groups"
+msgstr ""
+
+#: .\siscontrole\views.py:57
+msgid "Account"
+msgstr ""
+
+#: .\siscontrole\views.py:58
+msgid "Subaccount"
+msgstr ""
+
+#: .\siscontrole\views.py:59
+msgid "Subaccount Type"
+msgstr ""
+
+#: .\siscontrole\views.py:61
+msgid "Cost center"
+msgstr ""
+
+#: .\siscontrole\views.py:63
+msgid "Entry"
+msgstr ""
+
+#: .\siscontrole\views.py:147
+msgid "Editing"
+msgstr ""
+
+#: .\siscontrole\views.py:152
+msgid "Editar"
+msgstr ""
+
+#: .\siscontrole\views.py:154 .\siscontrole\views.py:159
+msgid "New"
+msgstr ""
+
+#: .\siscontrole\views.py:193
+msgid "created successfully!"
+msgstr ""
+
+#: .\siscontrole\views.py:206
+msgid " updated successfully!"
+msgstr ""

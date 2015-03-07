@@ -32,9 +32,8 @@ class DashboardMenu():
         {'name': 'main', 'icon_class': 'fa-users', 'verbose_name': _('Main'), 'children':
             [
                 {'name': 'employee', 'verbose_name': _('Employee'), 'link': reverse_lazy('main_employee')},
-                {'name': 'supplier', 'verbose_name': _('Supplier')},
-                {'name': 'customer', 'verbose_name': _('Customer')},
-                {'name': 'maintenance', 'verbose_name': 'Maintenance', 'children':
+                {'name': 'customer_supplier', 'verbose_name': _('Customer/Supplier'), 'link': reverse_lazy('main_customer_supplier')},
+                {'name': 'maintenance', 'verbose_name': _('Maintenance'), 'children':
                     [
                         {'name': 'departments', 'verbose_name': _('Department'),
                          'link': reverse_lazy('main_department')},
@@ -45,7 +44,7 @@ class DashboardMenu():
 
         {'name': 'financial', 'icon_class': 'fa-money', 'verbose_name': _('Financial'), 'children':
             [
-                {'name': 'maintenance', 'verbose_name': 'Maintenance', 'children':
+                {'name': 'maintenance', 'verbose_name': _('Maintenance'), 'children':
                     [
                         {'name': 'document_type', 'verbose_name': _('Document type'),
                          'link': '/financial/document_types'},
@@ -133,20 +132,31 @@ class DashboardView(ContextMixin):
         context['media_css'] = Media()
         context['media_js'] = Media()
 
-        context['list_view'] = self.request.resolver_match.view_name.replace('_edit', '').replace('_add', '')
-        context['add_view'] = self.request.resolver_match.view_name.replace('_edit', '').replace('_add', '') + '_add'
+        context['list_view'] = self.request.resolver_match.view_name.\
+            replace('_edit', '').replace('_add', '').replace('_detail', '')
+        context['add_view'] = self.request.resolver_match.view_name.\
+            replace('_edit', '').replace('_add', '').replace('_detail', '') + '_add'
+        context['detail_view'] = self.request.resolver_match.view_name.\
+            replace('_edit', '').replace('_add', '').replace('_detail', '') + '_detail'
+        context['edit_view'] = self.request.resolver_match.view_name.\
+            replace('_edit', '').replace('_add', '').replace('_detail', '') + '_edit'
 
         if self.template_name_suffix == '_form' and self.object:
             context[
                 'page_name'] = self.model._meta.verbose_name + u' <small>' + self.object.__unicode__() + u' <span class="label label-warning">' + _(
                 'Editing') + u'</span></small> '
+        elif self.template_name_suffix == '_detail':
+            context['page_name'] = self.model._meta.verbose_name + u' <small>' + self.object.__unicode__() + \
+            u'</small><a href="' + reverse(context['edit_view'], None, (), {'pk': self.object.pk}) + \
+                                   u'" class="btn pull-right btn-primary">' + \
+                                   _('Editar') + u'</a>'
         elif self.template_name_suffix == '_form':
             context['page_name'] = _('New') + ' ' + self.model._meta.verbose_name
         else:
-            context['page_name'] = u'<h1 class="page-header">' + self.model._meta.verbose_name_plural + \
+            context['page_name'] = self.model._meta.verbose_name_plural + \
                                    u'<a href="' + reverse(context['add_view']) + \
-                                   u'" class="btn pull-right btn-primary">' + \
-                                   _('New') + u' ' + self.model._meta.verbose_name + u'</a></h1>'
+                                   u'" class="btn pull-right btn-success">' + \
+                                   _('New') + u' ' + self.model._meta.verbose_name + u'</a>'
 
         fields = list(self.model._meta.fields)
         context['fields'] = []

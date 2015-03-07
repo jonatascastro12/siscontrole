@@ -1,0 +1,36 @@
+{% extends "generics/dashboard_list.html" %}
+{% load i18n %}
+
+{% block datatable %}
+ <div class="dataTable_wrapper">
+    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Type' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for o in object_list %}
+                <tr>
+                    <td>
+                        <a href="{{ o.get_absolute_url }}">{{ o.id }}</a>
+                    </td>
+                    <td>
+                        <a href="{{ o.get_absolute_url }}">{{ o.person.name }}</a>
+                    </td>
+                    <td>
+                        {{ o.get_type_icon|safe}}
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+ &nbsp;
+    <div class="text-right">
+            <small>{% trans 'Legend:' %} <span class="fa fa-male text-success"></span> {% trans 'Customer' %} &nbsp;&nbsp;&nbsp;&nbsp;<span class="fa fa-truck text-danger"></span> {% trans 'Supplier' %}</small>
+     </div>
+ </div>
+ {% endblock %}

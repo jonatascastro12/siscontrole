@@ -1,0 +1,42 @@
+{% extends "generics/dashboard_detail.html" %}
+{% load i18n %}
+{% load bootstrap_form %}
+
+{% block detail %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-xs-5 col-md-4 col-lg-2">
+                <a href="#" class="thumbnail">
+                  <img data-src="holder.js/100%x180" src="{{ object.person.photo }}" alt="...">
+                </a>
+            </div>
+            <div class="col-xs-7 col-md-8 col-lg-10">
+                <h2>{{ object.person.name }}<br><small>{{ object.function }}</small></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-4">
+                <address>
+                    <strong>{% trans "Address" %}</strong>
+                    <br>{{ object.person.address }}{% if object.person.address_number %}, {{ object.person.address_number }}{% endif %}{% if object.person.address_complement %}, {{ object.person.address_complement }}{% endif %}
+                    {% if object.person.neighborhood %}<br>{{ object.person.neighborhood }}{% endif %}
+                    <br>{{ object.person.city }} - {{ object.person.state }}
+                    <br>
+                    {% if object.person.email %}<br><span class="fa fa-envelope"></span> {{ object.person.email }}{% endif %}
+                    {% if object.person.site %}<br><span class="fa fa-link"></span> {{ object.person.site }}{% endif %}
+                    <br>
+                    {% if object.person.phone1 %}<br><span class="fa fa-phone"></span> {{ object.person.phone1 }}{% endif %}
+                    {% if object.person.phone2 %}<br><span class="fa fa-phone"></span> {{ object.person.phone2 }}{% endif %}
+                </address>
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-8">
+                {% if object.person.marital_status %}<strong>{% trans 'Marital Status' %}: </strong>{{ object.person.get_marital_status_display }}<br>{% endif %}
+                {% if object.person.birth_date %}<br><strong>{% trans 'Birth Date' %}: </strong>{{ object.person.birth_date}}<br>{% endif %}
+                {% if object.person.cpf %}<br><strong>{% trans 'CPF' %}: </strong>{{ object.person.cpf}}<br>{% endif %}
+                {% if object.person.rg %}<strong>{% trans 'RG' %}: </strong>{{ object.person.rg}}<br>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

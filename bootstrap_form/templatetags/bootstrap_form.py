@@ -1,4 +1,5 @@
 from django import template
+from django.forms.formsets import BaseFormSet
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
@@ -8,16 +9,23 @@ register = template.Library()
 
 @register.filter
 def as_bootstrap(form):
-    template = get_template('bootstrap_form/form.html')
 
-    c = Context({
-        'form': form
-    })
+    if issubclass(form.__class__, BaseFormSet):
+        template = get_template('bootstrap_form/formset.html')
 
+        c = Context({
+            'formset': form
+        })
+    else:
+        template = get_template('bootstrap_form/form.html')
+
+        c = Context({
+            'form': form
+        })
     return template.render(c)
 
 @register.simple_tag()
-def buttons(submit_label=_('Submit'), cancel_label=_('Cancel'), class_name='col-sm-offset-3 col-lg-offset-2 col-sm-8 col-lg-4'):
+def buttons(submit_label=_('Save'), cancel_label=_('Cancel'), class_name='col-sm-offset-3 col-lg-offset-2 col-sm-8 col-lg-4'):
 
     template = get_template('bootstrap_form/buttons.html')
 

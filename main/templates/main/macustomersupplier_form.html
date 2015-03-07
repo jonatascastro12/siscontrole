@@ -1,0 +1,64 @@
+{% extends "generics/dashboard_form.html" %}
+{% load i18n %}
+{% load bootstrap_form %}
+
+{% block extra_header_scripts %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+{% block form %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-horizontal">
+    {{ form|as_bootstrap}}
+    {{ second_form|as_bootstrap}}
+    </div>
+    <fieldset class="bankformset">
+        <legend>{% trans 'Bank accounts' %}</legend>
+        {{ bankformset|as_bootstrap}}
+    </fieldset>
+    <div class="form-horizontal">
+        &nbsp;
+        {% buttons %}
+    </div>
+</form>
+<div id="form-desactivated-fields" style="display:none"></div>
+{% endblock %}
+{% block extra_footer_scripts %}
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.formset.js"></script>
+<script type="text/javascript">
+        $('.bankformset .form-inline').formset({
+            prefix: '{{ bankformset.prefix }}',
+            addText:'',
+            deleteText:''
+        });
+
+        $('.add-row').addClass('text-success fa fa-plus-circle');
+        $('.delete-row').addClass('text-danger fa fa-minus-circle');
+
+        function activatePerson(person){
+            var other_person = (person == 'natural-person')?'legal-person':'natural-person';
+            $('.person-main').after($('.'+person).detach());
+            $('.'+other_person).detach().appendTo('#form-desactivated-fields');
+        }
+
+        if ($('input[name="person_type"]:checked').size() != 0) {
+            if ($('input[name="person_type"]:checked').attr('id') == 'id_person_type_1') {
+                activatePerson('legal-person');
+            } else {
+                activatePerson('natural-person');
+            }
+        } else {
+            $('.natural-person').detach().appendTo('#form-desactivated-fields');
+            $('.legal-person').detach().appendTo('#form-desactivated-fields');
+        }
+
+        $('#id_person_type_0').click(function(){
+            activatePerson('natural-person');
+        });
+        $('#id_person_type_1').click(function(){
+            activatePerson('legal-person');
+        })
+</script>
+{% endblock %}

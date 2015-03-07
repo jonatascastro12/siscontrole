@@ -10,8 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS, MEDIA_URL
-from django.utils.translation import gettext
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -106,6 +105,10 @@ USE_TZ = True
 
 LOCALE_PATHS = (
     os.path.dirname(os.path.dirname(__file__))+'/locale',
+    os.path.dirname(os.path.dirname(__file__))+'/siscontrole/locale',
+    os.path.dirname(os.path.dirname(__file__))+'/main/locale',
+    os.path.dirname(os.path.dirname(__file__))+'/crop_image/locale',
+    os.path.dirname(os.path.dirname(__file__))+'/bootstrap_form/locale',
 )
 
 # Static files (CSS, JavaScript, Images)

@@ -6,7 +6,7 @@
 
 {% if form.fieldsets %}
     {% for fieldset in form.fieldsets %}
-        <fieldset class="{{ fieldset.classes }}">
+        <fieldset class="{{ fieldset.classes }}" for="{{fieldset.name}}">
             {% if fieldset.legend %}
                 <legend>{{ fieldset.legend }}</legend>
             {% endif %}

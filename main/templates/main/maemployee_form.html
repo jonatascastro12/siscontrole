@@ -1,0 +1,12 @@
+{% extends "generics/dashboard_form.html" %}
+{% load i18n %}
+{% load bootstrap_form %}
+
+{% block form %}
+<form class="form-horizontal" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ second_form|as_bootstrap}}
+    {{ form|as_bootstrap}}
+    {% buttons %}
+</form>
+{% endblock %}
