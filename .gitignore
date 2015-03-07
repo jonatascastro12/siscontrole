@@ -56,6 +56,9 @@ target/
 # Upload Folder
 uploaded_images/
 
+# Migration Folder
+*migrations/
+
 #Jetbrains
 .idea
 
