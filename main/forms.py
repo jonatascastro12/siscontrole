@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from bootstrap3_datetime.widgets import DateTimePicker
+from django.conf.global_settings import STATIC_ROOT
 from django.core.exceptions import ValidationError
+from django.db.models.query_utils import Q
 from django.forms.fields import DateField
 from django.forms.models import inlineformset_factory
 from django.forms.widgets import RadioSelect, RadioFieldRenderer
@@ -9,6 +10,10 @@ from django.utils.encoding import force_text
 from django.utils.html import format_html_join
 from django.utils.translation import ugettext as _
 from django_localflavor_br.forms import BRCPFField, BRZipCodeField, BRPhoneNumberField, BRCNPJField
+from django_select2.fields import Select2MultipleChoiceField, HeavySelect2ChoiceField, AutoModelSelect2Field, \
+    ModelSelect2Field, HeavyModelSelect2ChoiceField, AutoModelSelect2MultipleField
+from django_select2.views import NO_ERR_RESP
+from django_select2.widgets import AutoHeavySelect2Widget
 from form_utils.forms import BetterModelForm
 from input_mask.contrib.localflavor.br.widgets import BRPhoneNumberInput, BRZipCodeInput, BRCPFInput, BRCNPJInput
 from main.models import MaEmployee, MaPerson, MaBankAccount, MaCustomerSupplier
@@ -49,6 +54,22 @@ class BetterRadioFieldRenderer(RadioFieldRenderer):
             [(force_text(w), ) for w in self],
         )
 
+class ExtendedAutoHeavySelectWidget(AutoHeavySelect2Widget):
+    class Media(AutoHeavySelect2Widget.Media):
+        css = AutoHeavySelect2Widget.Media.css
+        css['screen'] = css['screen'] + ('css/select2-bootstrap.css', )
+
+class MaPersonChoices(AutoModelSelect2Field):
+    queryset = MaPerson.objects.filter(Q(person_type__icontains='N'))
+    widget = ExtendedAutoHeavySelectWidget
+
+    def get_results(self, request, term, page, context):
+        #Get only natural persons matching Name or CPF
+        persons = MaPerson.objects.filter( Q(person_type__icontains='N') and (Q(name__icontains=term) | Q(cpf__icontains=term)) )
+        res = [(person.id, "%s - %s" % (person.name, person.cpf),) for person in persons]
+        return (NO_ERR_RESP, False, res, ) # Any error response, Has more results, options list
+
+
 
 class MaMultiPersonForm(BetterModelForm):
     cpf = BRCPFField(required=False, label='CPF', widget=BRCPFInput)
@@ -58,6 +79,7 @@ class MaMultiPersonForm(BetterModelForm):
     phone2 = BRPhoneNumberField(required=False, label=_('Phone 2'), widget=BRPhoneNumberInput)
     birth_date = DateField(required=False, widget=DateTimePicker(options={"format": "DD/MM/YYYY",
                                        "pickTime": False}), label=_('Birth date'))
+    representative = MaPersonChoices(required=False)
 
     def clean_cpf(self):
         cpf = self.cleaned_data.get('cpf', '')
@@ -85,7 +107,7 @@ class MaMultiPersonForm(BetterModelForm):
         fieldsets = [
             (_(' '), {'classes': ['person-main'], 'fields': ['person_type', 'name']}),
             (_('Natural Personal Information'), {'classes': ['natural-person'], 'fields': ['cpf', 'rg', 'birth_date', 'gender', 'marital_status']}),
-            (_('Legal Personal Information'), {'classes': ['legal-person'], 'fields': ['fantasy_name', 'contact_name', 'cnpj']}),
+            (_('Legal Personal Information'), {'classes': ['legal-person'], 'fields': ['fantasy_name', 'cnpj', 'state_registration', 'representative']}),
             (_('Photo'), {'fields': ['photo']}),
             (_('Contact Information'), {'fields': ['email', 'phone1', 'phone2', 'address', 'address_number',
                                                          'address_complement', 'city', 'state', 'zipcode',
@@ -99,4 +121,5 @@ class MaCustomerSupplierForm(BetterModelForm):
             'type': RadioSelect(renderer=BetterRadioFieldRenderer),
         }
 
-MaBankAccountFormset = inlineformset_factory(MaCustomerSupplier, MaBankAccount, min_num=0, extra=1)
+MaRepresentativeFormset = inlineformset_factory(MaPerson, MaPerson, min_num=0, max_num=1, extra=1)
+MaBankAccountFormset = inlineformset_factory(MaPerson, MaBankAccount, min_num=0, extra=1)

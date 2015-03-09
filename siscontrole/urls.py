@@ -2,11 +2,13 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from . import views
 from django.conf import settings
+from ajax_select import urls as ajax_select_urls
 
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'siscontrole.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
+    url(r'^select2/', include('django_select2.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^login/', views.login, name='login'),
     url(r'^logout/', 'siscontrole.views.logout', name='logout'),

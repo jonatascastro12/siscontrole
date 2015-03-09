@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'sorl.thumbnail',
     'django_localflavor_br',
+    'django_select2',
     'bootstrap_form',
     'bootstrap3_datetime',
     'crop_image',

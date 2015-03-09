@@ -1,7 +1,7 @@
 {% load i18n bootstrap_form %}
 
 {% for field in fields %}
-    {% if field.is_hidden %}
+    {% if field.is_hidden and field.field.widget|klass != 'extendedautoheavyselectwidget'  %}
         {{ field }}
     {% else %}
         <div class="form-group form-group-sm {% if field.errors %}has-error{% endif %} {% if form.errors and not field.errors %}has-success{% endif %} {% if form.errors %}has-feedback{% endif %}">

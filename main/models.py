@@ -40,14 +40,15 @@ class MaPerson(Model):
     MARITAL_STATUS_CHOICES = [('S', _('Single')), ('D', _('Divorced')), ('M', _('Married')), ('W', _('Widow')), ]
 
     name = models.CharField(max_length=255, verbose_name=_('Name'))
-    fantasy_name = models.CharField(max_length=255, verbose_name=_('Fantasy Name'), blank=True, null=True)
-    contact_name = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Contact Name'))
-
     person_type = models.CharField(max_length=10, choices=(('N', _('Natural')), ('L', _('Legal'))), verbose_name=_('Person Type'), default=None)
+
+    fantasy_name = models.CharField(max_length=255, verbose_name=_('Fantasy Name'), blank=True, null=True)
+    representative = models.ForeignKey('self', null=True, verbose_name=_('Representative'))
+    cnpj = models.CharField(max_length=18, blank=True, null=True, verbose_name=_('CNPJ'))
+
     cpf = models.CharField(max_length=14, blank=True, null=True, verbose_name=_('CPF'))
     rg = models.CharField(max_length=14, blank=True, null=True, verbose_name=_('RG'))
 
-    cnpj = models.CharField(max_length=18, blank=True, null=True, verbose_name=_('CNPJ'))
     #. Translators: State Registration é Inscricao estadual
     state_registration = models.CharField(max_length=11, blank=True, null=True, verbose_name=_('State Registration'))
 
@@ -78,6 +79,17 @@ class MaPerson(Model):
 
     def get_marital_status(self):
         return dict(self.MARITAL_STATUS_CHOICES).get(self.marital_status, '')
+
+    def get_ocupation_icon(self):
+        icons = ''
+        if hasattr(self, 'maemployee'):
+            icons += '<span class="fa fa-briefcase">'
+        if hasattr(self, 'macustomersupplier'):
+            icons += self.macustomersupplier.get_type_icon()
+        return icons
+
+    def get_type_icon(self):
+        pass
 
     @permalink
     def get_absolute_url(self):
@@ -128,11 +140,11 @@ class MaBank(Model):
 
     @permalink
     def get_absolute_url(self):
-        return 'main_customer_edit', (), {'pk': self.id}
+        return 'main_bank_edit', (), {'pk': self.id}
 
     class Meta:
-        verbose_name = _("Customer/Supplier")
-        verbose_name_plural = _("Customer/Suppliers")
+        verbose_name = _("Bank")
+        verbose_name_plural = _("Banks")
 
 
 class MaCustomerSupplier(Model):
@@ -168,7 +180,7 @@ class MaBankAccount(Model):
     bank = models.ForeignKey(MaBank, verbose_name=_('Bank'))
     agency = models.CharField(max_length=20, verbose_name=_('Agency'))
     number = models.CharField(max_length=20, verbose_name=_('Account number'))
-    costumersupplier = models.ForeignKey(MaCustomerSupplier, null=True)
+    person = models.ForeignKey(MaPerson, null=True)
 
     class Meta:
         verbose_name = _("Bank")

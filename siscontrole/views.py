@@ -31,6 +31,7 @@ class DashboardMenu():
         {'name': 'overview', 'icon_class': 'fa-dashboard', 'verbose_name': _('Overview'), 'link': reverse_lazy('dashboard_index')},
         {'name': 'main', 'icon_class': 'fa-users', 'verbose_name': _('Main'), 'children':
             [
+                {'name': 'person', 'verbose_name': _('Person'), 'link': reverse_lazy('main_person')},
                 {'name': 'employee', 'verbose_name': _('Employee'), 'link': reverse_lazy('main_employee')},
                 {'name': 'customer_supplier', 'verbose_name': _('Customer/Supplier'), 'link': reverse_lazy('main_customer_supplier')},
                 {'name': 'maintenance', 'verbose_name': _('Maintenance'), 'children':

@@ -37,6 +37,19 @@
                 {% if object.person.rg %}<strong>{% trans 'RG' %}: </strong>{{ object.person.rg}}<br>{% endif %}
             </div>
         </div>
+        {%  if object.person.mabankaccount_set.all|length > 0 %}
+        <div class="panel panel-default">
+          <div class="panel-heading"><span class="fa fa-bank"></span> {% trans "Bankaccounts" %}</div>
+          <div class="panel-body">
+              {% for ab in object.person.mabankaccount_set.all %}
+                  <strong>{% trans 'Bank' %}: </strong>{{ ab.bank.name }}<br>
+                  <strong>{% trans 'Agency' %}: </strong>{{ ab.agency }}<br>
+                  <strong>{% trans 'Account Number' %}: </strong>{{ ab.number }}<br>
+                  <br>
+              {% endfor %}
+          </div>
+        </div>
+        {%  endif %}
     </div>
 </div>
 {% endblock %}

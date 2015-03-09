@@ -1,11 +1,33 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
+from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from django_select2.views import Select2View
 from main.forms import MaEmployeeForm, MaPersonForm, MaCustomerSupplierForm, MaMultiPersonForm, MaBankAccountFormset
-from main.models import MaDepartment, MaEmployee, MaEmployeeFunction, MaCustomerSupplier
+from main.models import MaDepartment, MaEmployee, MaEmployeeFunction, MaCustomerSupplier, MaPerson
 from siscontrole.views import DashboardCreateView, DashboardListView, DashboardDeleteView, \
     DashboardUpdateView, DashboardDetailView
+
+
+''' Main Person Views '''
+class MaPersonListView(DashboardListView):
+    model = MaPerson
+    fields = ['id', 'name']
+
+class MaPersonCreateView(DashboardCreateView):
+    model = MaPerson
+    fields = ['name']
+    success_url = reverse_lazy('main_person')
+
+class MaPersonUpdateView(DashboardUpdateView):
+    model = MaPerson
+    fields = ['name']
+    success_url = reverse_lazy('main_person')
+
+class MaPersonDeleteView(DashboardDeleteView):
+    success_url = reverse_lazy('main_person')
+
 
 
 '''Main Department Views'''
@@ -77,7 +99,7 @@ class MaEmployeeCreateView(DashboardCreateView):
             return self.form_invalid(form, second_form)
 
     def form_valid(self, form, second_form):
-        second_form = MaPersonForm(self.request.POST, self.request.FILES)
+        second_form.instance.person_type = 'F'
         second_form.save()
         form.instance.person = second_form.instance
         self.object = form.save()
@@ -187,7 +209,7 @@ class MaCustomerSupplierUpdateView(DashboardUpdateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         second_form = MaMultiPersonForm(request.POST, request.FILES, instance=self.object.person)
-        bankformset = MaBankAccountFormset(request.POST, instance=self.object)
+        bankformset = MaBankAccountFormset(request.POST, instance=self.object.person)
 
         if form.is_valid() and second_form.is_valid() and bankformset.is_valid():
             return self.form_valid(form, second_form, bankformset)
@@ -208,7 +230,7 @@ class MaCustomerSupplierUpdateView(DashboardUpdateView):
     def get_context_data(self, **kwargs):
         context = super(MaCustomerSupplierUpdateView, self).get_context_data(**kwargs)
         context['second_form'] = kwargs.get('second_form', MaMultiPersonForm(instance=self.object.person))
-        context['bankformset'] = kwargs.get('bankformset', MaBankAccountFormset(instance=self.object))
+        context['bankformset'] = kwargs.get('bankformset', MaBankAccountFormset(instance=self.object.person))
 
         return context
 
