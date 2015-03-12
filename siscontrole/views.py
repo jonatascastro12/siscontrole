@@ -3,6 +3,7 @@ import imghdr
 import json
 import os
 from PIL import Image
+from datatableview.views import DatatableMixin
 from django.apps import apps
 from django.conf.urls import url
 from django.contrib import auth, messages
@@ -11,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.files.temp import NamedTemporaryFile
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.db.models.fields import Field, FieldDoesNotExist
 from django.forms.widgets import Media
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
@@ -182,9 +184,25 @@ class DashboardView(ContextMixin):
         context['fields'] = []
 
         if self.fields:
-            for f in fields:
+            '''for f in fields:
                 if f.name in self.fields:
-                    context['fields'].append(f)
+                    context['fields'].append(f)'''
+
+            for f in self.fields:
+                if type(f) is not tuple and isinstance(f, six.string_types):
+                    try:
+                        context['fields'].append(self.model._meta.get_field_by_name(f)[0])
+                    except FieldDoesNotExist:
+                        if hasattr(self.model, f):
+                            context['fields'].append(Field(verbose_name=f.title(), name=f))
+                else:
+                    try:
+                        field = self.model._meta.get_field_by_name(f[1])[0]
+                        field.verbose_name = f[0]
+                        context['fields'].append(field)
+                    except FieldDoesNotExist:
+                        if hasattr(self.model, f[1]):
+                            context['fields'].append(Field(verbose_name=f[0].title(), name=f[1]))
 
         return context
 
@@ -193,7 +211,22 @@ class DashboardView(ContextMixin):
         return super(DashboardView, self).dispatch(request, *args, **kwargs)
 
 
-class DashboardListView(ListView, DashboardView):
+class DashboardListView(DatatableMixin, ListView, DashboardView):
+    def get_datatable_options(self):
+        if type(self.datatable_options) is not dict:
+            self.datatable_options = {}
+        self.datatable_options["structure_template"] = "datatableview/bootstrap_structure.html"
+        return self.datatable_options
+
+    def get_column_data(self, i, name, instance):
+        """ Finds the backing method for column ``name`` and returns the generated data. """
+        values = super(DashboardListView, self).get_column_data(i, name, instance)
+
+        if hasattr(instance._meta.model, 'get_absolute_url'):
+            values = (u'<a href="%s">%s</a>' % (instance.get_absolute_url(), values[0]), values[1])
+
+        return values
+
     def delete(self, request):
         if (isinstance(request.body, six.string_types)):
             data = json.loads(request.body)

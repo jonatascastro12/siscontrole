@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'simple_history',
+    'datatableview',
     'sorl.thumbnail',
     'django_localflavor_br',
     'django_select2',

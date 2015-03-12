@@ -98,7 +98,10 @@ def getattr (obj, args):
     else:
         (attribute, default) = args
     try:
-        return obj.__getattribute__(attribute)
+        if callable(obj.__getattribute__(attribute)):
+            return obj.__getattribute__(attribute)()
+        else:
+            return obj.__getattribute__(attribute)
     except AttributeError:
          return  obj.__dict__.get(attribute, default)
     except:

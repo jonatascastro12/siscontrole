@@ -1,3 +1,4 @@
+from datatableview.views import DatatableMixin
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.http.response import HttpResponseRedirect
@@ -56,8 +57,14 @@ class MaEquipmentTypeDetailView(DashboardDetailView):
 
 class MaBankListView(DashboardListView):
     model = MaBank
-    fields = ['id', 'name', 'number']
-
+    fields = ['id', 'name', (_('Code'), 'get_code')]
+    datatable_options = {
+        'columns': [
+            'id',
+            'name',
+            (_('Code'), 'get_code'),
+        ]
+    }
 
 class MaBankCreateView(DashboardCreateView):
     model = MaBank
@@ -274,7 +281,7 @@ class MaCustomerSupplierDetailView(DashboardDetailView):
 
 class MaCustomerSupplierListView(DashboardListView):
     model = MaCustomerSupplier
-    fields = ['id', 'person__name', 'type']
+    fields = ['id', (_('Name'), 'get_name'), (_('Type'), 'get_type_icon')]
 
 class MaCustomerSupplierCreateView(DashboardCreateView):
     model = MaCustomerSupplier

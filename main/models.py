@@ -189,13 +189,18 @@ class MaBank(Model):
     number = models.CharField(max_length=4, blank=True, null=True, verbose_name=_('Code'))
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     cnpj = models.CharField(max_length=18, blank=True, null=True, verbose_name=_('CNPJ'))
-    site = models.URLField(blank=True, null=True)
+    site = models.URLField(blank=True, null=True, verbose_name=_('Site'))
 
     history = HistoricalRecords()
 
 
     def __unicode__(self):
         return (self.number + ' - ' + self.name)[:20]+'...'
+
+    def get_code(self):
+        if self.number != '':
+            return self.number.zfill(3)
+        return ''
 
     @permalink
     def get_absolute_url(self):
@@ -221,6 +226,9 @@ class MaCustomerSupplier(Model):
     @permalink
     def get_absolute_url(self):
         return 'main_customer_supplier_detail', (), {'pk': self.id}
+
+    def get_name(self):
+        return self.person.name
 
     def get_type_icon(self):
         if self.type == 'C':
