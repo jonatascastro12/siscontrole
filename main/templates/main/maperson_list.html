@@ -1,6 +1,6 @@
 {% extends "generics/dashboard_list.html" %}
 {% load i18n %}
-
+{% block page_content_title %} <h1 class="page-header">{% trans 'People' %} <a href="{% url add_view %}" class="btn pull-right btn-success">{% trans 'New Person' %} </a></h1>{% endblock %}
 {% block datatable %}
  <div class="dataTable_wrapper">
     <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -15,10 +15,10 @@
         <tbody>
             {% for o in object_list %}
                 <tr>
-                    <td>
+                    <td attr_name="obj_id">
                         <a href="{{ o.get_absolute_url }}">{{ o.id }}</a>
                     </td>
-                    <td>
+                    <td attr_name="obj_name">
                         <a href="{{ o.get_absolute_url }}">{{ o.name }}</a>
                     </td>
                     <td>
@@ -27,7 +27,6 @@
                     <td>
                         {{ o.get_ocupation_icon|safe}}
                     </td>
-
                 </tr>
             {% endfor %}
         </tbody>

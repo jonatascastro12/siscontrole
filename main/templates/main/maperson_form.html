@@ -4,13 +4,12 @@
 
 {% block extra_header_scripts %}
 {% endblock %}
-
+{% block page_content_title %} <h1 class="page-header">{% trans 'New Person' %}</h1>{% endblock %}
 {% block form %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-horizontal">
     {{ form|as_bootstrap}}
-    {{ second_form|as_bootstrap}}
     </div>
     <fieldset class="bankformset">
         <legend>{% trans 'Bank accounts' %}</legend>

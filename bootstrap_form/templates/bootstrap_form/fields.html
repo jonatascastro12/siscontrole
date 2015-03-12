@@ -15,9 +15,9 @@
                         {% endif %}
 
                         {% if field.help_text %}
-                            <a class="help-block" data-content="{{ field.help_text }}" title="{{ field.label }}">
-                                {% trans 'Display help text' %}
-                            </a><!-- /.help-block -->
+                            <span class="help-block" title="{{ field.label }}">
+                                {{ field.help_text }}
+                            </span><!-- /.help-block -->
                         {% endif %}
                     </label>
                     <div class="col-sm-8 col-lg-4">
@@ -60,9 +60,9 @@
                     {% endif %}
 
                     {% if field.help_text %}
-                        <a class="help-block" data-content="{{ field.help_text }}" title="{{ field.label }}">
-                            {% trans 'Display help text' %}
-                        </a><!-- /.help-block -->
+                        <span class="help-block" title="{{ field.label }}">
+                                {{ field.help_text }}
+                        </span><!-- /.help-block -->
                     {% endif %}
                     {% if field.errors %}
                         {% for error in field.errors %}

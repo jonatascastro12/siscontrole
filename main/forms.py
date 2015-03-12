@@ -65,7 +65,7 @@ class MaPersonChoices(AutoModelSelect2Field):
 
     def get_results(self, request, term, page, context):
         #Get only natural persons matching Name or CPF
-        persons = MaPerson.objects.filter( Q(person_type__icontains='N') and (Q(name__icontains=term) | Q(cpf__icontains=term)) )
+        persons = MaPerson.natural_people.filter( (Q(name__icontains=term) | Q(cpf__icontains=term)) )
         res = [(person.id, "%s - %s" % (person.name, person.cpf),) for person in persons]
         return (NO_ERR_RESP, False, res, ) # Any error response, Has more results, options list
 
@@ -110,8 +110,8 @@ class MaMultiPersonForm(BetterModelForm):
             (_('Legal Personal Information'), {'classes': ['legal-person'], 'fields': ['fantasy_name', 'cnpj', 'state_registration', 'representative']}),
             (_('Photo'), {'fields': ['photo']}),
             (_('Contact Information'), {'fields': ['email', 'phone1', 'phone2', 'address', 'address_number',
-                                                         'address_complement', 'city', 'state', 'zipcode',
-                                                         'neighborhood']}),]
+                                                         'address_complement', 'neighborhood', 'city', 'state',
+                                                         'zipcode', ]}), ]
 
 class MaCustomerSupplierForm(BetterModelForm):
     class Meta:

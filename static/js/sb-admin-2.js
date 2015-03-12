@@ -1,7 +1,21 @@
+function Dashboard(){
+}
+
+Dashboard.show_message = function(message, type){
+    type = type || 'success';
+    $('#page-wrapper .col-lg-12').first().prepend('&nbsp;<div class="alert alert-'+type+' alert-dismissible">' +
+        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+         message +'</div>');
+}
+
+
+$(document).ready(function(){
+    Dashboard();
+})
+
+
 $(function() {
-
     $('#side-menu').metisMenu();
-
 });
 
 //Loads the correct sidebar on window load,
@@ -28,7 +42,7 @@ $(function() {
 
     var url = window.location;
     var element = $('ul.nav a').filter(function() {
-        var patt = new RegExp("^"+this.href+"(/)?([0-9]*)(/add|/edit)?$");
+        var patt = new RegExp("^"+this.href+"(/)?([0-9]*)(/|/add|/edit/)?$");
         return patt.exec(url);
     }).addClass('active').parent().parent().addClass('in').parent().parent().addClass('in');
     if (element.is('li')) {

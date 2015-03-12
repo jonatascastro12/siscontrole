@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'simple_history',
     'sorl.thumbnail',
     'django_localflavor_br',
     'django_select2',
@@ -46,6 +47,7 @@ INSTALLED_APPS = (
     'crop_image',
     'main',
     'financial',
+
 )
 
 TEMPLATE_DIRS = (
@@ -71,6 +73,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )

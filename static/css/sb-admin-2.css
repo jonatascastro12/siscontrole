@@ -361,3 +361,7 @@ table.dataTable thead .sorting:after {
 .select2-container{
     width: 100%;
 }
+
+.dataTable tr.selected {
+    background: rgb(186, 186, 186) !important;
+}

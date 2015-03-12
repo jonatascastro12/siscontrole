@@ -5,8 +5,10 @@ from django.db import models
 # Create your models here.
 from django.db.models import permalink
 from django.db.models.base import Model
+from django.db.models.manager import Manager
 from django.utils.translation import ugettext as _
 from django_localflavor_br.br_states import STATE_CHOICES
+from simple_history.models import HistoricalRecords
 from crop_image.forms import CropImageModelField
 
 
@@ -25,18 +27,49 @@ class MaDepartment(Model):
         verbose_name_plural = _("Departments")
 
 class MaEquipmentType(Model):
-    name = models.CharField(max_length=100, verbose_name=_("Equipment Name"))
+    name = models.CharField(max_length=100, verbose_name=_("Equipment type name"))
     description = models.CharField(max_length=255, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
+    @permalink
+    def get_absolute_url(self):
+        return 'main_equipmenttype_edit', (), {'pk': self.id}
+
+    class Meta:
+        verbose_name = _("Equipment Type")
+        verbose_name_plural = _("Equipment Types")
 
 class MaEquipment(Model):
-    name = models.CharField(max_length=100)
-    equipment_type = models.ForeignKey(MaEquipmentType)
-    brand = models.CharField(max_length=100, blank=True, null=True)
-    model = models.CharField(max_length=100, blank=True, null=True)
-    registration = models.CharField(max_length=100, blank=True, null=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=100, verbose_name=_('Name'))
+    equipment_type = models.ForeignKey(MaEquipmentType, verbose_name=_('Equipment Type'))
+    brand = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Brand'))
+    model = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Model'))
+    registration = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Registration'), help_text='Número de placa, chassi etc.')
+    description = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Description'))
+
+    @permalink
+    def get_absolute_url(self):
+        return 'main_equipment_detail', (), {'pk': self.id}
+
+    class Meta:
+        verbose_name = _("Equipment")
+        verbose_name_plural = _("Equipments")
+
+    def __unicode__(self):
+        return self.brand + ' ' + self.name
+
+class NaturalPeopleManager(Manager):
+    def get_queryset(self):
+        return super(NaturalPeopleManager, self).get_queryset().filter(person_type='N')
+
+class LegalPeopleManager(Manager):
+    def get_queryset(self):
+        return super(LegalPeopleManager, self).get_queryset().filter(person_type='L')
 
 class MaPerson(Model):
+
     MARITAL_STATUS_CHOICES = [('S', _('Single')), ('D', _('Divorced')), ('M', _('Married')), ('W', _('Widow')), ]
 
     name = models.CharField(max_length=255, verbose_name=_('Name'))
@@ -74,6 +107,13 @@ class MaPerson(Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    history = HistoricalRecords()
+
+
+    objects = Manager()
+    natural_people = NaturalPeopleManager()
+    legal_people = LegalPeopleManager()
+
     def __unicode__(self):
         return self.name
 
@@ -83,17 +123,26 @@ class MaPerson(Model):
     def get_ocupation_icon(self):
         icons = ''
         if hasattr(self, 'maemployee'):
-            icons += '<span class="fa fa-briefcase">'
+            icons += '<span class="fa fa-briefcase" title="'+_('Employee')+'"></span>'
         if hasattr(self, 'macustomersupplier'):
             icons += self.macustomersupplier.get_type_icon()
         return icons
 
     def get_type_icon(self):
-        pass
+        if self.person_type == 'N':
+            return '<span class="fa fa-user" title="'+_('Natural Person')+'"></span>'
+        elif self.person_type == 'L':
+            return '<span class="fa fa-building" title="'+_('Legal Person')+'"></span>'
+        else:
+            return ''
+
+    def get_represented(self):
+        return MaPerson.legal_people.filter(representative=self).all()
+
 
     @permalink
     def get_absolute_url(self):
-        return 'main_person_edit', (), {'pk': self.id}
+        return 'main_person_detail', (), {'pk': self.id}
 
     class Meta:
         verbose_name = _("Person")
@@ -104,6 +153,8 @@ class MaEmployeeFunction(Model):
     name = models.CharField(max_length=100, verbose_name=_('Function Name'))
     description = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Description'))
 
+    history = HistoricalRecords()
+
     def __unicode__(self):
         return self.name
 
@@ -111,10 +162,16 @@ class MaEmployeeFunction(Model):
         verbose_name = _("Employee Function")
         verbose_name_plural = _("Employee Functions")
 
+    @permalink
+    def get_absolute_url(self):
+        return 'main_employeefunction_edit', (), {'pk': self.id}
+
 class MaEmployee(Model):
-    function = models.ForeignKey(MaEmployeeFunction, verbose_name=_("Function"))
-    department = models.ForeignKey(MaDepartment, verbose_name=_("Department"))
+    function = models.ForeignKey(MaEmployeeFunction, verbose_name=_("Function"), null=True, on_delete=models.SET_NULL)
+    department = models.ForeignKey(MaDepartment, verbose_name=_("Department"), null=True, on_delete=models.SET_NULL)
     person = models.OneToOneField(MaPerson)
+
+    history = HistoricalRecords()
 
     def __unicode__(self):
         return self.person.name
@@ -129,10 +186,12 @@ class MaEmployee(Model):
 
 
 class MaBank(Model):
-    number = models.CharField(max_length=4, blank=True, null=True, )
-    name = models.CharField(max_length=255)
+    number = models.CharField(max_length=4, blank=True, null=True, verbose_name=_('Code'))
+    name = models.CharField(max_length=255, verbose_name=_('Name'))
     cnpj = models.CharField(max_length=18, blank=True, null=True, verbose_name=_('CNPJ'))
     site = models.URLField(blank=True, null=True)
+
+    history = HistoricalRecords()
 
 
     def __unicode__(self):
@@ -154,6 +213,8 @@ class MaCustomerSupplier(Model):
                             verbose_name=_('Type'))
     person = models.OneToOneField(MaPerson)
 
+    history = HistoricalRecords()
+
     def __unicode__(self):
         return self.person.name
 
@@ -172,6 +233,7 @@ class MaCustomerSupplier(Model):
             return ''
 
     class Meta:
+
         verbose_name = _("Customer/Supplier")
         verbose_name_plural = _("Customer/Suppliers")
 
@@ -181,6 +243,8 @@ class MaBankAccount(Model):
     agency = models.CharField(max_length=20, verbose_name=_('Agency'))
     number = models.CharField(max_length=20, verbose_name=_('Account number'))
     person = models.ForeignKey(MaPerson, null=True)
+
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = _("Bank")

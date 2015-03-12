@@ -8,51 +8,82 @@
         <div class="row">
             <div class="col-xs-5 col-md-4 col-lg-2">
                 <a href="#" class="thumbnail">
-                  <img data-src="holder.js/100%x180" src="{{ object.person.photo }}" alt="...">
+                  <img data-src="holder.js/100%x180" src="{{ object.photo }}" alt="...">
                 </a>
             </div>
             <div class="col-xs-7 col-md-8 col-lg-10">
-                <h2>{{ object.person.name }}<br><small>{{ object.get_type_display }} {{ object.get_type_icon|safe }}</small></h2>
+                <h2>{{ object.name }}<br><small>{{ object.get_type_display }} {{ object.get_type_icon|safe }} {{ object.get_ocupation_icon|safe }}</small></h2>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-6 col-md-6 col-lg-4">
                 <address>
                     <strong>{% trans "Address" %}</strong>
-                    <br>{{ object.person.address }}{% if object.person.address_number %}, {{ object.person.address_number }}{% endif %}{% if object.person.address_complement %}, {{ object.person.address_complement }}{% endif %}
-                    {% if object.person.neighborhood %}<br>{{ object.person.neighborhood }}{% endif %}
-                    <br>{{ object.person.city }} - {{ object.person.state }}
+                    <br>{{ object.address }}{% if object.address_number %}, {{ object.address_number }}{% endif %}{% if object.address_complement %}, {{ object.address_complement }}{% endif %}
+                    {% if object.neighborhood %}<br>{{ object.neighborhood }}{% endif %}
+                    <br>{{ object.city }} - {{ object.state }}
                     <br>
-                    {% if object.person.email %}<br><span class="fa fa-envelope"></span> {{ object.person.email }}{% endif %}
-                    {% if object.person.site %}<br><span class="fa fa-link"></span> {{ object.person.site }}{% endif %}
+                    {% if object.email %}<br><span class="fa fa-envelope"></span> {{ object.email }}{% endif %}
+                    {% if object.site %}<br><span class="fa fa-link"></span> {{ object.site }}{% endif %}
                     <br>
-                    {% if object.person.phone1 %}<br><span class="fa fa-phone"></span> {{ object.person.phone1 }}{% endif %}
-                    {% if object.person.phone2 %}<br><span class="fa fa-phone"></span> {{ object.person.phone2 }}{% endif %}
+                    {% if object.phone1 %}<br><span class="fa fa-phone"></span> {{ object.phone1 }}{% endif %}
+                    {% if object.phone2 %}<br><span class="fa fa-phone"></span> {{ object.phone2 }}{% endif %}
                 </address>
             </div>
             <div class="col-xs-6 col-md-6 col-lg-8">
-                {% if object.person.person_type == "N" %}
+                {% if object.person_type == "N" %}
                     <strong>{% trans "Natural Person" %}</strong><br><br>
-                    {% if object.person.marital_status %}<strong>{% trans 'Marital Status' %}: </strong>{{ object.person.get_marital_status_display }}<br>{% endif %}
-                    {% if object.person.birth_date %}<br><strong>{% trans 'Birth Date' %}: </strong>{{ object.person.birth_date}}<br>{% endif %}
-                    {% if object.person.cpf %}<br><strong>{% trans 'CPF' %}: </strong>{{ object.person.cpf}}<br>{% endif %}
-                    {% if object.person.rg %}<strong>{% trans 'RG' %}: </strong>{{ object.person.rg}}<br>{% endif %}
+                    {% if object.marital_status %}<strong>{% trans 'Marital Status' %}: </strong>{{ object.get_marital_status_display }}<br>{% endif %}
+                    {% if object.birth_date %}<br><strong>{% trans 'Birth Date' %}: </strong>{{ object.birth_date}}<br>{% endif %}
+                    {% if object.cpf %}<br><strong>{% trans 'CPF' %}: </strong>{{ object.cpf}}<br>{% endif %}
+                    {% if object.rg %}<strong>{% trans 'RG' %}: </strong>{{ object.rg}}<br>{% endif %}
                 {%  else %}
                     <strong>{% trans "Legal Person" %}</strong><br><br>
-                    {% if object.person.fantasy_name %}<strong>{% trans 'Fantasy Name' %}: </strong>{{ object.person.fantasy_name }}<br>{% endif %}
-                    {% if object.person.representative %}<strong>{% trans 'Representative' %}: </strong>{{ object.person.representative.name }}<br>{% endif %}
-                    {% if object.person.representative %}<strong>{% trans 'Representative CPF' %}: </strong><a href="{{ object.person.representative.get_absolute_url }}">{{ object.person.representative.cpf }}</a><br>{% endif %}
-                    {% if object.person.cnpj %}<br><strong>{% trans 'CNPJ' %}: </strong>{{ object.person.cnpj }}<br>{% endif %}
+                    {% if object.fantasy_name %}<strong>{% trans 'Fantasy Name' %}: </strong>{{ object.fantasy_name }}<br>{% endif %}
+                    {% if object.representative %}<strong>{% trans 'Representative' %}: </strong><a href="{{ object.representative.get_absolute_url }}">{{ object.representative.name }}</a><br>{% endif %}
+                    {% if object.representative %}<strong>{% trans 'Representative CPF' %}: </strong><a href="{{ object.representative.get_absolute_url }}">{{ object.representative.cpf }}</a><br>{% endif %}
+                    {% if object.cnpj %}<br><strong>{% trans 'CNPJ' %}: </strong>{{ object.cnpj }}<br>{% endif %}
 
                 {% endif %}
             </div>
         </div>
 
-        {%  if object.person.mabankaccount_set.all|length > 0 %}
+        {%  if object.maemployee %}
+        <div class="panel panel-default">
+          <div class="panel-heading"><span class="fa fa-building"></span> {% trans "Employee Information" %}</div>
+          <div class="panel-body">
+              <strong>{% trans 'Department' %}: </strong>{{ object.maemployee.department }}<br>
+              <strong>{% trans 'Function' %}: </strong>{{ object.maemployee.function }}<br>
+          </div>
+        </div>
+        {%  endif %}
+
+        {%  if object.macustomersupplier %}
+        <div class="panel panel-default">
+          <div class="panel-heading"><span class="fa fa-building"></span> {% trans "Customer/Supplier Information" %}</div>
+          <div class="panel-body">
+              {{ object.macustomersupplier.get_type_icon|safe }} {{ object.macustomersupplier.get_type_display }}<br>
+          </div>
+        </div>
+        {%  endif %}
+
+
+        {%  if object.get_represented %}
+        <div class="panel panel-default">
+          <div class="panel-heading"><span class="fa fa-building"></span> {% trans "Organization Information" %}</div>
+          <div class="panel-body">
+          {% for rep in object.get_represented %}
+            {% trans 'Representative of ' %}<a href="{{rep.get_absolute_url}}">{{ rep.name }}</a><br>
+          {% endfor %}
+          </div>
+        </div>
+        {%  endif %}
+
+        {%  if object.mabankaccount_set.all|length > 0 %}
         <div class="panel panel-default">
           <div class="panel-heading"><span class="fa fa-bank"></span> {% trans "Bankaccounts" %}</div>
           <div class="panel-body">
-              {% for ab in object.person.mabankaccount_set.all %}
+              {% for ab in object.mabankaccount_set.all %}
                   <strong>{% trans 'Bank' %}: </strong>{{ ab.bank.name }}<br>
                   <strong>{% trans 'Agency' %}: </strong>{{ ab.agency }}<br>
                   <strong>{% trans 'Account Number' %}: </strong>{{ ab.number }}<br>

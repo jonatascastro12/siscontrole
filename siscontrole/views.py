@@ -6,6 +6,7 @@ from PIL import Image
 from django.apps import apps
 from django.conf.urls import url
 from django.contrib import auth, messages
+from django.contrib.admin.models import LogEntry
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.files.temp import NamedTemporaryFile
@@ -13,12 +14,16 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.forms.widgets import Media
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.base import TemplateDoesNotExist
+from django.template.defaultfilters import dictsort
+from django.template.loader import get_template
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.views.generic.base import ContextMixin, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, FormView, CreateView, DeleteView
 from django.views.generic.list import ListView
+import six
 from siscontrole import errors
 from siscontrole.settings import INSTALLED_APPS, MEDIA_ROOT, MEDIA_URL
 
@@ -28,18 +33,25 @@ class DashboardMenu():
                 not ("django" in app) and not ("nested" in app) and not ("bootstrap" in app) and not ("sorl" in app)]
 
     menu = [
-        {'name': 'overview', 'icon_class': 'fa-dashboard', 'verbose_name': _('Overview'), 'link': reverse_lazy('dashboard_index')},
+        {'name': 'overview', 'icon_class': 'fa-dashboard', 'verbose_name': _('Overview'),
+         'link': reverse_lazy('dashboard_index')},
         {'name': 'main', 'icon_class': 'fa-users', 'verbose_name': _('Main'), 'children':
             [
                 {'name': 'person', 'verbose_name': _('Person'), 'link': reverse_lazy('main_person')},
                 {'name': 'employee', 'verbose_name': _('Employee'), 'link': reverse_lazy('main_employee')},
-                {'name': 'customer_supplier', 'verbose_name': _('Customer/Supplier'), 'link': reverse_lazy('main_customer_supplier')},
+                {'name': 'customer_supplier', 'verbose_name': _('Customer/Supplier'),
+                 'link': reverse_lazy('main_customer_supplier')},
+                {'name': 'equipment', 'verbose_name': _('Equipment'), 'link': reverse_lazy('main_equipment')},
                 {'name': 'maintenance', 'verbose_name': _('Maintenance'), 'children':
                     [
                         {'name': 'departments', 'verbose_name': _('Department'),
                          'link': reverse_lazy('main_department')},
                         {'name': 'employee_function', 'verbose_name': _('Employee Function'),
-                         'link': reverse_lazy('main_employee_function')},
+                         'link': reverse_lazy('main_employeefunction')},
+                        {'name': 'equipment_type', 'verbose_name': _('Employee Type'),
+                         'link': reverse_lazy('main_equipmenttype')},
+                        {'name': 'bank', 'verbose_name': _('Bank'),
+                         'link': reverse_lazy('main_bank')},
                     ]},
             ]},
 
@@ -50,7 +62,6 @@ class DashboardMenu():
                         {'name': 'document_type', 'verbose_name': _('Document type'),
                          'link': '/financial/document_types'},
                         {'name': 'dolar', 'verbose_name': _('Dolar'), 'link': '/financial/dolar'},
-                        {'name': 'bank', 'verbose_name': _('Bank'), 'link': '/financial/bank'},
                         {'name': 'current_account', 'verbose_name': _('Current account'),
                          'link': '/financial/current_account'},
                         {'name': 'account_groups', 'verbose_name': _('Account groups'),
@@ -80,6 +91,7 @@ class DashboardMenu():
             output += u'<li><a href="{0}" class="{1}"><i class="fa {2} ' \
                       u'fa-fw"></i>{3} {4}</a>'.format(link, '', icon_class, verbose_name, arrow)
             if 'children' in item:
+                item['children'].sort()
                 output += u'<ul class="nav nav-second-level">'  # .format(' open' if active != '' else '')
                 for child_item in item['children']:
                     link = child_item.get('link', '#')
@@ -128,31 +140,38 @@ class DashboardView(ContextMixin):
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
         menu = DashboardMenu()
+
+        try:
+            get_template(self.model._meta.app_label + '/' + self.model._meta.model_name + self.template_name_suffix + '.html')
+        except TemplateDoesNotExist:
+            self.template_name = 'generics/dashboard' + self.template_name_suffix + '.html'
+
         context['app_list'] = menu.menu_list()
         context['dashboard_menu'] = menu.render(self.request)
         context['media_css'] = Media()
         context['media_js'] = Media()
 
-        context['list_view'] = self.request.resolver_match.view_name.\
+        context['list_view'] = self.request.resolver_match.view_name. \
             replace('_edit', '').replace('_add', '').replace('_detail', '')
-        context['add_view'] = self.request.resolver_match.view_name.\
-            replace('_edit', '').replace('_add', '').replace('_detail', '') + '_add'
-        context['detail_view'] = self.request.resolver_match.view_name.\
-            replace('_edit', '').replace('_add', '').replace('_detail', '') + '_detail'
-        context['edit_view'] = self.request.resolver_match.view_name.\
-            replace('_edit', '').replace('_add', '').replace('_detail', '') + '_edit'
+        context['add_view'] = self.request.resolver_match.view_name. \
+                                  replace('_edit', '').replace('_add', '').replace('_detail', '') + '_add'
+        context['detail_view'] = self.request.resolver_match.view_name. \
+                                     replace('_edit', '').replace('_add', '').replace('_detail', '') + '_detail'
+        context['edit_view'] = self.request.resolver_match.view_name. \
+                                   replace('_edit', '').replace('_add', '').replace('_detail', '') + '_edit'
 
         if self.template_name_suffix == '_form' and self.object:
             context[
-                'page_name'] = self.model._meta.verbose_name + u' <small>' + self.object.__unicode__() + u' <span class="label label-warning">' + _(
-                'Editing') + u'</span></small> '
+                'page_name'] = self.model._meta.verbose_name + u' <small>' + self.object.__unicode__() + \
+                               u' <span class="label label-warning">' + _('Editing') + u'</span></small> '
         elif self.template_name_suffix == '_detail':
             context['page_name'] = self.model._meta.verbose_name + u' <small>' + self.object.__unicode__() + \
-            u'</small><a href="' + reverse(context['edit_view'], None, (), {'pk': self.object.pk}) + \
+                                   u'</small><a href="' + reverse(context['edit_view'], None, (),
+                                                                  {'pk': self.object.pk}) + \
                                    u'" class="btn pull-right btn-primary">' + \
                                    _('Editar') + u'</a>'
         elif self.template_name_suffix == '_form':
-            context['page_name'] = _('New') + ' ' + self.model._meta.verbose_name
+            context['page_name'] = _('New') + u' ' + self.model._meta.verbose_name
         else:
             context['page_name'] = self.model._meta.verbose_name_plural + \
                                    u'<a href="' + reverse(context['add_view']) + \
@@ -175,7 +194,18 @@ class DashboardView(ContextMixin):
 
 
 class DashboardListView(ListView, DashboardView):
-    pass
+    def delete(self, request):
+        if (isinstance(request.body, six.string_types)):
+            data = json.loads(request.body)
+            ids = data.get('ids', None)
+            try:
+                selected_objects = self.model.objects.filter(id__in=ids).all()
+                selected_objects.delete()
+                messages.success(self.request, _('Deleted successfully!'))
+                return HttpResponse(status=200)
+            except:
+                raise
+                return HttpResponse(status=401)
 
 
 class DashboardDetailView(DetailView, DashboardView):
@@ -191,6 +221,8 @@ class DashboardCreateView(CreateView, DashboardView):
             object_name = ' ' + self.object.__unicode__() + ' '
         else:
             object_name = ' ' + form.instance.__unicode__() + ' '
+
+        # LogEntry.objects.log_action(self.request.user.id, )
         messages.success(self.request, message=model_name + object_name + _('created successfully!'))
         return super(DashboardCreateView, self).form_valid(form)
 
@@ -206,10 +238,6 @@ class DashboardUpdateView(UpdateView, DashboardView):
 
         messages.success(self.request, message=model_name + ' ' + object_name + _(' updated successfully!'))
         return super(DashboardUpdateView, self).form_valid(form)
-
-
-class DashboardDeleteView(DeleteView, DashboardView):
-    pass
 
 
 @login_required

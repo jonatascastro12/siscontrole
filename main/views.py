@@ -1,13 +1,76 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
-from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from django_select2.views import Select2View
 from main.forms import MaEmployeeForm, MaPersonForm, MaCustomerSupplierForm, MaMultiPersonForm, MaBankAccountFormset
-from main.models import MaDepartment, MaEmployee, MaEmployeeFunction, MaCustomerSupplier, MaPerson
-from siscontrole.views import DashboardCreateView, DashboardListView, DashboardDeleteView, \
+from main.models import MaDepartment, MaEmployee, MaEmployeeFunction, MaCustomerSupplier, MaPerson, MaEquipment, \
+    MaEquipmentType, MaBank
+from siscontrole.views import DashboardCreateView, DashboardListView, \
     DashboardUpdateView, DashboardDetailView
+
+
+''' Main Equipment Views '''
+
+
+class MaEquipmentListView(DashboardListView):
+    model = MaEquipment
+    fields = ['id', 'name']
+
+
+class MaEquipmentCreateView(DashboardCreateView):
+    model = MaEquipment
+
+
+class MaEquipmentUpdateView(DashboardUpdateView):
+    model = MaEquipment
+
+
+class MaEquipmentDetailView(DashboardDetailView):
+    model = MaEquipment
+    fields = ['name', 'type']
+
+
+''' Main Equipment Type Views '''
+
+
+class MaEquipmentTypeListView(DashboardListView):
+    model = MaEquipmentType
+    fields = ['id', 'name']
+
+
+class MaEquipmentTypeCreateView(DashboardCreateView):
+    model = MaEquipmentType
+
+
+class MaEquipmentTypeUpdateView(DashboardUpdateView):
+    model = MaEquipmentType
+
+
+class MaEquipmentTypeDetailView(DashboardDetailView):
+    model = MaEquipmentType
+    fields = ['name', 'type']
+
+
+''' Main Bank Views '''
+
+
+class MaBankListView(DashboardListView):
+    model = MaBank
+    fields = ['id', 'name', 'number']
+
+
+class MaBankCreateView(DashboardCreateView):
+    model = MaBank
+
+
+class MaBankUpdateView(DashboardUpdateView):
+    model = MaBank
+
+
+class MaBankDetailView(DashboardDetailView):
+    model = MaBank
+    fields = ['name', 'type']
+
 
 
 ''' Main Person Views '''
@@ -15,19 +78,78 @@ class MaPersonListView(DashboardListView):
     model = MaPerson
     fields = ['id', 'name']
 
+
 class MaPersonCreateView(DashboardCreateView):
     model = MaPerson
-    fields = ['name']
-    success_url = reverse_lazy('main_person')
+    form_class = MaMultiPersonForm
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        bankformset = MaBankAccountFormset(request.POST)
+
+        if form.is_valid() and bankformset.is_valid():
+            return self.form_valid(form, bankformset)
+        else:
+            return self.form_invalid(form, bankformset)
+
+    def form_valid(self, form, bankformset):
+        self.object = form.save()
+        bankformset.save()
+        messages.success(self.request, _('Person') + ' ' + self.object.name + ' ' + _('created successfully'))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, bankformset):
+        return self.render_to_response(self.get_context_data(form=form, bankformset=bankformset))
+
+    def get_context_data(self, **kwargs):
+        context = super(MaPersonCreateView, self).get_context_data(**kwargs)
+        context['bankformset'] = kwargs.get('bankformset', MaBankAccountFormset())
+
+        return context
+
 
 class MaPersonUpdateView(DashboardUpdateView):
     model = MaPerson
-    fields = ['name']
-    success_url = reverse_lazy('main_person')
+    form_class = MaMultiPersonForm
 
-class MaPersonDeleteView(DashboardDeleteView):
-    success_url = reverse_lazy('main_person')
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        bankformset = MaBankAccountFormset(request.POST, instance=self.object)
+
+        if form.is_valid() and bankformset.is_valid():
+            return self.form_valid(form, bankformset)
+        else:
+            return self.form_invalid(form, bankformset)
+
+    def form_valid(self, form, bankformset):
+        self.object = form.save()
+        bankformset.save()
+        messages.success(self.request, _('Person') + ' ' + self.object.name + ' ' + _('updated successfully'))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, bankformset):
+        return self.render_to_response(self.get_context_data(form=form, bankformset=bankformset))
+
+    def get_context_data(self, **kwargs):
+        context = super(MaPersonUpdateView, self).get_context_data(**kwargs)
+        context['bankformset'] = kwargs.get('bankformset', MaBankAccountFormset(instance=self.object))
+
+        return context
+
+
+class MaPersonDetailView(DashboardDetailView):
+    model = MaPerson
+    fields = ['person__name', 'department']
 
 
 '''Main Department Views'''
@@ -45,9 +167,6 @@ class MaDepartmentCreateView(DashboardCreateView):
 class MaDepartmentUpdateView(DashboardUpdateView):
     model = MaDepartment
     fields = ['name']
-    success_url = reverse_lazy('main_department')
-
-class MaDepartmentDeleteView(DashboardDeleteView):
     success_url = reverse_lazy('main_department')
 
 
@@ -68,9 +187,6 @@ class MaEmployeeFunctionUpdateView(DashboardUpdateView):
     fields = ['name', 'description']
     success_url = reverse_lazy('main_employee_function')
 
-class MaEmployeeFunctionDeleteView(DashboardDeleteView):
-    success_url = reverse_lazy('main_employee_function')
-    
 
 '''Main Employee Views'''
 
@@ -147,9 +263,6 @@ class MaEmployeeUpdateView(DashboardUpdateView):
         context['second_form'] = kwargs.get('second_form', MaPersonForm(instance=self.object.person))
 
         return context
-
-class MaEmployeeDeleteView(DashboardDeleteView):
-    success_url = reverse_lazy('main_department')
 
 
 '''Main Customer/Supplier Views'''
@@ -233,6 +346,3 @@ class MaCustomerSupplierUpdateView(DashboardUpdateView):
         context['bankformset'] = kwargs.get('bankformset', MaBankAccountFormset(instance=self.object.person))
 
         return context
-
-class MaCustomerSupplierDeleteView(DashboardDeleteView):
-    success_url = reverse_lazy('main_department')
