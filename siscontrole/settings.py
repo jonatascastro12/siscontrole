@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+import django.db.models.options as options
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -67,6 +68,10 @@ TEMPLATE_LOADERS = (
 )
 
 
+
+options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('gender', )
+
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -114,6 +119,7 @@ LOCALE_PATHS = (
     os.path.dirname(os.path.dirname(__file__))+'/main/locale',
     os.path.dirname(os.path.dirname(__file__))+'/crop_image/locale',
     os.path.dirname(os.path.dirname(__file__))+'/bootstrap_form/locale',
+    os.path.dirname(os.path.dirname(__file__))+'/financial/locale',
 )
 
 # Static files (CSS, JavaScript, Images)
@@ -130,3 +136,5 @@ MEDIA_ROOT = os.path.dirname(os.path.dirname(__file__))+ '/uploaded_images/'
 MEDIA_URL = '/uploaded_images/'
 
 DEFAULT_IMAGE = '/static/images/default.jpg'
+
+options.DEFAULT_NAMES = options.DEFAULT_NAMES + (u'gender', )

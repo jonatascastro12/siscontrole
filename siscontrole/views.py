@@ -20,7 +20,7 @@ from django.template.base import TemplateDoesNotExist
 from django.template.defaultfilters import dictsort
 from django.template.loader import get_template
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, pgettext
 from django.views.generic.base import ContextMixin, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, FormView, CreateView, DeleteView
@@ -62,7 +62,7 @@ class DashboardMenu():
                 {'name': 'maintenance', 'verbose_name': _('Maintenance'), 'children':
                     [
                         {'name': 'document_type', 'verbose_name': _('Document type'),
-                         'link': '/financial/document_types'},
+                         'link': reverse_lazy('financial_documenttype')},
                         {'name': 'dolar', 'verbose_name': _('Dolar'), 'link': '/financial/dolar'},
                         {'name': 'current_account', 'verbose_name': _('Current account'),
                          'link': '/financial/current_account'},
@@ -162,6 +162,11 @@ class DashboardView(ContextMixin):
         context['edit_view'] = self.request.resolver_match.view_name. \
                                    replace('_edit', '').replace('_add', '').replace('_detail', '') + '_edit'
 
+
+        new_title = (pgettext('female', 'New') if hasattr(self.model._meta, 'gender') and self.model._meta.gender == 'F' else\
+            pgettext('male', 'New')) + u' ' + self.model._meta.verbose_name
+
+
         if self.template_name_suffix == '_form' and self.object:
             context[
                 'page_name'] = self.model._meta.verbose_name + u' <small>' + self.object.__unicode__() + \
@@ -173,15 +178,20 @@ class DashboardView(ContextMixin):
                                    u'" class="btn pull-right btn-primary">' + \
                                    _('Editar') + u'</a>'
         elif self.template_name_suffix == '_form':
-            context['page_name'] = _('New') + u' ' + self.model._meta.verbose_name
+            context['page_name'] = new_title
         else:
             context['page_name'] = self.model._meta.verbose_name_plural + \
                                    u'<a href="' + reverse(context['add_view']) + \
                                    u'" class="btn pull-right btn-success">' + \
-                                   _('New') + u' ' + self.model._meta.verbose_name + u'</a>'
+                                   new_title + u'</a>'
 
         fields = list(self.model._meta.fields)
         context['fields'] = []
+
+        if hasattr(self, 'datatable_options'):
+            if self.datatable_options is not None:
+                self.fields = self.datatable_options['columns']
+
 
         if self.fields:
             '''for f in fields:

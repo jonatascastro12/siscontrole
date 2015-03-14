@@ -49,15 +49,15 @@ class MaEquipmentTypeUpdateView(DashboardUpdateView):
 
 class MaEquipmentTypeDetailView(DashboardDetailView):
     model = MaEquipmentType
-    fields = ['name', 'type']
-
+    datatable_options = {
+        'columns': ['name', 'type']
+    }
 
 ''' Main Bank Views '''
 
 
 class MaBankListView(DashboardListView):
     model = MaBank
-    fields = ['id', 'name', (_('Code'), 'get_code')]
     datatable_options = {
         'columns': [
             'id',
@@ -68,11 +68,11 @@ class MaBankListView(DashboardListView):
 
 class MaBankCreateView(DashboardCreateView):
     model = MaBank
-
+    success_url = reverse_lazy('main_bank')
 
 class MaBankUpdateView(DashboardUpdateView):
     model = MaBank
-
+    success_url = reverse_lazy('main_bank')
 
 class MaBankDetailView(DashboardDetailView):
     model = MaBank
@@ -83,7 +83,7 @@ class MaBankDetailView(DashboardDetailView):
 ''' Main Person Views '''
 class MaPersonListView(DashboardListView):
     model = MaPerson
-    fields = ['id', 'name']
+    fields = ['id', 'name', (_('Type'), 'get_type_icon'), (_('Ocupation'), 'get_ocupation_icon'), ]
 
 
 class MaPersonCreateView(DashboardCreateView):
@@ -200,7 +200,7 @@ class MaEmployeeFunctionUpdateView(DashboardUpdateView):
 
 class MaEmployeeListView(DashboardListView):
     model = MaEmployee
-    fields = ['id', 'person__name', 'department']
+    fields = ['id', (_('Name'), 'get_name'), 'department']
 
 class MaEmployeeDetailView(DashboardDetailView):
     model = MaEmployee

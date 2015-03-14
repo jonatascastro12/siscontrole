@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-10 16:56-0300\n"
+"POT-Creation-Date: 2015-03-13 15:17-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,7 +23,7 @@ msgstr ""
 msgid "Employee Information"
 msgstr "Informações do funcionário"
 
-#: .\main\forms.py:29 .\main\forms.py:77 .\main\models.py:82
+#: .\main\forms.py:29 .\main\forms.py:77 .\main\models.py:111
 msgid "Zipcode"
 msgstr "CEP"
 
@@ -79,8 +80,7 @@ msgstr "Foto"
 msgid "Department Name"
 msgstr "Nome do departamento"
 
-#: .\main\models.py:26 .\main\models.py:145
-#: .\main\templates\main\maemployee_list.html:11
+#: .\main\models.py:26 .\main\models.py:180
 #: .\main\templates\main\maperson_detail.html:55
 msgid "Department"
 msgstr "Departamento"
@@ -89,240 +89,279 @@ msgstr "Departamento"
 msgid "Departments"
 msgstr "Departamentos"
 
-#: .\main\models.py:30
-msgid "Equipment Name"
+#: .\main\models.py:31
+#, fuzzy
+msgid "Equipment type name"
 msgstr "Nome do equipamento"
 
-#: .\main\models.py:51
-msgid "Single"
-msgstr "Solteiro"
+#: .\main\models.py:42 .\main\models.py:48
+#, fuzzy
+msgid "Equipment Type"
+msgstr "Nome do equipamento"
 
-#: .\main\models.py:51
-msgid "Divorced"
-msgstr "Divorciado"
+#: .\main\models.py:43
+#, fuzzy
+msgid "Equipment Types"
+msgstr "Nome do equipamento"
 
-#: .\main\models.py:51
-msgid "Married"
-msgstr "Casado"
-
-#: .\main\models.py:51
-msgid "Widow"
-msgstr "Viúvo"
-
-#: .\main\models.py:53 .\main\templates\main\macustomersupplier_list.html:10
-#: .\main\templates\main\maemployee_list.html:10
-#: .\main\templates\main\maperson_list.html:10
+#: .\main\models.py:47 .\main\models.py:80 .\main\models.py:202
+#: .\main\views.py:203 .\main\views.py:284
 msgid "Name"
 msgstr "Nome"
 
-#: .\main\models.py:54
+#: .\main\models.py:49 .\main\templates\main\maequipment_detail.html:11
+#, fuzzy
+msgid "Brand"
+msgstr "Banco"
+
+#: .\main\models.py:50 .\main\templates\main\maequipment_detail.html:12
+msgid "Model"
+msgstr ""
+
+#: .\main\models.py:51 .\main\templates\main\maequipment_detail.html:13
+#: .\main\templates\main\maequipment_detail.html:14
+#, fuzzy
+msgid "Registration"
+msgstr "Inscrição estadual"
+
+#: .\main\models.py:53 .\main\models.py:161
+msgid "Description"
+msgstr "Descrição"
+
+#: .\main\models.py:60
+#, fuzzy
+msgid "Equipment"
+msgstr "Nome do equipamento"
+
+#: .\main\models.py:61
+#, fuzzy
+msgid "Equipments"
+msgstr "Nome do equipamento"
+
+#: .\main\models.py:78
+msgid "Single"
+msgstr "Solteiro"
+
+#: .\main\models.py:78
+msgid "Divorced"
+msgstr "Divorciado"
+
+#: .\main\models.py:78
+msgid "Married"
+msgstr "Casado"
+
+#: .\main\models.py:78
+msgid "Widow"
+msgstr "Viúvo"
+
+#: .\main\models.py:81
 msgid "Natural"
 msgstr "Física"
 
-#: .\main\models.py:54
+#: .\main\models.py:81
 msgid "Legal"
 msgstr "Jurídica"
 
-#: .\main\models.py:54
+#: .\main\models.py:82
 msgid "Person Type"
 msgstr "Tipo de pessoa"
 
-#: .\main\models.py:56 .\main\templates\main\macustomersupplier_detail.html:42
+#: .\main\models.py:84 .\main\templates\main\macustomersupplier_detail.html:42
 #: .\main\templates\main\maperson_detail.html:42
 msgid "Fantasy Name"
 msgstr "Nome fantasia"
 
-#: .\main\models.py:57 .\main\templates\main\macustomersupplier_detail.html:43
+#: .\main\models.py:85 .\main\templates\main\macustomersupplier_detail.html:43
 #: .\main\templates\main\maperson_detail.html:43
 msgid "Representative"
 msgstr "Representante"
 
-#: .\main\models.py:58 .\main\models.py:165
+#: .\main\models.py:86 .\main\models.py:204
 #: .\main\templates\main\macustomersupplier_detail.html:45
 #: .\main\templates\main\maperson_detail.html:45
 msgid "CNPJ"
 msgstr "CNPJ"
 
-#: .\main\models.py:60 .\main\templates\main\macustomersupplier_detail.html:38
+#: .\main\models.py:88 .\main\templates\main\macustomersupplier_detail.html:38
 #: .\main\templates\main\maemployee_detail.html:36
 #: .\main\templates\main\maperson_detail.html:38
 msgid "CPF"
 msgstr "CPF"
 
-#: .\main\models.py:61 .\main\templates\main\macustomersupplier_detail.html:39
+#: .\main\models.py:89 .\main\templates\main\macustomersupplier_detail.html:39
 #: .\main\templates\main\maemployee_detail.html:37
 #: .\main\templates\main\maperson_detail.html:39
 msgid "RG"
 msgstr "RG"
 
-#: .\main\models.py:64
+#. Translators: State Registration é Inscricao estadual
+#: .\main\models.py:92
 msgid "State Registration"
 msgstr "Inscrição estadual"
 
-#: .\main\models.py:66
+#: .\main\models.py:94
 msgid "Foto"
 msgstr "Foto"
 
-#: .\main\models.py:68 .\main\templates\main\macustomersupplier_detail.html:37
+#: .\main\models.py:96 .\main\templates\main\macustomersupplier_detail.html:37
 #: .\main\templates\main\maemployee_detail.html:35
 #: .\main\templates\main\maperson_detail.html:37
 msgid "Birth Date"
 msgstr "Data de nascimento"
 
-#: .\main\models.py:69
+#: .\main\models.py:97
 msgid "Gender"
 msgstr "Sexo"
 
-#: .\main\models.py:69
+#: .\main\models.py:98
 msgid "Male"
 msgstr "Masculino"
 
-#: .\main\models.py:69
+#: .\main\models.py:98
 msgid "Female"
 msgstr "Feminino"
 
-#: .\main\models.py:72
+#: .\main\models.py:101
 msgid "Email"
 msgstr "Email"
 
-#: .\main\models.py:73
+#: .\main\models.py:102 .\main\models.py:205
 msgid "Site"
 msgstr "Site"
 
-#: .\main\models.py:74
+#: .\main\models.py:103
 msgid "Phone1"
 msgstr "Telefone 1"
 
-#: .\main\models.py:75
+#: .\main\models.py:104
 msgid "Phone2"
 msgstr "Telefone 2"
 
-#: .\main\models.py:77 .\main\templates\main\macustomersupplier_detail.html:21
+#: .\main\models.py:106
+#: .\main\templates\main\macustomersupplier_detail.html:21
 #: .\main\templates\main\maemployee_detail.html:21
 #: .\main\templates\main\maperson_detail.html:21
 msgid "Address"
 msgstr "Endereço"
 
-#: .\main\models.py:78
+#: .\main\models.py:107
 msgid "Address number"
 msgstr "Nº"
 
-#: .\main\models.py:79
+#: .\main\models.py:108
 msgid "Address complement"
 msgstr "Complemento"
 
-#: .\main\models.py:80
+#: .\main\models.py:109
 msgid "City"
 msgstr "Cidade"
 
-#: .\main\models.py:81
+#: .\main\models.py:110
 #, fuzzy
 msgid "State"
 msgstr "Site"
 
-#: .\main\models.py:83
+#: .\main\models.py:112
 msgid "Neighborhood"
 msgstr "Bairro"
 
-#: .\main\models.py:104 .\main\models.py:158
+#: .\main\models.py:132 .\main\models.py:196
 msgid "Employee"
 msgstr "Funcionário"
 
-#: .\main\models.py:111
+#: .\main\models.py:139
 #: .\main\templates\main\macustomersupplier_detail.html:35
 #: .\main\templates\main\maperson_detail.html:35
 #, fuzzy
 msgid "Natural Person"
 msgstr "Física"
 
-#: .\main\models.py:113
+#: .\main\models.py:141
 #: .\main\templates\main\macustomersupplier_detail.html:41
 #: .\main\templates\main\maperson_detail.html:41
 #, fuzzy
 msgid "Legal Person"
 msgstr "Pessoa"
 
-#: .\main\models.py:126 .\main\views.py:38 .\main\views.py:72
+#: .\main\models.py:154 .\main\views.py:110 .\main\views.py:144
 msgid "Person"
 msgstr "Pessoa"
 
-#: .\main\models.py:127 .\main\templates\main\maperson_list.html:3
+#: .\main\models.py:155
 msgid "People"
 msgstr "Pessoas"
 
-#: .\main\models.py:131
+#: .\main\models.py:160
 msgid "Function Name"
 msgstr "Nome da função"
 
-#: .\main\models.py:132
-msgid "Description"
-msgstr "Descrição"
-
-#: .\main\models.py:140
+#: .\main\models.py:169
 msgid "Employee Function"
 msgstr "Nome do funcionário"
 
-#: .\main\models.py:141
+#: .\main\models.py:170
 msgid "Employee Functions"
 msgstr "Função de funcionários"
 
-#: .\main\models.py:144 .\main\templates\main\maemployee_list.html:12
-#: .\main\templates\main\maperson_detail.html:56
+#: .\main\models.py:179 .\main\templates\main\maperson_detail.html:56
 msgid "Function"
 msgstr "Função"
 
-#: .\main\models.py:159
+#: .\main\models.py:197
 msgid "Employees"
 msgstr "Funcionários"
 
-#: .\main\models.py:179 .\main\models.py:216 .\main\models.py:224
+#: .\main\models.py:201 .\main\views.py:65
+msgid "Code"
+msgstr ""
+
+#: .\main\models.py:203
+msgid "Short name"
+msgstr ""
+
+#: .\main\models.py:223 .\main\models.py:264 .\main\models.py:276
 #: .\main\templates\main\macustomersupplier_detail.html:56
 #: .\main\templates\main\maemployee_detail.html:45
 #: .\main\templates\main\maperson_detail.html:87
 msgid "Bank"
 msgstr "Banco"
 
-#: .\main\models.py:180 .\main\models.py:225
+#: .\main\models.py:224 .\main\models.py:277
 msgid "Banks"
 msgstr "Bancos"
 
-#: .\main\models.py:184 .\main\models.py:201 .\main\models.py:205
-#: .\main\templates\main\macustomersupplier_list.html:33
-#: .\main\templates\main\maperson_list.html:36
+#: .\main\models.py:228 .\main\models.py:248 .\main\models.py:253
 msgid "Customer"
 msgstr "Cliente"
 
-#: .\main\models.py:184 .\main\models.py:203 .\main\models.py:205
-#: .\main\templates\main\macustomersupplier_list.html:33
-#: .\main\templates\main\maperson_list.html:36
+#: .\main\models.py:228 .\main\models.py:250 .\main\models.py:253
 msgid "Supplier"
 msgstr "Fornecedor"
 
-#: .\main\models.py:185
+#: .\main\models.py:229
 msgid "Customer and Supplier"
 msgstr "Cliente e Fornecedor"
 
-#: .\main\models.py:187 .\main\templates\main\macustomersupplier_list.html:11
-#: .\main\templates\main\maperson_list.html:11
+#: .\main\models.py:231 .\main\views.py:86 .\main\views.py:284
 msgid "Type"
 msgstr "Tipo"
 
-#: .\main\models.py:211
+#: .\main\models.py:259
 msgid "Customer/Supplier"
 msgstr "Cliente/Fornecedor"
 
-#: .\main\models.py:212
+#: .\main\models.py:260
 msgid "Customer/Suppliers"
 msgstr "Cliente/Fornecedores"
 
-#: .\main\models.py:217
+#: .\main\models.py:265
 #: .\main\templates\main\macustomersupplier_detail.html:57
 #: .\main\templates\main\maemployee_detail.html:46
 #: .\main\templates\main\maperson_detail.html:88
 msgid "Agency"
 msgstr "Agência"
 
-#: .\main\models.py:218
+#: .\main\models.py:266
 msgid "Account number"
 msgstr "C/C"
 
@@ -356,11 +395,6 @@ msgstr "C/C"
 msgid "Bank accounts"
 msgstr "Contas bancárias"
 
-#: .\main\templates\main\macustomersupplier_list.html:33
-#: .\main\templates\main\maperson_list.html:36
-msgid "Legend:"
-msgstr "Legenda:"
-
 #: .\main\templates\main\maperson_detail.html:63
 #, fuzzy
 msgid "Customer/Supplier Information"
@@ -376,41 +410,43 @@ msgid "Representative of "
 msgstr "Representante de "
 
 #: .\main\templates\main\maperson_form.html:7
-#: .\main\templates\main\maperson_list.html:3
 msgid "New Person"
 msgstr "Nova Pessoa"
 
-#: .\main\templates\main\maperson_list.html:12
+#: .\main\views.py:86
 #, fuzzy
 msgid "Ocupation"
 msgstr "Descrição"
 
-#: .\main\views.py:38
+#: .\main\views.py:110
 #, fuzzy
 msgid "created successfully"
 msgstr "Funcionário atualizado com sucesso"
 
-#: .\main\views.py:72
+#: .\main\views.py:144
 #, fuzzy
 msgid "updated successfully"
 msgstr "Funcionário atualizado com sucesso"
 
-#: .\main\views.py:157
+#: .\main\views.py:229
 msgid "Employee created successfully"
 msgstr "Funcionário criado com sucesso"
 
-#: .\main\views.py:190
+#: .\main\views.py:262
 #, fuzzy
 msgid "Employee updated successfully!"
 msgstr "Funcionário atualizado com sucesso"
 
-#: .\main\views.py:235
+#: .\main\views.py:307
 msgid "CustomerSupplier created successfully"
 msgstr "Cliente/Fornecedor criado com sucesso"
 
-#: .\main\views.py:272
+#: .\main\views.py:344
 msgid "CustomerSupplier updated successfully"
 msgstr "Cliente/Fornecedor atualizado com sucesso"
+
+#~ msgid "Legend:"
+#~ msgstr "Legenda:"
 
 #~ msgid "Contact Name"
 #~ msgstr "Nome de contato"

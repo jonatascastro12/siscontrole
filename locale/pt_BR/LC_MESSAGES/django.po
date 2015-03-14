@@ -8,17 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-10 16:56-0300\n"
+"POT-Creation-Date: 2015-03-13 15:17-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\bootstrap_form\templates\bootstrap_form\fields.html:19
-#: .\bootstrap_form\templates\bootstrap_form\fields.html:64
 #: .\bootstrap_form\templates\bootstrap_form\formset_fields.html:21
 #: .\bootstrap_form\templates\bootstrap_form\formset_fields.html:63
 msgid "Display help text"
@@ -39,7 +38,7 @@ msgstr "Tamanho máximo permitido: 500kb"
 #: .\crop_image\templates\jcrop\jcrop_image_widget.html:35
 #: .\crop_image\templates\jcrop\jcrop_image_widget.html:40
 #: .\crop_image\templates\jcrop\jcrop_image_widget.html:45
-#: .\templates\generics\dashboard_list.html:180
+#: .\templates\generics\dashboard_list.html:145
 msgid "Loading"
 msgstr "Carregando"
 
@@ -114,86 +113,88 @@ msgstr "Remover"
 msgid "Print ID Cards"
 msgstr "Imprimir ID card"
 
-#: .\templates\generics\dashboard_list.html:95
+#: .\templates\generics\dashboard_list.html:100
 msgid "Confirm deletion"
 msgstr "Confirmar exclusão"
 
-#: .\templates\generics\dashboard_list.html:98
+#: .\templates\generics\dashboard_list.html:103
 msgid "Do you really want to delete "
 msgstr "Você deseja mesmo apagar "
 
-#: .\templates\generics\dashboard_list.html:101
+#: .\templates\generics\dashboard_list.html:106
 msgid "No"
 msgstr "Não"
 
-#: .\templates\generics\dashboard_list.html:102
+#: .\templates\generics\dashboard_list.html:107
 msgid "Confirm"
 msgstr "Confimar"
 
-#: .\templates\generics\dashboard_list.html:173
+#: .\templates\generics\dashboard_list.html:136
 msgid "No data available in table"
 msgstr "Nenhum registro disponível"
 
-#: .\templates\generics\dashboard_list.html:174
+#: .\templates\generics\dashboard_list.html:137
+#: .\templates\generics\dashboard_list.html:138
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Mostranto _START_ a _END_ de _TOTAL_ registros"
 
-#: .\templates\generics\dashboard_list.html:175
+#: .\templates\generics\dashboard_list.html:139
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Mostrando 0 a 0 de 0 registros"
 
-#: .\templates\generics\dashboard_list.html:176
+#: .\templates\generics\dashboard_list.html:140
+#: .\templates\generics\dashboard_list.html:141
 msgid "filtered from _MAX_ total entries"
 msgstr "filtrado de _MAX_ registros"
 
-#: .\templates\generics\dashboard_list.html:179
+#: .\templates\generics\dashboard_list.html:144
 msgid "Show _MENU_ entries"
 msgstr "Mostrar _MENU_ registros"
 
-#: .\templates\generics\dashboard_list.html:181
+#: .\templates\generics\dashboard_list.html:146
 msgid "Processing"
 msgstr "Processando"
 
-#: .\templates\generics\dashboard_list.html:182
+#: .\templates\generics\dashboard_list.html:147
 msgid "Search"
 msgstr "Pesquisar"
 
-#: .\templates\generics\dashboard_list.html:183
+#: .\templates\generics\dashboard_list.html:148
 msgid "No matching records found"
 msgstr "Nenhum registro encontrado"
 
-#: .\templates\generics\dashboard_list.html:185
+#: .\templates\generics\dashboard_list.html:150
 msgid "First"
 msgstr "Primeiro"
 
-#: .\templates\generics\dashboard_list.html:186
+#: .\templates\generics\dashboard_list.html:151
 msgid "Last"
 msgstr "Último"
 
-#: .\templates\generics\dashboard_list.html:187
+#: .\templates\generics\dashboard_list.html:152
 msgid "Next"
 msgstr "Próximo"
 
-#: .\templates\generics\dashboard_list.html:188
+#: .\templates\generics\dashboard_list.html:153
 msgid "Previous"
 msgstr "Anterior"
 
-#: .\templates\generics\dashboard_list.html:191
+#: .\templates\generics\dashboard_list.html:156
 msgid "activate to sort column ascending"
 msgstr "Ativar ordenação ascendente"
 
-#: .\templates\generics\dashboard_list.html:192
+#: .\templates\generics\dashboard_list.html:157
 msgid "activate to sort column descending"
 msgstr "Ativar ordenação descendente"
 
-#: .\templates\generics\dashboard_list.html:220
+#: .\templates\generics\dashboard_list.html:255
 msgid "Do you really want to delete:"
 msgstr "Você deseja mesmo apagar:"
 
-#: .\templates\generics\dashboard_list.html:235
+#: .\templates\generics\dashboard_list.html:270
 msgid "Deleting..."
 msgstr "Apagando..."
 
-#: .\templates\generics\dashboard_list.html:239
+#: .\templates\generics\dashboard_list.html:274
 msgid "Some error occurred."
 msgstr "Ocorreu algum erro."

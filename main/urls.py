@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     url(r'^/customer_supplier$', MaCustomerSupplierListView.as_view(), name="main_customer_supplier"),
     url(r'^/customer_supplier/add$', MaCustomerSupplierCreateView.as_view(), name="main_customer_supplier_add"),
     url(r'^/customer_supplier/(?P<pk>[0-9]+)', include([
-        url(r'[/]$', MaCustomerSupplierDetailView.as_view(), name="main_customer_supplier_detail"),
+        url(r'^[/]$', MaCustomerSupplierDetailView.as_view(), name="main_customer_supplier_detail"),
         url(r'/edit$', MaCustomerSupplierUpdateView.as_view(), name="main_customer_supplier_edit"),
     ])),
     url(r'^/equipment$', MaEquipmentListView.as_view(), name="main_equipment"),

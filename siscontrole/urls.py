@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('crop_image.urls')),
     url(r'^main', include('main.urls'),),
+    url(r'^financial', include('financial.urls'),),
 )
 
 if settings.DEBUG :

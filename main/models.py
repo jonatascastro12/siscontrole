@@ -26,6 +26,7 @@ class MaDepartment(Model):
         verbose_name = _("Department")
         verbose_name_plural = _("Departments")
 
+
 class MaEquipmentType(Model):
     name = models.CharField(max_length=100, verbose_name=_("Equipment type name"))
     description = models.CharField(max_length=255, blank=True, null=True)
@@ -41,12 +42,14 @@ class MaEquipmentType(Model):
         verbose_name = _("Equipment Type")
         verbose_name_plural = _("Equipment Types")
 
+
 class MaEquipment(Model):
     name = models.CharField(max_length=100, verbose_name=_('Name'))
     equipment_type = models.ForeignKey(MaEquipmentType, verbose_name=_('Equipment Type'))
     brand = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Brand'))
     model = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Model'))
-    registration = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Registration'), help_text='Número de placa, chassi etc.')
+    registration = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Registration'),
+                                    help_text='Número de placa, chassi etc.')
     description = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Description'))
 
     @permalink
@@ -60,20 +63,23 @@ class MaEquipment(Model):
     def __unicode__(self):
         return self.brand + ' ' + self.name
 
+
 class NaturalPeopleManager(Manager):
     def get_queryset(self):
         return super(NaturalPeopleManager, self).get_queryset().filter(person_type='N')
+
 
 class LegalPeopleManager(Manager):
     def get_queryset(self):
         return super(LegalPeopleManager, self).get_queryset().filter(person_type='L')
 
-class MaPerson(Model):
 
+class MaPerson(Model):
     MARITAL_STATUS_CHOICES = [('S', _('Single')), ('D', _('Divorced')), ('M', _('Married')), ('W', _('Widow')), ]
 
     name = models.CharField(max_length=255, verbose_name=_('Name'))
-    person_type = models.CharField(max_length=10, choices=(('N', _('Natural')), ('L', _('Legal'))), verbose_name=_('Person Type'), default=None)
+    person_type = models.CharField(max_length=10, choices=(('N', _('Natural')), ('L', _('Legal'))),
+                                   verbose_name=_('Person Type'), default=None)
 
     fantasy_name = models.CharField(max_length=255, verbose_name=_('Fantasy Name'), blank=True, null=True)
     representative = models.ForeignKey('self', null=True, verbose_name=_('Representative'))
@@ -82,13 +88,14 @@ class MaPerson(Model):
     cpf = models.CharField(max_length=14, blank=True, null=True, verbose_name=_('CPF'))
     rg = models.CharField(max_length=14, blank=True, null=True, verbose_name=_('RG'))
 
-    #. Translators: State Registration é Inscricao estadual
+    # . Translators: State Registration é Inscricao estadual
     state_registration = models.CharField(max_length=11, blank=True, null=True, verbose_name=_('State Registration'))
 
     photo = CropImageModelField(upload_to='person/', url='/upload_photo', blank=True, null=True, verbose_name=_('Foto'))
 
     birth_date = models.DateField(blank=True, null=True, verbose_name=_('Birth Date'))
-    gender = models.CharField(max_length='1', blank=True, null=True, verbose_name=_('Gender'), choices=[('M', _('Male')), ('F', _('Female'))])
+    gender = models.CharField(max_length='1', blank=True, null=True, verbose_name=_('Gender'),
+                              choices=[('M', _('Male')), ('F', _('Female'))])
     marital_status = models.CharField(max_length='1', blank=True, null=True, choices=MARITAL_STATUS_CHOICES)
 
     email = models.EmailField(blank=True, null=True, verbose_name=_('Email'))
@@ -109,7 +116,6 @@ class MaPerson(Model):
 
     history = HistoricalRecords()
 
-
     objects = Manager()
     natural_people = NaturalPeopleManager()
     legal_people = LegalPeopleManager()
@@ -123,16 +129,16 @@ class MaPerson(Model):
     def get_ocupation_icon(self):
         icons = ''
         if hasattr(self, 'maemployee'):
-            icons += '<span class="fa fa-briefcase" title="'+_('Employee')+'"></span>'
+            icons += '<span class="fa fa-briefcase" title="' + _('Employee') + '"></span>'
         if hasattr(self, 'macustomersupplier'):
             icons += self.macustomersupplier.get_type_icon()
         return icons
 
     def get_type_icon(self):
         if self.person_type == 'N':
-            return '<span class="fa fa-user" title="'+_('Natural Person')+'"></span>'
+            return '<span class="fa fa-user" title="' + _('Natural Person') + '"></span>'
         elif self.person_type == 'L':
-            return '<span class="fa fa-building" title="'+_('Legal Person')+'"></span>'
+            return '<span class="fa fa-building" title="' + _('Legal Person') + '"></span>'
         else:
             return ''
 
@@ -147,6 +153,7 @@ class MaPerson(Model):
     class Meta:
         verbose_name = _("Person")
         verbose_name_plural = _("People")
+        gender = 'F'
 
 
 class MaEmployeeFunction(Model):
@@ -161,10 +168,12 @@ class MaEmployeeFunction(Model):
     class Meta:
         verbose_name = _("Employee Function")
         verbose_name_plural = _("Employee Functions")
+        gender = 'F'
 
     @permalink
     def get_absolute_url(self):
         return 'main_employeefunction_edit', (), {'pk': self.id}
+
 
 class MaEmployee(Model):
     function = models.ForeignKey(MaEmployeeFunction, verbose_name=_("Function"), null=True, on_delete=models.SET_NULL)
@@ -174,6 +183,9 @@ class MaEmployee(Model):
     history = HistoricalRecords()
 
     def __unicode__(self):
+        return self.person.name
+
+    def get_name(self):
         return self.person.name
 
     @permalink
@@ -188,6 +200,7 @@ class MaEmployee(Model):
 class MaBank(Model):
     number = models.CharField(max_length=4, blank=True, null=True, verbose_name=_('Code'))
     name = models.CharField(max_length=255, verbose_name=_('Name'))
+    short_name = models.CharField(max_length=100, verbose_name=_('Short name'), blank=True, null=True)
     cnpj = models.CharField(max_length=18, blank=True, null=True, verbose_name=_('CNPJ'))
     site = models.URLField(blank=True, null=True, verbose_name=_('Site'))
 
@@ -195,7 +208,7 @@ class MaBank(Model):
 
 
     def __unicode__(self):
-        return (self.number + ' - ' + self.name)[:20]+'...'
+        return (self.number + ' - ' + self.name)[:20] + '...'
 
     def get_code(self):
         if self.number != '':
@@ -232,11 +245,12 @@ class MaCustomerSupplier(Model):
 
     def get_type_icon(self):
         if self.type == 'C':
-            return '<span class="fa fa-male text-success" title="'+_('Customer')+'"></span>'
+            return '<span class="fa fa-male text-success" title="' + _('Customer') + '"></span>'
         elif self.type == 'S':
-            return '<span class="fa fa-truck text-danger" title="'+_('Supplier')+'"></span>'
+            return '<span class="fa fa-truck text-danger" title="' + _('Supplier') + '"></span>'
         elif self.type == 'C/S':
-            return '<span class="fa fa-male text-success" title="'+_('Customer')+'"></span> <span class="fa fa-truck text-danger" title="'+_('Supplier')+'"></span>'
+            return '<span class="fa fa-male text-success" title="' + _(
+                'Customer') + '"></span> <span class="fa fa-truck text-danger" title="' + _('Supplier') + '"></span>'
         else:
             return ''
 
@@ -253,6 +267,10 @@ class MaBankAccount(Model):
     person = models.ForeignKey(MaPerson, null=True)
 
     history = HistoricalRecords()
+
+    def __unicode__(self):
+        return (self.bank.short_name if self.bank.short_name is not None else self.bank.name[:10]) + \
+               ' - ' + self.agency + ' - ' + self.number
 
     class Meta:
         verbose_name = _("Bank")
