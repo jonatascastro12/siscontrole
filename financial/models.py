@@ -28,7 +28,7 @@ class FiAccountGroup(Model):
     name = models.CharField(max_length=100, verbose_name=_('Account group name'))
 
     def __unicode__(self):
-        return self.name
+        return str(self.id) + ' - ' + self.name
 
     def get_code(self):
         return str(self.id).zfill(4)
@@ -42,13 +42,23 @@ class FiAccountGroup(Model):
 
 class FiAccount(Model):
     name = models.CharField(max_length=100, verbose_name=_('Account name'))
-    type = models.CharField(max_length=100, choices=(('E', 'Expense'), ('R', 'Revenue'),), verbose_name=_('Account type'))
+    type = models.CharField(max_length=100, choices=(('E', _('Expense')), ('R', _('Revenue')),), verbose_name=_('Account type'))
 
     def __unicode__(self):
-        return self.name
+        return str(self.id) + ' - ' + self.name
 
     def get_code(self):
-        return self.id.zfill(4)
+        return str(self.id).zfill(4)
+
+    def get_type_icon(self):
+        if self.type == 'E':
+            return '<span class="fa fa-level-down text-danger" title="' + _('Expense') + '"></span> <span class="text-danger">'+_('Expense')+'</span>'
+        else:
+            return '<span class="fa fa-level-up text-success" title="' + _('Revenue') + '"></span> <span class="text-success">'+_('Revenue')+'</span>'
+
+    @permalink
+    def get_absolute_url(self):
+        return ('financial_account_edit', (), {'pk': self.id})
 
     class Meta:
         verbose_name = _('Account')
@@ -59,10 +69,14 @@ class FiSubaccount(Model):
     name = models.CharField(max_length=100, verbose_name=_('Subaccount name'))
 
     def __unicode__(self):
-        return self.name
+        return str(self.id) + ' - ' + self.name
 
     def get_code(self):
-        return self.id.zfill(4)
+        return str(self.id).zfill(4)
+
+    @permalink
+    def get_absolute_url(self):
+        return ('financial_subaccount_edit', (), {'pk': self.id})
 
     class Meta:
         verbose_name = _('Subaccount')
@@ -71,13 +85,17 @@ class FiSubaccount(Model):
 class FiSubaccountType(Model):
     name = models.CharField(max_length=100, verbose_name=_('Subaccount type name'))
     subaccount = models.ForeignKey(FiSubaccount, verbose_name=_('Subaccount'))
-    nature = models.CharField(max_length=2, choices=(('O', 'Operational'), ('OO', 'One-off'), ('I', 'Indirect'), ), verbose_name=_('Subaccount type nature'))
+    nature = models.CharField(max_length=2, choices=(('O', _('Operational')), ('OO', _('One-off')), ('I', _('Indirect')), ), verbose_name=_('Subaccount type nature'))
 
     def __unicode__(self):
-        return self.name
+        return str(self.id) + ' - ' + self.name
 
     def get_code(self):
-        return self.id.zfill(4)
+        return str(self.id).zfill(4)
+
+    @permalink
+    def get_absolute_url(self):
+        return ('financial_subaccounttype_edit', (), {'pk': self.id})
 
     class Meta:
         verbose_name = _('Subaccount Type')
@@ -88,10 +106,19 @@ class FiCostCenter(Model):
     subaccount = models.ForeignKey(FiSubaccount, verbose_name=_('Subaccount'))
     subaccount_type = models.ForeignKey(FiSubaccountType, verbose_name=_('Subaccount type'))
 
+    def __unicode__(self):
+        return self.get_code()
+
     def get_code(self):
-        return "%s.%s.%s.%s" % (self.account_group.get_code(), self.account.get_code(), self.subaccount.get_code(), self.subaccount_type())
+        return "%s.%s.%s.%s" % (self.account_group.get_code(), self.account.get_code(), self.subaccount.get_code(), self.subaccount_type.get_code())
+
+    @permalink
+    def get_absolute_url(self):
+        return ('financial_costcenter_detail', (), {'pk': self.id})
 
     class Meta:
+        verbose_name = _('Cost Center')
+        verbose_name_plural = _('Cost Centers')
         unique_together = ('account_group', 'account', 'subaccount', 'subaccount_type')
 
 class FiCurrentAccount(Model):
@@ -116,19 +143,20 @@ class FiCurrentAccount(Model):
         return ('financial_currentaccount_edit', (), {'pk': self.id})
 
 class FiEntry(Model):
-    date = models.DateField()
-    costcenter = models.ForeignKey(FiCostCenter)
-    current_account = models.ForeignKey(FiCurrentAccount)
-    document_type = models.ForeignKey(FiDocumentType)
-    document_number = models.CharField(max_length=100)
+    date = models.DateField(verbose_name=_("Date"))
+    costcenter = models.ForeignKey(FiCostCenter, verbose_name=_("Cost Center"))
+    current_account = models.ForeignKey(FiCurrentAccount, verbose_name=_('Current Account'))
+    document_type = models.ForeignKey(FiDocumentType, verbose_name=_('Document Type'))
+    document_number = models.CharField(max_length=100, verbose_name=_('Document Number'))
     cheque_number = models.CharField(max_length=100, blank=True, null=True)
-    expiration_date = models.DateField()
-    department = models.ForeignKey(MaDepartment)
-    client_supplier = models.ForeignKey(MaCustomerSupplier)
+    expiration_date = models.DateField(verbose_name=_('Expiration Date'))
+    department = models.ForeignKey(MaDepartment, verbose_name=_('Department'))
+    client_supplier = models.ForeignKey(MaCustomerSupplier, verbose_name=_('Client/Supplier'))
     record = models.CharField(max_length=255, blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=1, choices=(('1', 'ONE'), ('2', 'TWO')))
-    status = models.CharField(max_length=2, choices=(('R', 'Receivable'), ('P', 'Payable'), ('RR', 'Received'), ('PP', 'Paid')))
+    status = models.CharField(max_length=2, choices=(('R', _('Receivable')), ('P', _('Payable')), ('RR', _('Received')),
+                                                     ('PP', _('Paid'))))
 
     history = HistoricalRecords()
 

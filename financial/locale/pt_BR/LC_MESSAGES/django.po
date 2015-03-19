@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-13 15:17-0300\n"
+"POT-Creation-Date: 2015-03-16 11:05-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,79 +42,226 @@ msgstr "Nome do grupo"
 msgid "Account Group"
 msgstr "Grupo de conta"
 
-#: .\financial\models.py:44 .\financial\models.py:98
+#: .\financial\models.py:44 .\financial\models.py:125
 msgid "Account name"
 msgstr "Nome da conta"
+
+#: .\financial\models.py:45 .\financial\models.py:55
+msgid "Expense"
+msgstr "Despesa"
+
+#: .\financial\models.py:45 .\financial\models.py:57
+msgid "Revenue"
+msgstr "Receita"
 
 #: .\financial\models.py:45
 msgid "Account type"
 msgstr "Tipo de conta"
 
-#: .\financial\models.py:54 .\financial\models.py:87
+#: .\financial\models.py:64 .\financial\models.py:105
 msgid "Account"
 msgstr "Conta"
 
-#: .\financial\models.py:59
+#: .\financial\models.py:69
 msgid "Subaccount name"
 msgstr "Nome da subconta"
 
-#: .\financial\models.py:68 .\financial\models.py:73 .\financial\models.py:88
+#: .\financial\models.py:82 .\financial\models.py:87 .\financial\models.py:106
 msgid "Subaccount"
 msgstr "Subconta"
 
-#: .\financial\models.py:72
+#: .\financial\models.py:86
 msgid "Subaccount type name"
 msgstr "Tipo de subconta"
 
-#: .\financial\models.py:74
-msgid "Subaccount type nature"
-msgstr "Natureza do tipo de subcontaa"
+#: .\financial\models.py:88
+msgid "Operational"
+msgstr "Operacional"
 
-#: .\financial\models.py:83
-#, fuzzy
+#: .\financial\models.py:88
+msgid "One-off"
+msgstr "Extraordinário"
+
+#: .\financial\models.py:88
+msgid "Indirect"
+msgstr "Indireto"
+
+#: .\financial\models.py:88
+msgid "Subaccount type nature"
+msgstr "Natureza"
+
+#: .\financial\models.py:101
 msgid "Subaccount Type"
 msgstr "Tipo de subconta"
 
-#: .\financial\models.py:86
+#: .\financial\models.py:104
 msgid "Account group"
 msgstr "Grupo de conta"
 
-#: .\financial\models.py:89
+#: .\financial\models.py:107
 msgid "Subaccount type"
 msgstr "Tipo de subconta"
 
-#: .\financial\models.py:99
+#: .\financial\models.py:120
+msgid "Cost Center"
+msgstr "Centro de Custo"
+
+#: .\financial\models.py:121
+msgid "Cost Centers"
+msgstr "Centros de Custo"
+
+#: .\financial\models.py:126
 msgid "Bank"
 msgstr "Banco"
 
-#: .\financial\models.py:100
+#: .\financial\models.py:127
 msgid "Agency"
 msgstr "Agência"
 
-#: .\financial\models.py:101
+#: .\financial\models.py:128
 msgid "Account number"
 msgstr "Número da conta"
 
-#: .\financial\models.py:104
+#: .\financial\models.py:131
 msgid "Balance"
 msgstr "Saldo"
 
-#: .\financial\models.py:110
+#: .\financial\models.py:137
 msgid "Current account"
 msgstr "Conta corrente"
 
-#: .\financial\models.py:111
+#: .\financial\models.py:138
 msgid "Current accounts"
 msgstr "Contas corrente"
 
-#: .\financial\models.py:136
+#: .\financial\models.py:158
+msgid "Receivable"
+msgstr "A receber"
+
+#: .\financial\models.py:158
+msgid "Payable"
+msgstr "A pagar"
+
+#: .\financial\models.py:158
+msgid "Received"
+msgstr "Recebido"
+
+#: .\financial\models.py:159
+msgid "Paid"
+msgstr "Pago"
+
+#: .\financial\models.py:164
 msgid "Entry"
-msgstr ""
+msgstr "Lançamento"
 
-#: .\financial\models.py:147
+#: .\financial\models.py:175
 msgid "Write off"
-msgstr ""
+msgstr "Baixa"
 
-#: .\financial\views.py:73 .\financial\views.py:97
+#: .\financial\urls.py:13
+msgid "^/document_type$"
+msgstr "^/tipo_de_documento$"
+
+#: .\financial\urls.py:14
+msgid "^/document_type/add$"
+msgstr "^/tipo_de_documento/novo$$"
+
+#: .\financial\urls.py:15
+msgid "^/document_type/(?P<pk>[0-9]+)"
+msgstr "^/tipo_de_documento/(?P<pk>[0-9]+)"
+
+#: .\financial\urls.py:16 .\financial\urls.py:22 .\financial\urls.py:28
+#: .\financial\urls.py:34 .\financial\urls.py:40 .\financial\urls.py:46
+#: .\financial\urls.py:52
+msgid "/edit$"
+msgstr "/editar$"
+
+#: .\financial\urls.py:18
+msgid "^/current_account$"
+msgstr "^/conta_corrente$"
+
+#: .\financial\urls.py:19
+msgid "^/current_account/add$"
+msgstr "^/conta_corrente/novo$"
+
+#: .\financial\urls.py:20
+msgid "^/current_account/(?P<pk>[0-9]+)"
+msgstr "^/conta_corrente/(?P<pk>[0-9]+)"
+
+#: .\financial\urls.py:21 .\financial\urls.py:27 .\financial\urls.py:33
+#: .\financial\urls.py:39 .\financial\urls.py:45 .\financial\urls.py:51
+msgid "[/]$"
+msgstr "[/]$"
+
+#: .\financial\urls.py:24
+msgid "^/account_group$"
+msgstr "^/grupo_de_conta$"
+
+#: .\financial\urls.py:25
+msgid "^/account_group/add$"
+msgstr "^/grupo_de_conta/novo$"
+
+#: .\financial\urls.py:26
+msgid "^/account_group/(?P<pk>[0-9]+)"
+msgstr "^/grupo_de_conta/(?P<pk>[0-9]+)"
+
+#: .\financial\urls.py:30
+msgid "^/account$"
+msgstr "^/conta$"
+
+#: .\financial\urls.py:31
+msgid "^/account/add$"
+msgstr "^/conta/nova$"
+
+#: .\financial\urls.py:32
+msgid "^/account/(?P<pk>[0-9]+)"
+msgstr "^/conta/(?P<pk>[0-9]+)"
+
+#: .\financial\urls.py:36
+msgid "^/subaccount$"
+msgstr "^/subconta$"
+
+#: .\financial\urls.py:37
+msgid "^/subaccount/add$"
+msgstr "^/subaccount/nova$"
+
+#: .\financial\urls.py:38
+msgid "^/subaccount/(?P<pk>[0-9]+)"
+msgstr "^/subconta/(?P<pk>[0-9]+)"
+
+#: .\financial\urls.py:42
+msgid "^/subaccount_type$"
+msgstr "^/tipo_de_subconta$"
+
+#: .\financial\urls.py:43
+msgid "^/subaccount_type/add$"
+msgstr "^/tipo_de_subconta/add$"
+
+#: .\financial\urls.py:44
+msgid "^/subaccount_type/(?P<pk>[0-9]+)"
+msgstr "^/tipo_de_subconta/(?P<pk>[0-9]+)"
+
+#: .\financial\urls.py:48
+msgid "^/cost_center$"
+msgstr "^/centro_de_custo$"
+
+#: .\financial\urls.py:49
+msgid "^/cost_center/add$"
+msgstr "^/centro_de_custo/novo$"
+
+#: .\financial\urls.py:50
+msgid "^/cost_center/(?P<pk>[0-9]+)"
+msgstr "^/centro_de_custo/(?P<pk>[0-9]+)"
+
+#: .\financial\views.py:75 .\financial\views.py:100 .\financial\views.py:126
+#: .\financial\views.py:151 .\financial\views.py:178
 msgid "Code"
 msgstr "Código"
+
+#: .\financial\views.py:102
+msgid "Type"
+msgstr ""
+
+#: .\financial\views.py:154
+msgid "Nature"
+msgstr "Natureza"

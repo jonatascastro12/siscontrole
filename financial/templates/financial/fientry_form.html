@@ -1,0 +1,237 @@
+{% extends "generics/dashboard_form.html" %}
+{% load i18n bootstrap_form %}
+
+{% block extra_header_scripts %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/select2.min.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/select2-bootstrap.min.css">
+{% endblock %}
+
+{% block page_content_title %}<h1 class="page-header">{{ page_name|safe }} <small  class="pull-right"  id="title_account_type"><span ></span></small></h1>{% endblock %}
+
+{% block form %}
+<form class="form-horizontal" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label class="col-sm-1 col-md-1" for="id_{{ form.date.name }}">{{form.date.label}}</label>
+        <div class="col-sm-4 col-md-3 col-lg-2">
+            {{ form.date|add_class:"form-control input-sm" }}
+        </div>
+        <label class="col-sm-3 col-md-offset-5 col-md-2" for="id_{{ form.date.name }}">{{form.expiration_date.label}}</label>
+        <div class="col-sm-4 col-md-3 col-lg-2">
+            {{ form.expiration_date|add_class:"form-control input-sm" }}
+        </div>
+    </div>
+    &nbsp;
+    <div class="panel panel-default">
+        <div class="panel-heading">{% trans 'Cost Center' %} <span id="cost_center_value"></span></div>
+        <div class="panel-body">
+        <div class="form-group">
+            <label class="col-sm-4 col-md-3 col-xs-12 control-label">{{costcenter_form.account_group.label}}</label>
+            <div class="col-sm-7 col-md-4 col-lg-4 col-xs-12">{{ costcenter_form.account_group|add_class:"form-control input-sm" }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-3 col-xs-12 control-label">{{costcenter_form.account.label}}</label>
+            <div class="col-sm-7 col-md-4 col-lg-4 col-xs0-12">{{ costcenter_form.account|add_class:"form-control input-sm" }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-3  col-xs-12 control-label">{{costcenter_form.subaccount.label}}</label>
+            <div class="col-sm-7 col-md-4 col-lg-4 col-xs-12">{{ costcenter_form.subaccount|add_class:"form-control input-sm" }}</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-3  col-xs-12 control-label">{{costcenter_form.subaccount_type.label}}</label>
+            <div class="col-sm-7 col-md-4 col-lg-4 col-xs-12">{{ costcenter_form.subaccount_type|add_class:"form-control input-sm" }}</div>
+        </div>
+        </div>
+    </div>
+</form>
+
+    <!-- CSRF TOKEN -->
+    <script>
+            function getCookie(name) {
+                    var cookieValue = null;
+                        if (document.cookie && document.cookie != '') {
+                            var cookies = document.cookie.split(';');
+                            for (var i = 0; i < cookies.length; i++) {
+                                var cookie = $.trim(cookies[i]);
+                                // Does this cookie string begin with the name we want?
+                                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
+                            }
+                        }
+                        return cookieValue;
+                }
+                var csrftoken = getCookie('csrftoken');
+
+                function csrfSafeMethod(method) {
+                    // these HTTP methods do not require CSRF protection
+                    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                }
+
+                function sameOrigin(url) {
+                    var host = document.location.host; // host + port
+                    var protocol = document.location.protocol;
+                    var sr_origin = '//' + host;
+                    var origin = protocol + sr_origin;
+                    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                        !(/^(\/\/|http:|https:).*/.test(url));
+                }
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    }
+                });
+        </script>
+
+
+{% endblock %}
+{% block extra_footer_scripts %}
+    <script src="{{ STATIC_URL }}js/select2.full.min.js"></script>
+    <script src="{{ STATIC_URL }}js/select2.pt-BR.js"></script>
+        <script type="text/javascript">
+        /*function pad(n, w) {
+            var an = Math.abs(n);
+            var digitCount = 1 + Math.floor(Math.log(an) / Math.LN10);
+            if (digitCount >= w) {
+                    return n;
+            }
+            var zeroString = Math.pow(10, w - digitCount).toString().substr(1);
+            return n < 0 ? '-' + zeroString + an : zeroString + an;
+        }
+
+        function check_cost_center(){
+            var values = [];
+            var f = true;
+            $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").each(function(i,e){
+                if ($(e).hasClass('valid')){
+                    values[i] = $(e).val()
+                }else{
+                    values[i] = '____'
+                    f = false;
+                }
+            })
+            if (f) $('#cost_center_value').html('- <strong><span class="text-success">' + values[0]+'.'+values[1]+'.'+values[2]+'.'+values[3]+'</span></strong>');
+            else $('#cost_center_value').html("- " + values[0]+'.'+values[1]+'.'+values[2]+'.'+values[3])
+        }
+
+        $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").val('0000');
+        $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").css('text-align','right');
+        $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").focusin(function(){
+            if ($(this).val() == '0000') {
+                $(this).val('');
+                $(this).parent().next('span').html('<span class="text-muted">Digite um código</span>');
+            }
+            $(this).parent().removeClass('has-error');
+            $(this).parent().removeClass('has-feedback');
+            $(this).next('span').remove();
+        });
+        $("#id_account, #id_subaccount, #id_subaccount_type").focusout(function(){
+
+            if ($(this).val() == '') {
+                $(this).val('0000');
+                $(this).parent().next('span').html('');
+            }else{
+                var val = $(this).val();
+                if (val == 0){
+                    $(this).val('0000');
+                }else $(this).val(pad(val, 4));
+            }
+            var input = this;
+            if ($(this).val() != 0 && $(this).val() != '')
+                $.get("{ url 'financial_get_value_for_key' %}", {"id": $(this).attr('id'), "key": $(this).val()}, function(result){
+                    $(input).parent().next('span').html(result);
+                    $(input).addClass('valid');
+                }).error(function(a, b, c){
+                    $(input).addClass('invalid');
+                    if (c == "NOT FOUND") {
+                        $(input).parent().next('span').html(a.responseText);
+                        $(input).parent().addClass('has-error has-feedback');
+                        $(input).after('<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>')
+                    }
+                    else $(input).parent().next('span').html('<span class="text-danger">{%  trans 'Something went wrong.' %}</span>');
+                }).done(function(){
+                    check_cost_center();
+                });
+
+
+        });*/
+        function pad(n, w) {
+            var an = Math.abs(n);
+            var digitCount = 1 + Math.floor(Math.log(an) / Math.LN10);
+            if (digitCount >= w) {
+                return n;
+            }
+            var zeroString = Math.pow(10, w - digitCount).toString().substr(1);
+            return n < 0 ? '-' + zeroString + an : zeroString + an;
+        };
+
+        function check_cost_center(){
+            var values = [];
+            var f = true;
+            $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").each(function(i,e){
+                if ($(e).val() != ''){
+                    values[i] = pad($(e).val(),4);
+                }else{
+                    values[i] = '____'
+                    f = false;
+                }
+            })
+            if (f) $('#cost_center_value').html('- <strong><span class="text-success">' + values[0]+'.'+values[1]+'.'+values[2]+'.'+values[3]+'</span></strong>');
+            else $('#cost_center_value').html("- " + values[0]+'.'+values[1]+'.'+values[2]+'.'+values[3])
+        }
+
+        function printDate(date){
+            return pad(date.getDate()*1, 2)+"/"+pad(date.getMonth()*1+1,2)+"/"+date.getFullYear();
+        }
+
+        $(document).ready(function(){
+
+            var today = new Date();
+            $('#id_date').val(printDate(today));
+
+            var selects = $('select');
+            var inputs = $('input, select');
+
+            $('input, select').keypress(function(e){
+                if (e.charCode == 13) {
+                    var next = $(inputs.get(inputs.index(this) + 1));
+                    if (next.get(0).tagName == "SELECT") {
+                        next.select2('open');
+                    } else {
+                        next.focus();
+                    }
+                }
+            });
+
+            selects.next().on('focusin', function(){
+                $(this).prev().select2('open');
+            });
+
+            selects.on('change', function(){
+                if ($(selects.get(selects.index(this)+1)).size()>0)
+                    $(selects.get(selects.index(this)+1)).select2('open');
+                check_cost_center();
+            });
+
+            /*selects.on('select2:close', function(){
+                $(selects.get(selects.index(this)+1)).select2('open');
+            })*/
+
+
+            $('#id_account').on('change', function(){
+                $.get("{% url 'financial_get_account_type' %}", {"account_id": $(this).val()}, function(result){
+                        $('#title_account_type').html(result);
+                });
+            });
+
+
+            $('#id_date').focus();
+
+        });
+    </script>
+{% endblock %}
+

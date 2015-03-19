@@ -17,6 +17,7 @@ from django_select2.widgets import AutoHeavySelect2Widget
 from form_utils.forms import BetterModelForm
 from input_mask.contrib.localflavor.br.widgets import BRPhoneNumberInput, BRZipCodeInput, BRCPFInput, BRCNPJInput
 from main.models import MaEmployee, MaPerson, MaBankAccount, MaCustomerSupplier
+from siscontrole.forms import ExtendedAutoHeavySelectWidget
 
 
 class MaEmployeeForm(BetterModelForm):
@@ -54,10 +55,6 @@ class BetterRadioFieldRenderer(RadioFieldRenderer):
             [(force_text(w), ) for w in self],
         )
 
-class ExtendedAutoHeavySelectWidget(AutoHeavySelect2Widget):
-    class Media(AutoHeavySelect2Widget.Media):
-        css = AutoHeavySelect2Widget.Media.css
-        css['screen'] = css['screen'] + ('css/select2-bootstrap.css', )
 
 class MaPersonChoices(AutoModelSelect2Field):
     queryset = MaPerson.objects.filter(Q(person_type__icontains='N'))

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-13 15:17-0300\n"
+"POT-Creation-Date: 2015-03-16 11:05-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,60 +18,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\main\forms.py:25 .\main\templates\main\maperson_detail.html:53
+#: .\main\forms.py:26 .\main\templates\main\maperson_detail.html:53
 #, fuzzy
 msgid "Employee Information"
 msgstr "Informações do funcionário"
 
-#: .\main\forms.py:29 .\main\forms.py:77 .\main\models.py:111
+#: .\main\forms.py:30 .\main\forms.py:74 .\main\models.py:111
 msgid "Zipcode"
 msgstr "CEP"
 
-#: .\main\forms.py:30 .\main\forms.py:78
+#: .\main\forms.py:31 .\main\forms.py:75
 msgid "Phone 1"
 msgstr "Telefone 1"
 
-#: .\main\forms.py:31 .\main\forms.py:79
+#: .\main\forms.py:32 .\main\forms.py:76
 msgid "Phone 2"
 msgstr "Telefone 2"
 
-#: .\main\forms.py:33 .\main\forms.py:81
+#: .\main\forms.py:34 .\main\forms.py:78
 msgid "Birth date"
 msgstr "Data de nascimento"
 
-#: .\main\forms.py:38 .\main\forms.py:90
+#: .\main\forms.py:39 .\main\forms.py:87
 msgid "This CPF already exists."
 msgstr "Este CPF já existe."
 
-#: .\main\forms.py:43
+#: .\main\forms.py:44
 msgid "Personal Information"
 msgstr "Informações pessoais"
 
-#: .\main\forms.py:44 .\main\forms.py:112
+#: .\main\forms.py:45 .\main\forms.py:109
 msgid "Contact Information"
 msgstr "Informações de contato"
 
-#: .\main\forms.py:88 .\main\forms.py:97
+#: .\main\forms.py:85 .\main\forms.py:94
 msgid "This field is required."
 msgstr "Esse campo é obrigatório"
 
-#: .\main\forms.py:99
+#: .\main\forms.py:96
 msgid "This CNPJ already exists."
 msgstr "Este CNPJ já existe."
 
-#: .\main\forms.py:108
+#: .\main\forms.py:105
 msgid " "
 msgstr ""
 
-#: .\main\forms.py:109
+#: .\main\forms.py:106
 msgid "Natural Personal Information"
 msgstr "Pessoa Física"
 
-#: .\main\forms.py:110
+#: .\main\forms.py:107
 msgid "Legal Personal Information"
 msgstr "Pessoa Jurídica"
 
-#: .\main\forms.py:111
+#: .\main\forms.py:108
 #, fuzzy
 msgid "Photo"
 msgstr "Foto"
