@@ -2,7 +2,7 @@
 Enterprise Control System
 
 **SisControle** is a kind of ERP system to help enterprises management.
-Now, tt covers people managament, financial and some reports generation.
+Now, it covers people managament, financial and some reports generation.
 It is a Django based application.
 
 
