@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.db.models.loading import get_model
 from django.http.response import HttpResponse, HttpResponseServerError
 from django.utils.translation import ugettext as _
-from financial.forms import FiCurrentAccountForm, FiEntryForm, FiCostCenterForm
+from financial.forms import FiCurrentAccountForm, FiEntryForm, FiCostCenterForm, FiWriteOffFormset
 from financial.models import FiDocumentType, FiCurrentAccount, FiAccountGroup, FiAccount, FiSubaccount, FiSubaccountType, \
     FiCostCenter, FiEntry
 from siscontrole.views import DashboardListView, DashboardCreateView, DashboardUpdateView, DashboardDetailView
@@ -217,10 +217,10 @@ class FiEntryCreateView(DashboardCreateView):
     success_url = reverse_lazy('financial_entry')
 
     def get_context_data(self, **kwargs):
-       context = super(FiEntryCreateView, self).get_context_data(**kwargs)
-       context['costcenter_form'] = FiCostCenterForm()
-
-       return context
+        context = super(FiEntryCreateView, self).get_context_data(**kwargs)
+        context['costcenter_form'] = FiCostCenterForm()
+        context['writeoff_formset'] = FiWriteOffFormset()
+        return context
 
 def get_value_for_key(request):
     if request.GET:

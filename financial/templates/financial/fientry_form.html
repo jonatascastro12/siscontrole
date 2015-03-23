@@ -15,7 +15,7 @@
         <div class="col-sm-4 col-md-3 col-lg-2">
             {{ form.date|add_class:"form-control input-sm" }}
         </div>
-        <label class="col-sm-3 col-md-offset-5 col-md-2" for="id_{{ form.date.name }}">{{form.expiration_date.label}}</label>
+        <label class="col-sm-3 col-md-offset-3 col-md-2" for="id_{{ form.date.name }}">{{form.expiration_date.label}}</label>
         <div class="col-sm-4 col-md-3 col-lg-2">
             {{ form.expiration_date|add_class:"form-control input-sm" }}
         </div>
@@ -42,6 +42,70 @@
         </div>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="id_{{ form.record.name }}">{{form.record.label}}</label>
+        <div class="col-md-3 col-lg-5">
+            {{ form.record|add_class:"form-control input-sm" }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="id_{{ form.document_type.name }}">{{form.document_type.label}}</label>
+        <div class="col-md-3 col-lg-2">
+            {{ form.document_type|add_class:"form-control input-sm" }}
+        </div>&nbsp;
+        <label class="col-md-3 control-label" for="id_{{ form.document_number.name }}">{{form.document_number.label}}</label>
+        <div class="col-md-3 col-lg-2">
+            {{ form.document_number|add_class:"form-control input-sm" }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="id_{{ form.department.name }}">{{form.department.label}}</label>
+        <div class="col-md-3 col-lg-2">
+            {{ form.department|add_class:"form-control input-sm" }}
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="id_{{ form.client_supplier.name }}">{{form.client_supplier.label}}</label>
+        <div class="col-md-5 col-lg-5">
+            {{ form.client_supplier|add_class:"form-control input-sm" }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="id_{{ form.value.name }}">{{form.value.label}}</label>
+        <div class="col-md-3 col-lg-2">
+            {{ form.value|add_class:"form-control input-sm" }}
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">{% trans 'Write-off' %} <span id="cost_center_value"></span></div>
+        <div class="panel-body writeoff-formset">
+            {{ writeoff_formset.management_form }}
+            <div class="row">
+                <div class="col-md-2"><label>{{ writeoff_formset.form.date.label }}</label></div>
+                <div class="col-md-2"><label>{{ writeoff_formset.form.value.label }}</label></div>
+                <div class="col-md-2"><label>{{ writeoff_formset.form.third_party.label }}</label></div>
+                <div class="col-md-3"><label>{{ writeoff_formset.form.third_party_bank.label }}</label></div>
+                <div class="col-md-2"><label>{{ writeoff_formset.form.third_party_agency.label }}</label></div>
+            </div>
+            {% for f in writeoff_formset %}
+                <div class="row form-item">
+                    <div class="col-md-2">{{ f.date|add_class:"dateinput form-control input-sm" }}</div>
+                    <div class="col-md-2">{{ f.value|add_class:"form-control input-sm" }}</div>
+                    <div class="col-md-2">{{ f.third_party|add_class:"form-control input-sm" }}</div>
+                    <div class="col-md-3">{{ f.third_party_bank|add_class:"form-control input-sm" }}</div>
+                    <div class="col-md-2">{{ f.third_party_agency|add_class:"form-control input-sm" }}</div>
+                </div>
+            {%  endfor %}
+            &nbsp;
+            <div class="form-group">
+                <label class="col-md-1">Balance</label>
+                <label id="write-off balance" class="col-md-4">R$ 0,00</label>
+            </div>
+        </div>
+    </div>
+
+
 </form>
 
     <!-- CSRF TOKEN -->
@@ -92,73 +156,9 @@
 {% block extra_footer_scripts %}
     <script src="{{ STATIC_URL }}js/select2.full.min.js"></script>
     <script src="{{ STATIC_URL }}js/select2.pt-BR.js"></script>
-        <script type="text/javascript">
-        /*function pad(n, w) {
-            var an = Math.abs(n);
-            var digitCount = 1 + Math.floor(Math.log(an) / Math.LN10);
-            if (digitCount >= w) {
-                    return n;
-            }
-            var zeroString = Math.pow(10, w - digitCount).toString().substr(1);
-            return n < 0 ? '-' + zeroString + an : zeroString + an;
-        }
-
-        function check_cost_center(){
-            var values = [];
-            var f = true;
-            $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").each(function(i,e){
-                if ($(e).hasClass('valid')){
-                    values[i] = $(e).val()
-                }else{
-                    values[i] = '____'
-                    f = false;
-                }
-            })
-            if (f) $('#cost_center_value').html('- <strong><span class="text-success">' + values[0]+'.'+values[1]+'.'+values[2]+'.'+values[3]+'</span></strong>');
-            else $('#cost_center_value').html("- " + values[0]+'.'+values[1]+'.'+values[2]+'.'+values[3])
-        }
-
-        $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").val('0000');
-        $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").css('text-align','right');
-        $("#id_account_group, #id_account, #id_subaccount, #id_subaccount_type").focusin(function(){
-            if ($(this).val() == '0000') {
-                $(this).val('');
-                $(this).parent().next('span').html('<span class="text-muted">Digite um código</span>');
-            }
-            $(this).parent().removeClass('has-error');
-            $(this).parent().removeClass('has-feedback');
-            $(this).next('span').remove();
-        });
-        $("#id_account, #id_subaccount, #id_subaccount_type").focusout(function(){
-
-            if ($(this).val() == '') {
-                $(this).val('0000');
-                $(this).parent().next('span').html('');
-            }else{
-                var val = $(this).val();
-                if (val == 0){
-                    $(this).val('0000');
-                }else $(this).val(pad(val, 4));
-            }
-            var input = this;
-            if ($(this).val() != 0 && $(this).val() != '')
-                $.get("{ url 'financial_get_value_for_key' %}", {"id": $(this).attr('id'), "key": $(this).val()}, function(result){
-                    $(input).parent().next('span').html(result);
-                    $(input).addClass('valid');
-                }).error(function(a, b, c){
-                    $(input).addClass('invalid');
-                    if (c == "NOT FOUND") {
-                        $(input).parent().next('span').html(a.responseText);
-                        $(input).parent().addClass('has-error has-feedback');
-                        $(input).after('<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>')
-                    }
-                    else $(input).parent().next('span').html('<span class="text-danger">{%  trans 'Something went wrong.' %}</span>');
-                }).done(function(){
-                    check_cost_center();
-                });
-
-
-        });*/
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.formset.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.inputmask.bundle.min.js"></script>
+    <script type="text/javascript">
         function pad(n, w) {
             var an = Math.abs(n);
             var digitCount = 1 + Math.floor(Math.log(an) / Math.LN10);
@@ -189,7 +189,6 @@
         }
 
         $(document).ready(function(){
-
             var today = new Date();
             $('#id_date').val(printDate(today));
 
@@ -228,8 +227,17 @@
                 });
             });
 
+            $('.dateinput').inputmask('dd/mm/yyyy');
 
             $('#id_date').focus();
+            $('.form-item').formset({
+                prefix: '{{ writeoff_formset.prefix }}',
+                addText:'',
+                deleteText:''
+            });
+
+            $('.add-row').addClass('text-success fa fa-plus-circle');
+            $('.delete-row').addClass('text-danger fa fa-minus-circle');
 
         });
     </script>

@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db.models.query_utils import Q
 from django.forms.fields import DecimalField, CharField
 from django.forms.models import ModelForm, inlineformset_factory, ModelChoiceField
+from django.forms.widgets import DateInput
 from django.utils import numberformat
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -14,7 +15,7 @@ from input_mask.contrib.localflavor.br.widgets import BRDecimalInput
 from input_mask.utils import chunks
 from input_mask.widgets import DecimalInputMask, InputMask
 from financial.models import FiCurrentAccount, FiCostCenter, FiAccountGroup, FiAccount, FiSubaccount, FiSubaccountType, \
-    FiEntry
+    FiEntry, FiWriteOff
 from siscontrole.forms import ExtendedAutoHeavySelectWidget, Select2Widget
 
 
@@ -80,13 +81,28 @@ class FiEntryForm(ModelForm):
         widgets = {
             'date': DateTimePicker(options={"format": "DD/MM/YYYY", "pickTime": False}),
             'expiration_date': DateTimePicker(options={"format": "DD/MM/YYYY", "pickTime": False}),
+            'document_type': Select2Widget,
+            'department': Select2Widget,
+            'client_supplier': Select2Widget,
+            'value': DecimalInputMask,
+
         }
 
 
 class FiCostCenterForm(ModelForm):
-    account_group = ModelChoiceField(queryset=FiAccountGroup.objects, widget=Select2Widget)
-    account = ModelChoiceField(queryset=FiAccount.objects, widget=Select2Widget)
-    subaccount = ModelChoiceField(queryset=FiSubaccount.objects, widget=Select2Widget)
-    subaccount_type = ModelChoiceField(queryset=FiSubaccountType.objects, widget=Select2Widget)
     class Meta:
         model = FiCostCenter
+        widgets = {
+            'account_group': Select2Widget,
+            'account': Select2Widget,
+            'subaccount': Select2Widget,
+            'subaccount_type': Select2Widget,
+        }
+
+class FiWriteOffForm(ModelForm):
+    class Model:
+        model = FiWriteOff
+
+
+FiWriteOffFormset = inlineformset_factory(FiEntry, FiWriteOff, min_num=1, extra=0, form=FiWriteOffForm, widgets={
+})
