@@ -1,3 +1,5 @@
+from locale import currency
+import locale
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -192,6 +194,16 @@ class FiEntry(Model):
                                                      ('PP', _('Paid'))))
 
     history = HistoricalRecords()
+
+    def get_costcenter_code(self):
+        return self.costcenter.get_code()
+
+    def get_formated_date(self):
+        return self.date.strftime("%d/%m/%Y")
+
+    def get_formated_value(self):
+        locale.setlocale(locale.LC_MONETARY, '')
+        return locale.currency(self.value)
 
     class Meta:
         verbose_name = _('Entry')

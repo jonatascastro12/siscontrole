@@ -246,22 +246,18 @@
                 check_cost_center();
             });
 
-            $('#id_account').on('change', function(){
-                $.get("{% url 'financial_get_account_type' %}", {"account_id": $(this).val()}, function(result){
+            function update_account_type(){
+                $.get("{% url 'financial_get_account_type' %}", {"account_id": $('#id_account').val()}, function(result){
                         $('#title_account_type').html(result);
                 });
+            }
+            update_account_type();
+
+            $('#id_account').on('change', function(){
+                update_account_type();
             });
 
             $('.dateinput').inputmask('dd/mm/yyyy');
-
-            $('.form-item').formset({
-                prefix: '{{ writeoff_formset.prefix }}',
-                addText:'',
-                deleteText:'',
-                added:function(){
-                    $('.form-item').last().find('.writeoff-cheque-fields').hide();
-                }
-            });
 
             function update_balance(){
                 var balance = $('#id_value').val().replace('.','').replace(',','.')*1;
@@ -280,6 +276,15 @@
 
             $('#id_value, .writeoff-value').change(function(){
                 update_balance();
+            });
+
+            $('.form-item').formset({
+                prefix: '{{ writeoff_formset.prefix }}',
+                addText:'',
+                deleteText:'',
+                added:function(){
+                    $('.form-item').last().find('.writeoff-cheque-fields').hide();
+                }
             });
 
             $('.add-row').addClass('text-success pull-right fa fa-plus-circle');

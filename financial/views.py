@@ -205,11 +205,12 @@ class FiEntryListView(DashboardListView):
     model = FiEntry
     datatable_options = {
         'columns': [
-            (_('Code'), 'get_code'),
-            'client_supplier',
+            (_('Date'), 'get_formated_date'),
             (_('Cost Center'), 'get_costcenter_code'),
-            'document_type',
-            'value',
+            'customer_supplier',
+            'current_account',
+            (_('Doc'), 'get_document_type_display'),
+            (_('Value'), 'get_formated_value'),
         ]
     }
 
