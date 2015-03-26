@@ -9,103 +9,122 @@
 {% block page_content_title %}<h1 class="page-header">{{ page_name|safe }} <small  class="pull-right"  id="title_account_type"><span ></span></small></h1>{% endblock %}
 
 {% block form %}
-<form class="form-horizontal" method="POST" enctype="multipart/form-data">
-    <div class="form-group">
-        <label class="col-sm-1 col-md-1" for="id_{{ form.date.name }}">{{form.date.label}}</label>
-        <div class="col-sm-4 col-md-3 col-lg-2">
-            {{ form.date|add_class:"form-control input-sm" }}
-        </div>
-        <label class="col-sm-3 col-md-offset-3 col-md-2" for="id_{{ form.date.name }}">{{form.expiration_date.label}}</label>
-        <div class="col-sm-4 col-md-3 col-lg-2">
-            {{ form.expiration_date|add_class:"form-control input-sm" }}
-        </div>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors.0 %}
+    <div class="alert alert-danger">
+        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+    </div>
+    {% endif %}
+    <div class="form-inline">
+        {% field_as_bootstrap form form.date "inline" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {% field_as_bootstrap form form.expiration_date "inline" %}
     </div>
     &nbsp;
     <div class="panel panel-default">
-        <div class="panel-heading">{% trans 'Cost Center' %} <span id="cost_center_value"></span></div>
-        <div class="panel-body">
-        <div class="form-group">
-            <label class="col-sm-4 col-md-3 col-xs-12 control-label">{{costcenter_form.account_group.label}}</label>
-            <div class="col-sm-7 col-md-4 col-lg-4 col-xs-12">{{ costcenter_form.account_group|add_class:"form-control input-sm" }}</div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4 col-md-3 col-xs-12 control-label">{{costcenter_form.account.label}}</label>
-            <div class="col-sm-7 col-md-4 col-lg-4 col-xs0-12">{{ costcenter_form.account|add_class:"form-control input-sm" }}</div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4 col-md-3  col-xs-12 control-label">{{costcenter_form.subaccount.label}}</label>
-            <div class="col-sm-7 col-md-4 col-lg-4 col-xs-12">{{ costcenter_form.subaccount|add_class:"form-control input-sm" }}</div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4 col-md-3  col-xs-12 control-label">{{costcenter_form.subaccount_type.label}}</label>
-            <div class="col-sm-7 col-md-4 col-lg-4 col-xs-12">{{ costcenter_form.subaccount_type|add_class:"form-control input-sm" }}</div>
-        </div>
+        <div class="panel-heading">{% trans 'Cost Center' %}
+            <span id="cost_center_value" {% if costcenter_form.account_group.value and costcenter_form.account.value and costcenter_form.subaccount.value and costcenter_form.subaccount_type.value %} class="text-success" {% endif %}>
+                <strong>
+                    {{ costcenter_form.account_group.value|default:"____"|leading_zeros:4 }}.{{costcenter_form.account.value|default:"____"|leading_zeros:4}}.{{ costcenter_form.subaccount.value|default:"____"|leading_zeros:4}}.{{ costcenter_form.subaccount_type.value|default:"____"|leading_zeros:4 }}
+                </strong>
+            </span></div>
+        <div class="panel-body form-horizontal">
+            {% if costcenter_form.non_field_errors.0 %}
+            <div class="alert alert-danger">
+                {% for error in costcenter_form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+            {%  field_as_bootstrap costcenter_form costcenter_form.account_group "horizontal" "col-sm-4 col-md-3 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
+            {%  field_as_bootstrap costcenter_form costcenter_form.account "horizontal" "col-sm-4 col-md-3 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
+            {%  field_as_bootstrap costcenter_form costcenter_form.subaccount "horizontal" "col-sm-4 col-md-3 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
+            {%  field_as_bootstrap costcenter_form costcenter_form.subaccount_type "horizontal" "col-sm-4 col-md-3 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="id_{{ form.record.name }}">{{form.record.label}}</label>
-        <div class="col-md-3 col-lg-5">
-            {{ form.record|add_class:"form-control input-sm" }}
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="id_{{ form.document_type.name }}">{{form.document_type.label}}</label>
-        <div class="col-md-3 col-lg-2">
-            {{ form.document_type|add_class:"form-control input-sm" }}
-        </div>&nbsp;
-        <label class="col-md-3 control-label" for="id_{{ form.document_number.name }}">{{form.document_number.label}}</label>
-        <div class="col-md-3 col-lg-2">
-            {{ form.document_number|add_class:"form-control input-sm" }}
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="id_{{ form.department.name }}">{{form.department.label}}</label>
-        <div class="col-md-3 col-lg-2">
-            {{ form.department|add_class:"form-control input-sm" }}
-        </div>
 
+    <div class="form-horizontal">
+        {%  field_as_bootstrap form form.current_account "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
+        {%  field_as_bootstrap form form.document_type "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
+        {%  field_as_bootstrap form form.document_number "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12" %}
     </div>
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="id_{{ form.client_supplier.name }}">{{form.client_supplier.label}}</label>
-        <div class="col-md-5 col-lg-5">
-            {{ form.client_supplier|add_class:"form-control input-sm" }}
+    &nbsp;
+    <div id="cheque-panel" class="panel panel-default" style="display:none">
+        <div class="panel-heading">{% trans "Cheque information" %}</div>
+        <div class="panel-body form-horizontal">
+            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_person "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-5 col-lg-5 col-xs-12" %}
+            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_description "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-5 col-lg-5 col-xs-12" %}
+            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_expiration_date "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-3 col-xs-12"%}
+            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_number "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
+            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_bank "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12"%}
+            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_agency "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
+            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_current_account "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="id_{{ form.value.name }}">{{form.value.label}}</label>
-        <div class="col-md-3 col-lg-2">
-            {{ form.value|add_class:"form-control input-sm" }}
-        </div>
+    &nbsp;
+    <div class="form-horizontal">
+        {%  field_as_bootstrap form form.department "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12"%}
+        {%  field_as_bootstrap form form.customer_supplier "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12"%}
+        {%  field_as_bootstrap form form.value "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-3 col-xs-12"%}
     </div>
+    &nbsp;
     <div class="panel panel-default">
         <div class="panel-heading">{% trans 'Write-off' %} <span id="cost_center_value"></span></div>
         <div class="panel-body writeoff-formset">
             {{ writeoff_formset.management_form }}
             <div class="row">
-                <div class="col-md-2"><label>{{ writeoff_formset.form.date.label }}</label></div>
-                <div class="col-md-2"><label>{{ writeoff_formset.form.value.label }}</label></div>
-                <div class="col-md-2"><label>{{ writeoff_formset.form.third_party.label }}</label></div>
-                <div class="col-md-3"><label>{{ writeoff_formset.form.third_party_bank.label }}</label></div>
-                <div class="col-md-2"><label>{{ writeoff_formset.form.third_party_agency.label }}</label></div>
+                <div class="col-md-2 col-xs-6 hidden-xs"><label>{{ writeoff_formset.form.date.label }}</label></div>
+                <div class="col-md-2 col-xs-6 hidden-xs"><label>{{ writeoff_formset.form.value.label }}</label></div>
+                <div class="col-md-1 col-xs-6 hidden-xs"><label>{{ writeoff_formset.form.is_cheque.label }}</label></div>
+                <div class="col-md-1 col-xs-6 hidden-xs"><label class="writeoff-cheque-fields" style="display:none">{{ writeoff_formset.form.cheque_number.label }}</label></div>
+                <div class="col-md-2 col-xs-6 hidden-xs"><label class="writeoff-cheque-fields" style="display:none">{{ writeoff_formset.form.cheque_name.label }}</label></div>
+                <div class="col-md-2 col-xs-6 hidden-xs"><label class="writeoff-cheque-fields" style="display:none">{{ writeoff_formset.form.cheque_bank.label }}</label></div>
+                <div class="col-md-1 col-xs-6 hidden-xs"><label class="writeoff-cheque-fields" style="display:none">{{ writeoff_formset.form.cheque_agency.label }}</label></div>
             </div>
             {% for f in writeoff_formset %}
                 <div class="row form-item">
-                    <div class="col-md-2">{{ f.date|add_class:"dateinput form-control input-sm" }}</div>
-                    <div class="col-md-2">{{ f.value|add_class:"form-control input-sm" }}</div>
-                    <div class="col-md-2">{{ f.third_party|add_class:"form-control input-sm" }}</div>
-                    <div class="col-md-3">{{ f.third_party_bank|add_class:"form-control input-sm" }}</div>
-                    <div class="col-md-2">{{ f.third_party_agency|add_class:"form-control input-sm" }}</div>
+                    <div class="col-md-2 col-xs-6">
+                        {{ f.date|add_class:"form-control input-sm" }}
+                    </div>
+                    <div class="col-md-2 col-xs-6">
+                        <input class="{{ f.value.css_classes }} writeoff-value form-control input-sm mask mask-reverse {&quot;mask&quot;: &quot;99,999.999.99&quot;, &quot;defaultValue&quot;: &quot;000&quot;, &quot;type&quot;: &quot;reverse&quot;}"
+                               id="id_{{ f.value.name }}" name="{{ f.prefix }}-{{ f.value.name }}" type="text" value="{{ f.value.value|default:"0,00" }}" style="text-align: right;"></div>
+
+                    <div class="col-md-1 col-xs-6">
+                        <input class="{{ f.is_cheque.css_classes }} is-cheque-field"
+                               id="id_{{ f.is_cheque.name }}" name="{{ f.prefix }}-{{ f.is_cheque.name }}" type="checkbox" {{ f.is_cheque.checked }} value="{{ f.is_cheque.value|default:"" }}" style="text-align: right;"></div>
+
+                    <div class="col-md-1 col-xs-6">
+                        <input class="{{ f.cheque_number.css_classes }} writeoff-cheque-fields writeoff-value form-control input-sm"
+                               placeholder="{% trans "Number" %}" id="id_{{ f.cheque_number.name }}" name="{{ f.prefix }}-{{ f.cheque_number.name }}" type="text" value="{{ f.cheque_number.value|default:"" }}" style="display:none"></div>
+
+                    <div class="col-md-2 col-xs-6">
+                        <input class="{{ f.cheque_name.css_classes }} writeoff-cheque-fields writeoff-value form-control input-sm"
+                               placeholder="{% trans "Name" %}" id="id_{{ f.cheque_name.name }}" name="{{ f.prefix }}-{{ f.cheque_name.name }}" type="text" value="{{ f.cheque_name.value|default:"" }}" style="display:none"></div>
+
+
+                    <div class="col-md-2 col-xs-6">
+                        <span class="writeoff-cheque-fields" style="display:none">{{ f.cheque_bank|add_class:"form-control input-sm" }}</span>
+                    </div>
+                    <div class="col-md-1 col-xs-6">
+                        <input class="{{ f.cheque_agency.css_classes }} writeoff-cheque-fields writeoff-value form-control input-sm"
+                               id="id_{{ f.cheque_agency.name }}" name="{{ f.prefix }}-{{ f.cheque_agency.name }}"
+                               placeholder="{% trans "Agency" %}" type="text" value="{{ f.cheque_agency.value|default:"" }}"
+                               style="display:none"></div>
+
+
                 </div>
             {%  endfor %}
             &nbsp;
             <div class="form-group">
                 <label class="col-md-1">Balance</label>
-                <label id="write-off balance" class="col-md-4">R$ 0,00</label>
+                <label id="write-off_balance" class="col-md-4">R$ 0,00</label>
             </div>
         </div>
     </div>
 
-
+    <div class="form-group">
+        {% buttons %}
+    </div>
+    &nbsp;
 </form>
 
     <!-- CSRF TOKEN -->
@@ -185,17 +204,28 @@
         }
 
         function printDate(date){
-            return pad(date.getDate()*1, 2)+"/"+pad(date.getMonth()*1+1,2)+"/"+date.getFullYear();
+            return date.getFullYear()+"-"+pad(date.getMonth()*1+1,2)+"-"+pad(date.getDate()*1, 2);
         }
+
+        Number.prototype.format = function(n, x, s, c) {
+            var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+                num = this.toFixed(Math.max(0, ~~n));
+
+            return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+        };
 
         $(document).ready(function(){
             var today = new Date();
-            $('#id_date').val(printDate(today));
+
+            var id_date = $('#id_date');
+            id_date.val(printDate(today));
+            id_date.focus();
 
             var selects = $('select');
+
             var inputs = $('input, select');
 
-            $('input, select').keypress(function(e){
+            inputs.keypress(function(e){
                 if (e.charCode == 13) {
                     var next = $(inputs.get(inputs.index(this) + 1));
                     if (next.get(0).tagName == "SELECT") {
@@ -211,15 +241,10 @@
             });
 
             selects.on('change', function(){
-                if ($(selects.get(selects.index(this)+1)).size()>0)
-                    $(selects.get(selects.index(this)+1)).select2('open');
+                if ($(inputs.get(inputs.index(this)+1)).size()>0)
+                    $(inputs.get(inputs.index(this)+1)).focus();
                 check_cost_center();
             });
-
-            /*selects.on('select2:close', function(){
-                $(selects.get(selects.index(this)+1)).select2('open');
-            })*/
-
 
             $('#id_account').on('change', function(){
                 $.get("{% url 'financial_get_account_type' %}", {"account_id": $(this).val()}, function(result){
@@ -229,16 +254,70 @@
 
             $('.dateinput').inputmask('dd/mm/yyyy');
 
-            $('#id_date').focus();
             $('.form-item').formset({
                 prefix: '{{ writeoff_formset.prefix }}',
                 addText:'',
-                deleteText:''
+                deleteText:'',
+                added:function(){
+                    $('.form-item').last().find('.writeoff-cheque-fields').hide();
+                }
             });
 
-            $('.add-row').addClass('text-success fa fa-plus-circle');
+            function update_balance(){
+                var balance = $('#id_value').val().replace('.','').replace(',','.')*1;
+                var soma = 0;
+                $.each($('.writeoff-value'), function(i,e){
+                    console.log($(e).val());
+                    soma += $(e).val().replace('.','').replace(',','.')*1;
+                });
+                balance = soma - balance;
+                if (balance >= 0)
+                    $('#write-off_balance').html('<span class="text-success"> + R$ ' + balance.format(2,3,'.',',') + '</span>');
+                else
+                    $('#write-off_balance').html('<span class="text-danger"> - R$ ' + (balance*-1).format(2,3,'.',',') + '</span>');
+            }
+            update_balance();
+
+            $('#id_value, .writeoff-value').change(function(){
+                update_balance();
+            });
+
+            $('.add-row').addClass('text-success pull-right fa fa-plus-circle');
             $('.delete-row').addClass('text-danger fa fa-minus-circle');
 
+            $('#id_document_number').change(function(){
+                $('#id_cheque_number').val($(this).val());
+            });
+
+            $('#id_expiration_date').change(function(){
+               $('#id_cheque_expiration_date').val($(this).val());
+            });
+
+            var document_type = $('#id_document_type');
+            document_type.change(function(){
+                if ($(this).val() == 'C'){
+                    $('#cheque-panel').show();
+                }else{
+                    $('#cheque-panel').hide();
+                }
+            });
+            if (document_type.val() == 'C')
+                $('#cheque-panel').show();
+
+            $('.is-cheque-field').click(function(){
+                $(this).parent().parent().find('.writeoff-cheque-fields').toggle(this.checked);
+                 if ($('.is-cheque-field:checked').size() > 0){
+                    $('label.writeoff-cheque-fields').show();
+                }else{
+                    $('label.writeoff-cheque-fields').hide();
+                }
+            });
+
+            $('form').submit(function(){
+                if (document_type.val() != 'C'){
+                    $('#cheque-panel').remove();
+                }
+            });
         });
     </script>
 {% endblock %}

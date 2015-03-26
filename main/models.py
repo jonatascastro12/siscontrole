@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import models
-
-# Create your models here.
 from django.db.models import permalink
 from django.db.models.base import Model
 from django.db.models.manager import Manager
@@ -145,6 +142,11 @@ class MaPerson(Model):
     def get_represented(self):
         return MaPerson.legal_people.filter(representative=self).all()
 
+    def get_document_number(self):
+        if self.person_type == 'N':
+            return self.cpf
+        else:
+            return self.cnpj
 
     @permalink
     def get_absolute_url(self):
@@ -234,7 +236,10 @@ class MaCustomerSupplier(Model):
     history = HistoricalRecords()
 
     def __unicode__(self):
-        return self.person.name
+        if self.person.person_type == 'N':
+            return self.person.name + ' - CPF: ' + self.person.cpf
+        else:
+            return self.person.name + ' - CNPJ: ' + self.person.cnpj
 
     @permalink
     def get_absolute_url(self):
@@ -242,6 +247,9 @@ class MaCustomerSupplier(Model):
 
     def get_name(self):
         return self.person.name
+
+    def get_document_number(self):
+        return self.person.get_document_number()
 
     def get_type_icon(self):
         if self.type == 'C':

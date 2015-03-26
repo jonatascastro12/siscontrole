@@ -56,8 +56,8 @@ class BetterRadioFieldRenderer(RadioFieldRenderer):
         )
 
 
-class MaPersonChoices(AutoModelSelect2Field):
-    queryset = MaPerson.objects.filter(Q(person_type__icontains='N'))
+class MaNaturalPersonChoices(AutoModelSelect2Field):
+    queryset = MaPerson.natural_people
     widget = ExtendedAutoHeavySelectWidget
 
     def get_results(self, request, term, page, context):
@@ -76,7 +76,7 @@ class MaMultiPersonForm(BetterModelForm):
     phone2 = BRPhoneNumberField(required=False, label=_('Phone 2'), widget=BRPhoneNumberInput)
     birth_date = DateField(required=False, widget=DateTimePicker(options={"format": "DD/MM/YYYY",
                                        "pickTime": False}), label=_('Birth date'))
-    representative = MaPersonChoices(required=False)
+    representative = MaNaturalPersonChoices(required=False)
 
     def clean_cpf(self):
         cpf = self.cleaned_data.get('cpf', '')

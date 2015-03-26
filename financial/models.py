@@ -1,3 +1,6 @@
+from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db import models
 
@@ -23,6 +26,8 @@ class FiDocumentType(Model):
     class Meta:
         verbose_name = _('Document Type')
         verbose_name_plural = _('Document Types')
+
+
 
 class FiAccountGroup(Model):
     name = models.CharField(max_length=100, verbose_name=_('Account group name'))
@@ -142,20 +147,48 @@ class FiCurrentAccount(Model):
     def get_absolute_url(self):
         return ('financial_currentaccount_edit', (), {'pk': self.id})
 
+
+ENTRY_DOC_TYPES = (
+    ('I', _('Invoice')),
+    ('C', _('Cheque')),
+    ('R', _('Receipt')),
+    ('D', _('Duplicate')),
+    ('P', _('Promissory Note')),
+    ('O', _('Other')),
+)
+
+class FiCheque(Model):
+    cheque_person = models.ForeignKey(MaPerson, null=True, blank=True, verbose_name=_('Person'))
+    cheque_description = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Description'))
+    cheque_bank = models.ForeignKey(MaBank, verbose_name=_('Bank'))
+    cheque_agency = models.CharField(max_length=20, null=True, blank=True, verbose_name=_('Agency'))
+    cheque_current_account = models.CharField(max_length=20, null=True, blank=True, verbose_name=_('Current account'))
+    cheque_expiration_date = models.DateField(verbose_name=_('Expiration Date'))
+    cheque_number = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Number'))
+
 class FiEntry(Model):
     date = models.DateField(verbose_name=_("Date"))
-    costcenter = models.ForeignKey(FiCostCenter, verbose_name=_("Cost Center"))
-    current_account = models.ForeignKey(FiCurrentAccount, verbose_name=_('Current Account'))
-    document_type = models.ForeignKey(FiDocumentType, verbose_name=_('Document Type'))
-    document_number = models.CharField(max_length=100, verbose_name=_('Document Number'))
-    cheque_number = models.CharField(max_length=100, blank=True, null=True)
     expiration_date = models.DateField(verbose_name=_('Expiration Date'))
+
+    costcenter = models.ForeignKey(FiCostCenter, blank=True, null=True, verbose_name=_("Cost Center"))
+    current_account = models.ForeignKey(FiCurrentAccount, verbose_name=_('Current Account'))
+
+    '''doc_content_type = models.ForeignKey(ContentType, null=True)
+    doc_object_id = models.PositiveIntegerField(null=True)
+    doc_content_object = GenericForeignKey('doc_content_type', 'doc_object_id')'''
+
+    document_type = models.CharField(max_length=2, choices=ENTRY_DOC_TYPES, verbose_name=_("Document Type"), null=True)
+    other_description = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Other"))
+    document_number = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Document Number'))
+
+    cheque = models.ForeignKey(FiCheque, blank=True, null=True)
+
     department = models.ForeignKey(MaDepartment, verbose_name=_('Department'))
-    client_supplier = models.ForeignKey(MaCustomerSupplier, verbose_name=_('Client/Supplier'))
+    customer_supplier = models.ForeignKey(MaCustomerSupplier, null=True, blank=True, verbose_name=_('Customer/Supplier'))
     record = models.CharField(max_length=255, blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=1, choices=(('1', 'ONE'), ('2', 'TWO')))
-    status = models.CharField(max_length=2, choices=(('R', _('Receivable')), ('P', _('Payable')), ('RR', _('Received')),
+    category = models.CharField(max_length=1, blank=True, null=True, choices=(('1', 'ONE'), ('2', 'TWO')))
+    status = models.CharField(max_length=2, blank=True, choices=(('R', _('Receivable')), ('P', _('Payable')), ('RR', _('Received')),
                                                      ('PP', _('Paid'))))
 
     history = HistoricalRecords()
@@ -163,12 +196,51 @@ class FiEntry(Model):
     class Meta:
         verbose_name = _('Entry')
 
+
+'''
+class FiDocInvoice(Model):
+    description = models.CharField(max_length=255)
+    number = models.CharField(max_length=255)
+    date = models.DateField()
+    entry = generic.GenericRelation(FiEntry, null=True)
+
+class FiDocCheque(Model):
+    person = models.ForeignKey(MaPerson, null=True, blank=True, verbose_name=_('Person'))
+    description = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Description'))
+    bank = models.ForeignKey(MaBank, null=True, blank=True, verbose_name=_('Bank'))
+    agency = models.CharField(max_length=20, null=True, blank=True, verbose_name=_('Agency'))
+    current_account = models.CharField(max_length=20, null=True, blank=True, verbose_name=_('Current account'))
+    expiration_date = models.DateField(null=True, blank=True, verbose_name=_('Expiration Date'))
+    number = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Number'))
+    entry = generic.GenericRelation(FiEntry, null=True)
+
+class FiDocDuplicate(Model):
+    number = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Number'))
+    description = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Description'))
+    entry = generic.GenericRelation(FiEntry, null=True)
+
+class FiDocReceipt(Model):
+    number = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Number'))
+    description = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Description'))
+    entry = generic.GenericRelation(FiEntry, null=True)
+
+class FiDocPromissoryNote(Model):
+    number = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Number'))
+    description = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Description'))
+    entry = generic.GenericRelation(FiEntry, null=True)
+
+class FiDocOther(Model):
+    name = models.CharField(max_length=100)
+    entry = generic.GenericRelation(FiEntry, null=True)
+'''
+
 class FiWriteOff(Model):
     date = models.DateField()
     value = models.DecimalField(max_digits=10, decimal_places=2)
-    third_party = models.CharField(max_length=100, blank=True, null=True)
-    third_party_bank = models.ForeignKey(MaBank, blank=True, null=True)
-    third_party_agency = models.CharField(max_length=30, blank=True, null=True)
+    '''doc_content_type = models.ForeignKey(ContentType, null=True)
+    doc_object_id = models.PositiveIntegerField(null=True)
+    doc_content_object = GenericForeignKey('doc_content_type', 'doc_object_id')'''
+    cheque = models.ForeignKey(FiCheque, null=True, blank=True)
     entry = models.ForeignKey(FiEntry, null=True)
 
     class Meta:

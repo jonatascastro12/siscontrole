@@ -1,13 +1,15 @@
-from django.core.urlresolvers import reverse_lazy
+# -*- coding: utf-8 -*-
 
-# Create your views here.
+from django.contrib import messages
+from django.core.urlresolvers import reverse_lazy
 from django.db.models.loading import get_model
-from django.http.response import HttpResponse, HttpResponseServerError
+from django.http.response import HttpResponse, HttpResponseServerError, HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from financial.forms import FiCurrentAccountForm, FiEntryForm, FiCostCenterForm, FiWriteOffFormset
+from financial.forms import FiCurrentAccountForm, FiEntryForm, FiCostCenterForm, FiWriteOffFormset, \
+    FiChequeForm
 from financial.models import FiDocumentType, FiCurrentAccount, FiAccountGroup, FiAccount, FiSubaccount, FiSubaccountType, \
     FiCostCenter, FiEntry
-from siscontrole.views import DashboardListView, DashboardCreateView, DashboardUpdateView, DashboardDetailView
+from dashboard_view.views import DashboardListView, DashboardCreateView, DashboardUpdateView, DashboardDetailView
 
 
 ''' Financial DocumentType Views '''
@@ -216,10 +218,64 @@ class FiEntryCreateView(DashboardCreateView):
     form_class = FiEntryForm
     success_url = reverse_lazy('financial_entry')
 
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        costcenter_form = FiCostCenterForm(request.POST)
+        writeoff_formset = FiWriteOffFormset(request.POST)
+        entry_cheque_form = FiChequeForm(request.POST)
+
+        if form.is_valid() and costcenter_form.is_valid():
+            cc = costcenter_form.instance
+            cc = FiCostCenter.objects.filter(account_group=cc.account_group, account=cc.account, subaccount=cc.subaccount, subaccount_type=cc.subaccount_type).first()
+            form.instance.costcenter = cc
+
+            cheque_valid = True
+            if form.cleaned_data.get('document_type') == 'C' and not entry_cheque_form.is_valid():
+                cheque_valid = False
+            if not cheque_valid:
+                return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
+            return self.form_valid(form, costcenter_form, writeoff_formset, entry_cheque_form)
+        else:
+            return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
+
+    def form_valid(self, form, costcenter_form, writeoff_formset, entry_cheque_form):
+        if form.cleaned_data.get('document_type') == 'C':
+            cheque = entry_cheque_form.save()
+            form.instance.cheque = cheque
+
+        balance = 0
+        for wo in writeoff_formset:
+            if wo.is_valid():
+                balance += wo.instance.value
+                wo.save()
+
+        if form.instance.value == balance and form.instance.costcenter.account == 'E':
+            form.instance.status = 'PP'
+        elif form.instance.value == balance and form.instance.costcenter.account == 'R':
+            form.instance.status = 'RR'
+        elif form.instance.value != balance and form.instance.costcenter.account == 'E':
+            form.instance.status = 'P'
+        else:
+            form.instance.status = 'R'
+
+        self.object = form.save()
+
+        #TODO Debitar/creditar CONTA
+
+        messages.success(self.request, _('Entry created successfully'))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, costcenter_form, writeoff_formset, entry_cheque_form):
+        return self.render_to_response(self.get_context_data(form=form, costcenter_form=costcenter_form, writeoff_formset=writeoff_formset, entry_cheque_form=entry_cheque_form))
+
     def get_context_data(self, **kwargs):
         context = super(FiEntryCreateView, self).get_context_data(**kwargs)
-        context['costcenter_form'] = FiCostCenterForm()
-        context['writeoff_formset'] = FiWriteOffFormset()
+        context['costcenter_form'] = kwargs.get('costcenter_form', FiCostCenterForm())
+        context['writeoff_formset'] = kwargs.get('writeoff_formset', FiWriteOffFormset())
+        context['entry_cheque_form'] = kwargs.get('entry_cheque_form', FiChequeForm())
         return context
 
 def get_value_for_key(request):

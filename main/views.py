@@ -6,7 +6,7 @@ from django.utils.translation import ugettext as _
 from main.forms import MaEmployeeForm, MaPersonForm, MaCustomerSupplierForm, MaMultiPersonForm, MaBankAccountFormset
 from main.models import MaDepartment, MaEmployee, MaEmployeeFunction, MaCustomerSupplier, MaPerson, MaEquipment, \
     MaEquipmentType, MaBank
-from siscontrole.views import DashboardCreateView, DashboardListView, \
+from dashboard_view.views import DashboardCreateView, DashboardListView, \
     DashboardUpdateView, DashboardDetailView
 
 

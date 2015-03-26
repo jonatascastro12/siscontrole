@@ -2,7 +2,6 @@ from decimal import Decimal
 from django.forms.models import ModelChoiceField
 from django.forms.widgets import Select
 from django.utils import numberformat
-from django.utils.formats import get_format
 from django.utils.safestring import mark_safe
 from django_select2.widgets import AutoHeavySelect2Widget
 from input_mask.utils import chunks

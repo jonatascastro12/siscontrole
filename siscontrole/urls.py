@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from . import views
 from django.conf import settings
-from ajax_select import urls as ajax_select_urls
+from dashboard_view.views import DashboardOverviewView, DashboardProfileView
 
 urlpatterns = patterns('',
     # Examples:
@@ -12,8 +12,8 @@ urlpatterns = patterns('',
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^login/', views.login, name='login'),
     url(r'^logout/', 'siscontrole.views.logout', name='logout'),
-    url(r'^$', 'siscontrole.views.dashboard', name="dashboard_index"),
-    url(r'^profile$', 'siscontrole.views.profile', name="user_profile"),
+    url(r'^$', DashboardOverviewView.as_view(), name="dashboard_index"),
+    url(r'^profile$', DashboardProfileView.as_view(), name="user_profile"),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('crop_image.urls')),
     url(r'^main', include('main.urls'),),
