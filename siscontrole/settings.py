@@ -141,3 +141,9 @@ DEFAULT_IMAGE = '/static/images/default.jpg'
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + (u'gender', )
 
 AUTO_RENDER_SELECT2_STATICS = False
+
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
