@@ -6,6 +6,7 @@ from django.db.models.manager import Manager
 from django.utils.translation import ugettext as _
 from django_localflavor_br.br_states import STATE_CHOICES
 from simple_history.models import HistoricalRecords
+
 from crop_image.forms import CropImageModelField
 
 
