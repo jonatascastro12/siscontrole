@@ -40,14 +40,14 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'simple_history',
+    'bootstrap_form',
+    'crop_image',
     'datatableview',
     'dashboard_view',
     'sorl.thumbnail',
     'django_localflavor_br',
     'django_select2',
-    'bootstrap_form',
     'bootstrap3_datetime',
-    'crop_image',
     'main',
     'financial',
 
@@ -106,7 +106,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC-3'
+TIME_ZONE = 'America/Sao_paulo'
 
 USE_I18N = True
 
