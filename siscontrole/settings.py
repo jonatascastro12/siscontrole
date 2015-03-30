@@ -40,14 +40,14 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'simple_history',
+    'bootstrap_form',
+    'crop_image',
     'datatableview',
     'dashboard_view',
     'sorl.thumbnail',
     'django_localflavor_br',
     'django_select2',
-    'bootstrap_form',
     'bootstrap3_datetime',
-    'crop_image',
     'main',
     'financial',
 
@@ -141,3 +141,9 @@ DEFAULT_IMAGE = '/static/images/default.jpg'
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + (u'gender', )
 
 AUTO_RENDER_SELECT2_STATICS = False
+
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
