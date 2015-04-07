@@ -48,6 +48,7 @@ menu_dict = [
                      'link': reverse_lazy('financial_costcenter')},
                 ]},
             {'name': 'entry', 'verbose_name': _('Entry'), 'link': reverse_lazy('financial_entry')},
+            {'name': 'cheque', 'verbose_name': _('Cheque'), 'link': reverse_lazy('financial_cheque')},
         ]
      },
 ]

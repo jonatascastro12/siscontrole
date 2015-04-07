@@ -8,7 +8,8 @@ from financial.views import FiDocumentTypeListView, FiDocumentTypeCreateView, Fi
     FiSubaccountCreateView, FiSubaccountDetailView, FiSubaccountUpdateView, FiSubaccountTypeListView, \
     FiSubaccountTypeCreateView, FiSubaccountTypeDetailView, FiSubaccountTypeUpdateView, FiCostCenterCreateView, \
     FiCostCenterDetailView, FiCostCenterUpdateView, FiCostCenterListView, FiEntryCreateView, FiEntryListView, \
-    get_value_for_key, get_account_type
+    get_value_for_key, get_account_type, FiChequeListView, FiChequeCreateView, FiChequeDetailView, FiChequeUpdateView, \
+    FiEntryUpdateView, FiEntryDetailView
 
 urlpatterns = patterns('',
     url(_(r'^/document_type$'), FiDocumentTypeListView.as_view(), name="financial_documenttype"),
@@ -52,9 +53,18 @@ urlpatterns = patterns('',
         url(_(r'[/]$'), FiCostCenterDetailView.as_view(), name="financial_costcenter_detail"),
         url(_(r'/edit$'), FiCostCenterUpdateView.as_view(), name="financial_costcenter_edit"),
     ])),
-    url(_(r'^/get_value_for_key'), get_value_for_key, name="financial_get_value_for_key"),
-    url(_(r'^/get_account_type'), get_account_type, name="financial_get_account_type"),
+    url(_(r'^/cheque$'), FiChequeListView.as_view(), name="financial_cheque"),
+    url(_(r'^/cheque/add$'), FiChequeCreateView.as_view(), name="financial_cheque_add"),
+    url(_(r'^/cheque/(?P<pk>[0-9]+)'), include([
+        url(_(r'[/]$'), FiChequeDetailView.as_view(), name="financial_cheque_detail"),
+        url(_(r'/edit$'), FiChequeUpdateView.as_view(), name="financial_cheque_edit"),
+    ])),
     url(_(r'^/entry$'), FiEntryListView.as_view(), name="financial_entry"),
     url(_(r'^/entry/add$'), FiEntryCreateView.as_view(), name="financial_entry_add"),
-
+    url(_(r'^/entry/(?P<pk>[0-9]+)'), include([
+        url(_(r'[/]$'), FiEntryDetailView.as_view(), name="financial_entry_detail"),
+        url(_(r'/edit$'), FiEntryUpdateView.as_view(), name="financial_entry_edit"),
+    ])),
+    url(_(r'^/get_value_for_key'), get_value_for_key, name="financial_get_value_for_key"),
+    url(_(r'^/get_account_type'), get_account_type, name="financial_get_account_type"),
 )

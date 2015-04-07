@@ -1,0 +1,44 @@
+{% extends "generics/dashboard_detail.html" %}
+{% load i18n %}
+{% load bootstrap_form %}
+
+{% block detail %}
+<div class="row">
+    <div class="col-lg-12">
+        {% if object.cheque_person %}<p><strong>{% trans "Person name" %}:</strong> <a href="{{ object.cheque_person.get_absolute_url }}"> {{ object.cheque_person }}</a></p>{% endif %}
+        {% if object.cheque_name %}<p><strong>{% trans "Person name" %}:</strong> {{ object.cheque_name }}</p>{% endif %}
+        {% if object.cheque_bank %}<p><strong>{% trans "Bank" %}:</strong> <a href="{{ object.cheque_bank.get_absolute_url }}">{{ object.cheque_bank.name }}</a></p>{% endif %}
+        {% if object.cheque_agency %}<p><strong>{% trans "Agency" %}:</strong> {{ object.cheque_agency }}</p>{% endif %}
+        {% if object.cheque_current_account %}<p><strong>{% trans "Current Account" %}:</strong> {{ object.cheque_current_account }}</p>{% endif %}
+        {% if object.cheque_expiration_date %}<p><strong>{% trans "Expiration Date" %}:</strong> {{ object.cheque_expiration_date|date:"SHORT_DATE_FORMAT" }}</p>{% endif %}
+        {% if object.cheque_value %}<p><strong>{% trans "Value" %}:</strong> {{ object.get_formated_value }}</p>{% endif %}
+        {% if object.cheque_destiny %}<p><strong>{% trans "Destiny" %}:</strong> {{ object.cheque_destiny }}</p>{% endif %}
+        &nbsp;
+        {% if object.fientry_set %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "Related entries" %}</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'Date' %}</th>
+                                <th>{% trans 'Client/Supplier' %}</th>
+                                <th>{% trans 'Record' %}</th>
+                                <th>{% trans 'Group/Account' %}</th>
+                                <th>{% trans 'Value' %}</th>
+                            </tr>
+                        </thead>
+                        {% for entry in object.fientry_set.all %}
+                            <tr>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.date|date:"SHORT_DATE_FORMAT" }}</a></td>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.customer_supplier }}</a></td>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.record }}</a></td>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.costcenter.account_group.name }} > {{ entry.costcenter.account.name }}</a></td>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.get_formated_value }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

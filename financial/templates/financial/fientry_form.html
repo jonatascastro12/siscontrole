@@ -42,6 +42,7 @@
     </div>
 
     <div class="form-horizontal">
+        {%  field_as_bootstrap form form.record "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
         {%  field_as_bootstrap form form.current_account "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
         {%  field_as_bootstrap form form.document_type "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12" %}
         {%  field_as_bootstrap form form.document_number "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12" %}
@@ -50,13 +51,20 @@
     <div id="cheque-panel" class="panel panel-default" style="display:none">
         <div class="panel-heading">{% trans "Cheque information" %}</div>
         <div class="panel-body form-horizontal">
-            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_person "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-5 col-lg-5 col-xs-12" %}
-            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_description "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-5 col-lg-5 col-xs-12" %}
-            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_expiration_date "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-3 col-xs-12"%}
-            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_number "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
-            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_bank "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12"%}
-            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_agency "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
-            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_current_account "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
+            {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_exists "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-5 col-lg-5 col-xs-12" %}
+            <div class="cheque_field" style="display:none">
+                {%  field_as_bootstrap form form.cheque  "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-5 col-lg-5 col-xs-12" %}
+            </div>
+            <div class="cheque_form">
+                {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_destiny "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-5 col-lg-5 col-xs-12" %}
+                {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_person "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-5 col-lg-5 col-xs-12" %}
+                {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_expiration_date "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-3 col-xs-12"%}
+                {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_number "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
+                {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_bank "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12"%}
+                {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_agency "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
+                {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_current_account "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
+                {%  field_as_bootstrap entry_cheque_form entry_cheque_form.cheque_value "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-3 col-lg-2 col-xs-12"%}
+            </div>
         </div>
     </div>
     &nbsp;
@@ -64,6 +72,7 @@
         {%  field_as_bootstrap form form.department "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12"%}
         {%  field_as_bootstrap form form.customer_supplier "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-4 col-xs-12"%}
         {%  field_as_bootstrap form form.value "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-3 col-xs-12"%}
+        {%  field_as_bootstrap form form.interest "horizontal" "col-sm-4 col-md-2 col-xs-12 control-label" "col-sm-7 col-md-4 col-lg-3 col-xs-12"%}
     </div>
     &nbsp;
     <div class="panel panel-default">
@@ -80,24 +89,25 @@
                 <div class="col-md-1 col-xs-6 hidden-xs"><label class="writeoff-cheque-fields" style="display:none">{{ writeoff_formset.form.cheque_agency.label }}</label></div>
             </div>
             {% for f in writeoff_formset %}
+                {% for hidden in f.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
                 <div class="row form-item">
                     <div class="col-md-2 col-xs-6">
                         {{ f.date|add_class:"form-control input-sm" }}
                     </div>
                     <div class="col-md-2 col-xs-6">
-                        <input class="{{ f.value.css_classes }} writeoff-value form-control input-sm mask mask-reverse {&quot;mask&quot;: &quot;99,999.999.99&quot;, &quot;defaultValue&quot;: &quot;000&quot;, &quot;type&quot;: &quot;reverse&quot;}"
-                               id="id_{{ f.value.name }}" name="{{ f.prefix }}-{{ f.value.name }}" type="text" value="{{ f.value.value|default:"0,00" }}" style="text-align: right;"></div>
+                        {{ f.value|add_class:"writeoff-value form-control input-sm" }}</div>
 
                     <div class="col-md-1 col-xs-6">
-                        <input class="{{ f.is_cheque.css_classes }} is-cheque-field"
-                               id="id_{{ f.is_cheque.name }}" name="{{ f.prefix }}-{{ f.is_cheque.name }}" type="checkbox" {{ f.is_cheque.checked }} value="{{ f.is_cheque.value|default:"" }}" style="text-align: right;"></div>
+                        {{ f.is_cheque|add_class:"input-sm is-cheque-field" }}</div>
 
                     <div class="col-md-1 col-xs-6">
-                        <input class="{{ f.cheque_number.css_classes }} writeoff-cheque-fields writeoff-value form-control input-sm"
+                        <input class="{{ f.cheque_number.css_classes }} writeoff-cheque-fields form-control input-sm"
                                placeholder="{% trans "Number" %}" id="id_{{ f.cheque_number.name }}" name="{{ f.prefix }}-{{ f.cheque_number.name }}" type="text" value="{{ f.cheque_number.value|default:"" }}" style="display:none"></div>
 
                     <div class="col-md-2 col-xs-6">
-                        <input class="{{ f.cheque_name.css_classes }} writeoff-cheque-fields writeoff-value form-control input-sm"
+                        <input class="{{ f.cheque_name.css_classes }} writeoff-cheque-fields form-control input-sm"
                                placeholder="{% trans "Name" %}" id="id_{{ f.cheque_name.name }}" name="{{ f.prefix }}-{{ f.cheque_name.name }}" type="text" value="{{ f.cheque_name.value|default:"" }}" style="display:none"></div>
 
 
@@ -105,7 +115,7 @@
                         <span class="writeoff-cheque-fields" style="display:none">{{ f.cheque_bank|add_class:"form-control input-sm" }}</span>
                     </div>
                     <div class="col-md-1 col-xs-6">
-                        <input class="{{ f.cheque_agency.css_classes }} writeoff-cheque-fields writeoff-value form-control input-sm"
+                        <input class="{{ f.cheque_agency.css_classes }} writeoff-cheque-fields form-control input-sm"
                                id="id_{{ f.cheque_agency.name }}" name="{{ f.prefix }}-{{ f.cheque_agency.name }}"
                                placeholder="{% trans "Agency" %}" type="text" value="{{ f.cheque_agency.value|default:"" }}"
                                style="display:none"></div>
@@ -247,9 +257,10 @@
             });
 
             function update_account_type(){
-                $.get("{% url 'financial_get_account_type' %}", {"account_id": $('#id_account').val()}, function(result){
-                        $('#title_account_type').html(result);
-                });
+                if ($('#id_account').val())
+                    $.get("{% url 'financial_get_account_type' %}", {"account_id": $('#id_account').val()}, function(result){
+                            $('#title_account_type').html(result);
+                    });
             }
             update_account_type();
 
@@ -260,7 +271,7 @@
             $('.dateinput').inputmask('dd/mm/yyyy');
 
             function update_balance(){
-                var balance = $('#id_value').val().replace('.','').replace(',','.')*1;
+                var balance = $('#id_value').val().replace('.','').replace(',','.')*1 + $('#id_interest').val().replace('.','').replace(',','.')*1;
                 var soma = 0;
                 $.each($('.writeoff-value'), function(i,e){
                     console.log($(e).val());
@@ -274,8 +285,18 @@
             }
             update_balance();
 
-            $('#id_value, .writeoff-value').change(function(){
+            $('#id_value, #id_interest, .writeoff-value').change(function(){
                 update_balance();
+            });
+
+            $('#id_cheque_exists').click(function(){
+                if (this.checked){
+                    $('.cheque_field').show();
+                    $('.cheque_form').hide();
+                }else{
+                    $('.cheque_field').hide();
+                    $('.cheque_form').show();
+                }
             });
 
             $('.form-item').formset({
@@ -309,16 +330,24 @@
             if (document_type.val() == 'C')
                 $('#cheque-panel').show();
 
-            $('.is-cheque-field').click(function(){
-                $(this).parent().parent().find('.writeoff-cheque-fields').toggle(this.checked);
-                 if ($('.is-cheque-field:checked').size() > 0){
+            function update_cheque_fields(_this){
+                $.each(_this, function(i, e){
+                    $(e).parent().parent().find('.writeoff-cheque-fields').toggle(e.checked);
+                });
+                if ($('.is-cheque-field:checked').size() > 0){
                     $('label.writeoff-cheque-fields').show();
                 }else{
                     $('label.writeoff-cheque-fields').hide();
                 }
+            }
+            $('.is-cheque-field').click(function(){
+                update_cheque_fields($(this));
             });
+            update_cheque_fields($('.is-cheque-field'))
+
 
             $('form').submit(function(){
+                debugger;
                 if (document_type.val() != 'C'){
                     $('#cheque-panel').remove();
                 }

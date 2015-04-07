@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from financial.forms import FiCurrentAccountForm, FiEntryForm, FiCostCenterForm, FiWriteOffFormset, \
     FiChequeForm
 from financial.models import FiDocumentType, FiCurrentAccount, FiAccountGroup, FiAccount, FiSubaccount, FiSubaccountType, \
-    FiCostCenter, FiEntry
+    FiCostCenter, FiEntry, FiCheque
 from dashboard_view.views import DashboardListView, DashboardCreateView, DashboardUpdateView, DashboardDetailView
 
 
@@ -199,20 +199,40 @@ class FiCostCenterUpdateView(DashboardUpdateView):
 class FiCostCenterDetailView(DashboardDetailView):
     model = FiCostCenter
     fields = ['name', 'type']
-    
+
+class FiEntryDetailView(DashboardDetailView):
+    model = FiEntry
+    fields = ['name', 'type']
 
 class FiEntryListView(DashboardListView):
     model = FiEntry
     datatable_options = {
         'columns': [
+            'date',
+            'expiration_date',
             (_('Date'), 'get_formated_date'),
-            (_('Cost Center'), 'get_costcenter_code'),
-            'customer_supplier',
+            #(_('Cost Center'), 'get_costcenter_code'),
+            (_('Customer/Supplier'), 'get_customer_supplier_name'),
+            'record',
             'current_account',
+            'document_type',
             (_('Doc'), 'get_document_type_display'),
             (_('Value'), 'get_formated_value'),
-        ]
+            (_('Exp. Date'), 'get_formated_expiration_date'),
+            (' ', 'get_info_icons'),
+        ],
+        'hidden_columns': ['date', 'expiration_date', 'document_type']
     }
+
+    #   (LABEL,                         FIELD_NAME,          FILTER_TYPE,        CHOICES)
+    filters = [
+        (_('Date Range'),               'date',             'date_range'),
+        (_('Expiration Date Range'),    'expiration_date',  'date_range'),
+        #(_('Writeoff'),                 'writeoff',         'checkbox_choice', (('W', _('Wrote-off')), ('PW', _('Partial Wrote-off')), ('NW', _('No Wrote-off')))),
+        #(_('Status'),                   'status',           'checkbox_choice', (('W', _('Wrote-off')), ('PW', _('Partial Wrote-off')), ('NW', _('No Wrote-off')))),
+        #(_('Document Type'),            'document_type',    'select_choice'),
+        #'record',
+    ]
 
 class FiEntryCreateView(DashboardCreateView):
     model = FiEntry
@@ -234,8 +254,9 @@ class FiEntryCreateView(DashboardCreateView):
             form.instance.costcenter = cc
 
             cheque_valid = True
-            if form.cleaned_data.get('document_type') == 'C' and not entry_cheque_form.is_valid():
+            if form.cleaned_data.get('document_type', None) == 'C' and form.cleaned_data.get('cheque', None) is None and not entry_cheque_form.is_valid():
                 cheque_valid = False
+
             if not cheque_valid:
                 return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
             return self.form_valid(form, costcenter_form, writeoff_formset, entry_cheque_form)
@@ -244,14 +265,18 @@ class FiEntryCreateView(DashboardCreateView):
 
     def form_valid(self, form, costcenter_form, writeoff_formset, entry_cheque_form):
         if form.cleaned_data.get('document_type') == 'C':
-            cheque = entry_cheque_form.save()
-            form.instance.cheque = cheque
+            if form.cleaned_data.get('cheque', None) is None:
+                cheque = entry_cheque_form.save()
+                form.instance.cheque = cheque
 
         balance = 0
         for wo in writeoff_formset:
             if wo.is_valid():
                 balance += wo.instance.value
+                wo.instance.entry = form.instance
                 wo.save()
+            else:
+                return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
 
         if form.instance.value == balance and form.instance.costcenter.account == 'E':
             form.instance.status = 'PP'
@@ -278,6 +303,110 @@ class FiEntryCreateView(DashboardCreateView):
         context['writeoff_formset'] = kwargs.get('writeoff_formset', FiWriteOffFormset())
         context['entry_cheque_form'] = kwargs.get('entry_cheque_form', FiChequeForm())
         return context
+
+
+class FiEntryUpdateView(DashboardUpdateView):
+    model = FiEntry
+    form_class = FiEntryForm
+    success_url = reverse_lazy('financial_entry')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        costcenter_form = FiCostCenterForm(request.POST, instance=self.object.costcenter)
+        writeoff_formset = FiWriteOffFormset(request.POST, instance=self.object)
+        entry_cheque_form = FiChequeForm(request.POST, instance=self.object.cheque)
+
+        if form.is_valid() and costcenter_form.is_valid():
+            cc = costcenter_form.instance
+            cc = FiCostCenter.objects.filter(account_group=cc.account_group, account=cc.account, subaccount=cc.subaccount, subaccount_type=cc.subaccount_type).first()
+            form.instance.costcenter = cc
+
+            cheque_valid = True
+            if form.cleaned_data.get('document_type', None) == 'C' and form.cleaned_data.get('cheque', None) is None and not entry_cheque_form.is_valid():
+                cheque_valid = False
+
+            if not cheque_valid:
+                return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
+            return self.form_valid(form, costcenter_form, writeoff_formset, entry_cheque_form)
+        else:
+            return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
+
+    def form_valid(self, form, costcenter_form, writeoff_formset, entry_cheque_form):
+        if form.cleaned_data.get('document_type') == 'C':
+            if form.cleaned_data.get('cheque', None) is None:
+                cheque = entry_cheque_form.save()
+                form.instance.cheque = cheque
+
+        balance = 0
+        for wo in writeoff_formset:
+            if wo.is_valid():
+                balance += wo.instance.value
+                wo.save()
+
+        if form.instance.value == balance and form.instance.costcenter.account == 'E':
+            form.instance.status = 'PP'
+        elif form.instance.value == balance and form.instance.costcenter.account == 'R':
+            form.instance.status = 'RR'
+        elif form.instance.value != balance and form.instance.costcenter.account == 'E':
+            form.instance.status = 'P'
+        else:
+            form.instance.status = 'R'
+
+        self.object = form.save()
+
+        #TODO Debitar/creditar CONTA
+
+        messages.success(self.request, _('Entry updated successfully'))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, costcenter_form, writeoff_formset, entry_cheque_form):
+        return self.render_to_response(self.get_context_data(form=form, costcenter_form=costcenter_form, writeoff_formset=writeoff_formset, entry_cheque_form=entry_cheque_form))
+
+    def get_context_data(self, **kwargs):
+        context = super(FiEntryUpdateView, self).get_context_data(**kwargs)
+        context['costcenter_form'] = kwargs.get('costcenter_form', FiCostCenterForm(instance=self.object.costcenter))
+
+
+        context['writeoff_formset'] = kwargs.get('writeoff_formset', FiWriteOffFormset(instance=self.object))
+        context['entry_cheque_form'] = kwargs.get('entry_cheque_form', FiChequeForm(instance=self.object.cheque))
+        return context
+
+
+''' Financial Cheque Views '''
+
+
+class FiChequeListView(DashboardListView):
+    model = FiCheque
+    datatable_options = {
+        'columns': [
+            (_('#'), 'id'),
+            'cheque_bank',
+            'cheque_agency',
+            (_('Name'), 'get_cheque_name'),
+            'cheque_number',
+            ('Expiration Date', 'cheque_expiration_date'),
+        ]
+    }
+
+    def get_column_Expiration_Date_data(self, instance, *args, **kwargs):
+        return instance.cheque_expiration_date.strftime("%d/%m/%Y")
+
+class FiChequeCreateView(DashboardCreateView):
+    model = FiCheque
+    success_url = reverse_lazy('financial_cheque')
+
+class FiChequeUpdateView(DashboardUpdateView):
+    model = FiCheque
+    success_url = reverse_lazy('financial_cheque')
+
+class FiChequeDetailView(DashboardDetailView):
+    model = FiCheque
+    fields = ['name', 'type']
+
+
 
 def get_value_for_key(request):
     if request.GET:

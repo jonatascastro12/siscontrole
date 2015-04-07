@@ -129,14 +129,28 @@ class MaPersonChoices(AutoModelSelect2Field):
         res = [(obj.id, "%s - %s" % (obj.name, obj.get_document_number())) for obj in objects]
         return (NO_ERR_RESP, False, res, ) # Any error response, Has more results, options list
 
+class MaChequeChoices(AutoModelSelect2Field):
+    queryset = FiCheque.objects.all()
+    widget = ExtendedAutoHeavySelectWidget
+
+    def get_results(self, request, term, page, context):
+        objects = self.queryset.filter((Q(cheque_number__icontains=term))).order_by('cheque_number')
+        res = [(obj.id, "%s (%s, A: %s, C/C: %s) de %s" % (obj.id, obj.cheque_bank.name, obj.cheque_agency, obj.cheque_current_account, obj.cheque_person)) for obj in objects]
+        return (NO_ERR_RESP, False, res, ) # Any error response, Has more results, options list
+
+
+
 class FiEntryForm(ModelForm):
     customer_supplier = MaClientSupplierChoices()
     value = BRDecimalField(required=True, label=_('Value'))
+    cheque = MaChequeChoices(required=False, label=_('Cheque'))
+    interest = BRDecimalField(required=True, label=_('Interest'))
+
     class Meta:
         model = FiEntry
         widgets = {
-            'date': DateInput(attrs={'type': 'date'}),
-            'expiration_date': DateInput(attrs={'type': 'date'}),
+            'date': DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'expiration_date': DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'department': Select2Widget,
             'value': BRDecimalInput,
             'current_account': Select2Widget,
@@ -167,20 +181,27 @@ class FiCostCenterForm(ModelForm):
         }
 
 class FiWriteOffForm(ModelForm):
-    is_cheque = BooleanField(label=_('Is Cheque?'))
+    is_cheque = BooleanField(required=False, label=_('Is Cheque?'))
     cheque_number = CharField(required=False, label=_('Number'))
     cheque_name = CharField(required=False, label=_('Name'))
     cheque_bank = ModelChoiceField(queryset=MaBank.objects, required=False, label=_('Bank'), empty_label=_('Select a bank'))
-    cheque_agency = CharField(label=_('Agency'))
+    cheque_agency = CharField(required=False, label=_('Agency'))
     value = BRDecimalField(required=True, label=_('Value'))
 
-    def clean_value(self):
-        if self.cleaned_data.get('value', 0) == 0:
-            raise ValidationError(_('Value can\'t be zero.'))
-        return self.cleaned_data.get('value', 0)
+    def __init__(self, *args, **kwargs):
+        super(FiWriteOffForm, self).__init__(*args, **kwargs)
+        if self.instance.cheque is not None:
+            self.fields['is_cheque'].initial = True
+            self.fields['cheque_number'].initial = self.instance.cheque.cheque_number
+            self.fields['cheque_name'].initial = self.instance.cheque.cheque_name
+            self.fields['cheque_bank'].initial = self.instance.cheque.cheque_bank
+            self.fields['cheque_agency'].initial = self.instance.cheque.cheque_agency
 
     def clean(self):
         super(FiWriteOffForm, self).clean()
+        if self.cleaned_data.get('date', False) and self.cleaned_data.get('value', 0) == 0:
+            raise ValidationError(_('Value can\'t be zero.'))
+
         is_cheque = self.cleaned_data.get('is_cheque', False)
         if is_cheque:
             cheque_number = self.cleaned_data.get('cheque_number', False)
@@ -191,22 +212,48 @@ class FiWriteOffForm(ModelForm):
             if not (cheque_number and cheque_agency and cheque_bank and cheque_name):
                 raise ValidationError(message=_('Complete cheque information properly.'))
 
+    def save(self, commit=False):
+        instance = super(FiWriteOffForm, self).save(commit)
+
+        if instance.cheque is None and self.cleaned_data.get('is_cheque', False):
+             cheque = FiCheque(cheque_number=self.cleaned_data.get('cheque_number'),
+                          cheque_name=self.cleaned_data.get('cheque_name'),
+                          cheque_bank=self.cleaned_data.get('cheque_bank'),
+                          cheque_expiration_date=self.cleaned_data.get('date'),
+                          cheque_value=self.cleaned_data.get('value'),
+                          cheque_agency=self.cleaned_data.get('cheque_agency'))
+             cheque.save()
+             instance.cheque = cheque
+
+        elif instance.cheque is not None:
+            instance.cheque.cheque_number = self.cleaned_data.get('cheque_number')
+            instance.cheque.cheque_name = self.cleaned_data.get('cheque_name')
+            instance.cheque.cheque_bank = self.cleaned_data.get('cheque_bank')
+            instance.cheque.cheque_agency = self.cleaned_data.get('cheque_agency')
+            instance.cheque.cheque_expiration_date = self.cleaned_data.get('date')
+            instance.cheque.cheque_value = self.cleaned_data.get('value')
+
+        instance.save()
+        return instance
+
+
     class Model:
         model = FiWriteOff
 
 class FiChequeForm(ModelForm):
     cheque_person = MaPersonChoices(required=False, label=_('Person'))
+    cheque_exists = BooleanField(required=False, label=_('Cheque already exists?'))
 
     class Meta:
         model = FiCheque
         widgets = {
             'cheque_bank': Select2Widget,
-            'cheque_expiration_date': DateInput(attrs={'type': 'date', 'placeholder': _('Date')}),
+            'cheque_expiration_date': DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'placeholder': _('Date')}),
         }
 
 
 FiWriteOffFormset = inlineformset_factory(FiEntry, FiWriteOff, min_num=1, extra=0, form=FiWriteOffForm, widgets={
-    'date': DateInput(attrs={'type': 'date', 'placeholder': _('Date')}),
+    'date': DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'placeholder': _('Date')}),
 })
 
 '''FiDocument = generic_inlineformset_factory(FiEntry, ct_field="doc_content_type", fk_field="doc_object_id")'''

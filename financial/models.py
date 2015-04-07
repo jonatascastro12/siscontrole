@@ -1,3 +1,4 @@
+from decimal import Decimal
 from locale import currency
 import locale
 from django.contrib.contenttypes import generic
@@ -9,6 +10,7 @@ from django.db import models
 # Create your models here.
 from django.db.models import permalink
 from django.db.models.base import Model
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, pgettext as p_
 from simple_history.models import HistoricalRecords
 from main.models import MaDepartment, MaCustomerSupplier, MaBank, MaBankAccount, MaPerson
@@ -62,6 +64,12 @@ class FiAccount(Model):
             return '<span class="fa fa-level-down text-danger" title="' + _('Expense') + '"></span> <span class="text-danger">'+_('Expense')+'</span>'
         else:
             return '<span class="fa fa-level-up text-success" title="' + _('Revenue') + '"></span> <span class="text-success">'+_('Revenue')+'</span>'
+
+    def get_type_icon_only(self):
+        if self.type == 'E':
+            return '<span class="fa fa-level-down text-danger" title="' + _('Expense') + '"></span>'
+        else:
+            return '<span class="fa fa-level-up text-success" title="' + _('Revenue') + '"></span>'
 
     @permalink
     def get_absolute_url(self):
@@ -161,12 +169,38 @@ ENTRY_DOC_TYPES = (
 
 class FiCheque(Model):
     cheque_person = models.ForeignKey(MaPerson, null=True, blank=True, verbose_name=_('Person'))
-    cheque_description = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Description'))
+    cheque_name = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Person Name'))
+    cheque_destiny = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Destiny'))
     cheque_bank = models.ForeignKey(MaBank, verbose_name=_('Bank'))
     cheque_agency = models.CharField(max_length=20, null=True, blank=True, verbose_name=_('Agency'))
     cheque_current_account = models.CharField(max_length=20, null=True, blank=True, verbose_name=_('Current account'))
     cheque_expiration_date = models.DateField(verbose_name=_('Expiration Date'))
     cheque_number = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Number'))
+    cheque_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, verbose_name=_('Value'))
+
+    def __unicode__(self):
+        return str(self.id)
+
+    def get_formated_value(self):
+        locale.setlocale(locale.LC_MONETARY, '')
+        return locale.currency(self.cheque_value)
+
+    def get_cheque_name(self):
+        if self.cheque_person:
+            return 'Person: %s' % self.cheque_person.name
+        else:
+            return self.cheque_name
+
+    def get_formated_expiration_date(self):
+        return self.cheque_expiration_date.strftime("%d/%m/%Y")
+
+    @permalink
+    def get_absolute_url(self):
+        return ('financial_cheque_detail', (), {'pk': self.id})
+
+    class Meta:
+        verbose_name = _('Cheque')
+
 
 class FiEntry(Model):
     date = models.DateField(verbose_name=_("Date"))
@@ -187,23 +221,54 @@ class FiEntry(Model):
 
     department = models.ForeignKey(MaDepartment, verbose_name=_('Department'))
     customer_supplier = models.ForeignKey(MaCustomerSupplier, null=True, blank=True, verbose_name=_('Customer/Supplier'))
-    record = models.CharField(max_length=255, blank=True, null=True)
-    value = models.DecimalField(max_digits=10, decimal_places=2)
+    record = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Story'))
+    value = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Value'), default=0)
+    interest = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Interest'), default=0)
     category = models.CharField(max_length=1, blank=True, null=True, choices=(('1', 'ONE'), ('2', 'TWO')))
     status = models.CharField(max_length=2, blank=True, choices=(('R', _('Receivable')), ('P', _('Payable')), ('RR', _('Received')),
                                                      ('PP', _('Paid'))))
 
     history = HistoricalRecords()
 
+    def __unicode__(self):
+        return str(self.id)
+
     def get_costcenter_code(self):
         return self.costcenter.get_code()
+
+    def get_customer_supplier_name(self):
+        return self.customer_supplier.get_name()
 
     def get_formated_date(self):
         return self.date.strftime("%d/%m/%Y")
 
+    def get_formated_expiration_date(self):
+        return self.expiration_date.strftime("%d/%m/%Y")
+
     def get_formated_value(self):
         locale.setlocale(locale.LC_MONETARY, '')
-        return locale.currency(self.value)
+        if self.costcenter.account.type == 'R':
+            class_type = 'text-success'
+        else:
+            class_type = 'text-danger'
+        return mark_safe('<span class="%s">%s</span>' % (class_type,  locale.currency(self.value)))
+
+    def get_info_icons(self):
+        write_off = ''
+        if (self.fiwriteoff_set.exists()):
+            balance = 0
+            for wo in self.fiwriteoff_set.all():
+                balance += wo.value
+            if balance == (self.value+self.interest):
+                write_off = '<span title="'+_('Wrote off')+'" class="fa fa-check-square text-info"></span>'
+            elif balance > 0:
+                write_off = '<span title="'+_('Wrote off')+'" class="fa fa-minus-square text-info"></span>'
+
+        return '%s %s' % (self.costcenter.account.get_type_icon_only(), write_off)
+
+    @permalink
+    def get_absolute_url(self):
+        return ('financial_entry_detail', (), {'pk': self.id})
 
     class Meta:
         verbose_name = _('Entry')
@@ -247,7 +312,7 @@ class FiDocOther(Model):
 '''
 
 class FiWriteOff(Model):
-    date = models.DateField()
+    date = models.DateField(null=True, blank=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
     '''doc_content_type = models.ForeignKey(ContentType, null=True)
     doc_object_id = models.PositiveIntegerField(null=True)
