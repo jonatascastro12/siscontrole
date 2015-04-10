@@ -10,6 +10,7 @@ from django.db import models
 # Create your models here.
 from django.db.models import permalink
 from django.db.models.base import Model
+from django.db.models.manager import Manager
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, pgettext as p_
 from simple_history.models import HistoricalRecords
@@ -155,7 +156,8 @@ class FiCurrentAccount(Model):
 
     @permalink
     def get_absolute_url(self):
-        return ('financial_currentaccount_edit', (), {'pk': self.id})
+        return ('financial_currentaccount_detail', (), {'pk': self.id})
+
 
 
 ENTRY_DOC_TYPES = (
@@ -203,8 +205,8 @@ class FiCheque(Model):
 
 
 class FiEntry(Model):
-    date = models.DateField(verbose_name=_("Date"))
-    expiration_date = models.DateField(verbose_name=_('Expiration Date'))
+    date = models.DateField(verbose_name=_("Date"), db_index=True)
+    expiration_date = models.DateField(verbose_name=_('Expiration Date'), db_index=True)
 
     costcenter = models.ForeignKey(FiCostCenter, blank=True, null=True, verbose_name=_("Cost Center"))
     current_account = models.ForeignKey(FiCurrentAccount, verbose_name=_('Current Account'))
@@ -232,6 +234,10 @@ class FiEntry(Model):
 
     def __unicode__(self):
         return str(self.id)
+
+    def update_status(self):
+        pass
+
 
     def get_costcenter_code(self):
         return self.costcenter.get_code()
@@ -272,6 +278,7 @@ class FiEntry(Model):
 
     class Meta:
         verbose_name = _('Entry')
+        get_latest_by = 'date'
 
 
 '''
@@ -323,3 +330,65 @@ class FiWriteOff(Model):
     class Meta:
         verbose_name = _('Write off')
         gender = 'F'
+
+
+class FiLastCurrentAccountBalance(Manager):
+    def last_balances(self, current_account):
+        set = super(FiLastCurrentAccountBalance, self).get_queryset().filter(current_account=current_account).order_by('-date')[:11]
+        new_list = list(set)
+        if len(set) == 1:
+            new_list.insert(0, FiCurrentAccountBalance(date=set[0].date, record=_('Last Balance'), value=None, balance=0))
+        else:
+            last = set.last()
+            new_list.remove(new_list[len(new_list)-1])
+            new_list.insert(0, FiCurrentAccountBalance(date=last.date, record=_('Last Balance'), value=None, balance=last.balance))
+
+        return new_list
+
+
+class FiCurrentAccountBalance(Model):
+    date = models.DateTimeField(verbose_name=_('Data'), db_index=True)
+    record = models.CharField(max_length=255, verbose_name=_('Story'))
+    value = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Value'))
+    balance = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Balance'))
+    current_account = models.ForeignKey(FiCurrentAccount)
+    write_off = models.ForeignKey(FiWriteOff)
+    entry = models.ForeignKey(FiEntry)
+
+    objects = FiLastCurrentAccountBalance()
+
+    def get_formated_value(self):
+        locale.setlocale(locale.LC_MONETARY, '')
+
+        if self.value is None:
+            return ''
+
+        if self.value >= 0:
+            result = '<span class="text-success">%s</span> <span class="text-success fa fa-plus"></span>'
+        else:
+            result = '<span class="text-danger">%s</span> <span class="text-success fa fa-minus"></span>'
+
+        return mark_safe(result % locale.currency(self.value))
+
+    def get_formated_balance(self):
+        locale.setlocale(locale.LC_MONETARY, '')
+
+        if self.balance >= 0:
+            result = '<span class="text-success">%s</span> <span class="text-success fa fa-plus"></span>'
+        else:
+            result = '<span class="text-danger">%s</span> <span class="text-success fa fa-minus"></span>'
+
+        return mark_safe(result % locale.currency(self.balance))
+
+
+    @staticmethod
+    def get_last_balance_for_account(account):
+        return FiCurrentAccountBalance.objects.filter(current_account=account).order_by('-date').last()
+
+    @staticmethod
+    def get_last_date_balance_for_account(account, date):
+        return FiCurrentAccountBalance.objects.filter(current_account=account, date=date).order_by('-date').last()
+
+    @staticmethod
+    def consolidate_balance(oldest_date):
+        pass

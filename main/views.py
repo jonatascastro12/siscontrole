@@ -281,7 +281,7 @@ class MaCustomerSupplierDetailView(DashboardDetailView):
 
 class MaCustomerSupplierListView(DashboardListView):
     model = MaCustomerSupplier
-    fields = ['id', (_('Name'), 'get_name'), (_('Type'), 'get_type_icon')]
+    fields = ['id', (_('Name'), 'person__name'), (_('Type'), 'get_type_icon')]
 
 class MaCustomerSupplierCreateView(DashboardCreateView):
     model = MaCustomerSupplier

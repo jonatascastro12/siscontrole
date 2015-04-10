@@ -281,6 +281,10 @@ class MaBankAccount(Model):
         return (self.bank.short_name if self.bank.short_name is not None else self.bank.name[:10]) + \
                ' - ' + self.agency + ' - ' + self.number
 
+    @permalink
+    def get_absolute_url(self):
+        return 'main_bank_account_edit', (), {'pk': self.id}
+
     class Meta:
         verbose_name = _("Bank")
         verbose_name_plural = _("Banks")

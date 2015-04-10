@@ -199,7 +199,7 @@ class FiWriteOffForm(ModelForm):
 
     def clean(self):
         super(FiWriteOffForm, self).clean()
-        if self.cleaned_data.get('date', False) and self.cleaned_data.get('value', 0) == 0:
+        if self.cleaned_data.get('date', None) is None or self.cleaned_data.get('value', 0) == 0:
             raise ValidationError(_('Value can\'t be zero.'))
 
         is_cheque = self.cleaned_data.get('is_cheque', False)

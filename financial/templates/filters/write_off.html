@@ -1,0 +1,19 @@
+{% load i18n %}
+<div class="form-inline">
+    <label>{{ filter_label }} </label>&nbsp;
+    <div class="checkbox">
+        <label>
+            <input class="checkbox" placeholder="" type="checkbox" value="ok" name="filter_checkbox_choice_{{ field_name }}_ok"
+                   id="id_filter_write_off_{{ field_name }}_ok">  {% trans 'Wrote-off' %}
+        </label>&nbsp;&nbsp;&nbsp;
+        <label>
+            <input class="checkbox" placeholder="" type="checkbox" value="parcial" name="filter_checkbox_choice_{{ field_name }}_parcial"
+                   id="id_filter_write_off_{{ field_name }}_parcial">  {% trans 'Partially Wrote-off' %}
+        </label>&nbsp;&nbsp;&nbsp;
+        <label>
+            <input class="checkbox" placeholder="" type="checkbox" value="no" name="filter_checkbox_choice_{{ field_name }}_no"
+                   id="id_filter_write_off_{{ field_name }}_no">  {% trans 'No Wrote-off' %}
+        </label>&nbsp;&nbsp;&nbsp;
+    </div>
+    <button id="clear_{{ field_name }}_checkbox_choice_button" class="text-right pull-right btn-link "><span class="fa fa-close text-muted"></span></button>
+</div>
