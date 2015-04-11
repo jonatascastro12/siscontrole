@@ -1,0 +1,77 @@
+{% extends "generics/dashboard_detail.html" %}
+{% load i18n %}
+{% load bootstrap_form %}
+
+{% block detail %}
+<div class="row">
+    <div class="col-lg-12">
+        {% if object.name %}<p><strong>{% trans "Account name" %}:</strong> {{ object.name }}</p>{% endif %}
+        {% if object.bank %}<p><strong>{% trans "Bank" %}:</strong> {{ object.bank.name }}</p>{% endif %}
+        {% if object.agency %}<p><strong>{% trans "Agency" %}:</strong> {{ object.agency }}</p>{% endif %}
+        {% if object.number %}<p><strong>{% trans "Account number" %}:</strong> {{ object.number }}</p>{% endif %}
+        {% if object.related_account %}<p><strong>{% trans "Current account related" %}:</strong> <a href="{{ object.related_account.person.get_absolute_url }}">{{ object.related_account }}</a></p>{% endif %}
+        &nbsp;
+
+        {% if last_balances %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "Last related entries" %}</div>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'Date' %}</th>
+                                <th>{% trans 'Record' %}</th>
+                                <th>{% trans 'Value' %}</th>
+                                <th>{% trans 'Balance' %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for balance in last_balances %}
+                            <tr>
+                                <td>{{ balance.date|date:"SHORT_DATE_FORMAT" }}</td>
+                                <td><a href="{{ balance.entry.get_absolute_url }}">{{ balance.record }}</a></td>
+                                <td>{{ balance.get_formated_value }}</td>
+                                <td>{{ balance.get_formated_balance }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="info">
+                                <td>{% now "SHORT_DATE_FORMAT" %}</td>
+                                <td>{% trans 'TOTAL BALANCE' %}</td>
+                                <td></td>
+                                <td>{{ object.get_formated_balance }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+            </div>
+        {% endif %}
+
+
+        {% if future_entries %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "Last related entries" %}</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'Date' %}</th>
+                                <th>{% trans 'Client/Supplier' %}</th>
+                                <th>{% trans 'Record' %}</th>
+                                <th>{% trans 'Group/Account' %}</th>
+                                <th>{% trans 'Value' %}</th>
+                            </tr>
+                        </thead>
+                        {% for entry in future_entries %}
+                            <tr>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.date|date:"SHORT_DATE_FORMAT" }}</a></td>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.customer_supplier }}</a></td>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.record }}</a></td>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.costcenter.account_group.name }} > {{ entry.costcenter.account.name }}</a></td>
+                                <td><a href="{{ entry.get_absolute_url }}">{{ entry.get_formated_value }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

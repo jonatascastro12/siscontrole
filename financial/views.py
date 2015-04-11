@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse_lazy
+from django.db import transaction
 from django.db.models.loading import get_model
 from django.http.response import HttpResponse, HttpResponseServerError, HttpResponseRedirect
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from financial.filters import FiEntryFilter
 from financial.forms import FiCurrentAccountForm, FiEntryForm, FiCostCenterForm, FiWriteOffFormset, \
@@ -51,7 +54,7 @@ class FiCurrentAccountListView(DashboardListView):
             'bank',
             'agency',
             'number',
-            'balance',
+            (_('Balance'), 'get_formated_balance'),
         ]
     }
 
@@ -72,7 +75,7 @@ class FiCurrentAccountDetailView(DashboardDetailView):
     def get_context_data(self, **kwargs):
         context = super(FiCurrentAccountDetailView, self).get_context_data(**kwargs)
         context['last_entries'] = context['object'].fientry_set.order_by('-date')[:10]
-        context['last_balances'] = FiCurrentAccountBalance.objects.last_balances(context['object'])
+        context['last_balances'] = FiCurrentAccountBalance.objects.last_balances(context['object'], 10)
 
 
         return context
@@ -277,22 +280,26 @@ class FiEntryCreateView(DashboardCreateView):
         else:
             return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
 
+    @transaction.atomic()
     def form_valid(self, form, costcenter_form, writeoff_formset, entry_cheque_form):
         if form.cleaned_data.get('document_type') == 'C':
             if form.cleaned_data.get('cheque', None) is None:
                 cheque = entry_cheque_form.save()
                 form.instance.cheque = cheque
 
+        self.object = form.save()
+
         balance = 0
         balances_to_save = []
-        last_balance = FiCurrentAccountBalance.get_last_balance_for_account(form.instance.current_account)
+        oldest_date = timezone.now().date()
+
         for wo in writeoff_formset:
             if wo.is_valid():
                 balance += wo.instance.value
-                wo.instance.entry = form.instance
+                wo.instance.entry = self.object
                 wo_object = wo.save()
                 value = 0
-                if form.instance.costcenter.account == 'E':
+                if form.instance.costcenter.account.type == 'E':
                     value = -wo.instance.value
                 else:
                     value = wo.instance.value
@@ -300,31 +307,36 @@ class FiEntryCreateView(DashboardCreateView):
                 new_balance = FiCurrentAccountBalance(
                     date=wo.instance.date,
                     value=value,
-                    record=form.instance.record,
-                    balance=(0 if last_balance is None else last_balance.balance)+value,
-                    write_off=wo_object
+                    record=(form.instance.get_document_type_display() if not wo.instance.cheque else 'CHEQUE') + ': ' + form.instance.record,
+                    balance=balance,
+                    write_off=wo_object,
+                    current_account=form.instance.current_account
                 )
                 balances_to_save.append(new_balance)
-
             else:
                 return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
 
-        total = form.instance.value + form.instance.interest
-        if total == balance and form.instance.costcenter.account == 'E':
-            form.instance.status = 'PP'
-        elif total == balance and form.instance.costcenter.account == 'R':
-            form.instance.status = 'RR'
-        elif total != balance and form.instance.costcenter.account == 'E':
-            form.instance.status = 'P'
+        total = self.object.value + self.object.interest
+        if total == balance and self.object.costcenter.account.type == 'E':
+            self.object.status = 'PP'
+        elif total == balance and self.object.costcenter.account.type == 'R':
+            self.object.status = 'RR'
+        elif total != balance and self.object.costcenter.account.type == 'E':
+            self.object.status = 'P'
         else:
-            form.instance.status = 'R'
+            self.object.status = 'R'
 
-        self.object = form.save()
+        self.object.save()
 
         for b in balances_to_save:
+            last_balance = FiCurrentAccountBalance.get_last_date_balance_for_account(b.current_account, b.date)
             b.entry = self.object
-            b.current_account = self.object.current_account
+            b.balance = (0 if last_balance is None else last_balance.balance) + b.value
             b.save()
+            self.object.current_account.balance = self.object.current_account.balance + b.value
+            self.object.current_account.save()
+
+        FiCurrentAccountBalance.consolidate_balance(self.object.current_account)
 
         messages.success(self.request, _('Entry created successfully'))
         return HttpResponseRedirect(self.get_success_url())
@@ -369,6 +381,7 @@ class FiEntryUpdateView(DashboardUpdateView):
         else:
             return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
 
+    @transaction.atomic()
     def form_valid(self, form, costcenter_form, writeoff_formset, entry_cheque_form):
         if form.cleaned_data.get('document_type') == 'C':
             if form.cleaned_data.get('cheque', None) is None:
@@ -377,13 +390,14 @@ class FiEntryUpdateView(DashboardUpdateView):
 
         balance = 0
         balances_to_save = []
+        oldest_date = timezone.now().date()
 
         for wo in writeoff_formset:
             if wo.is_valid():
                 balance += wo.instance.value
                 wo_object = wo.save()
                 value = 0
-                if form.instance.costcenter.account == 'E':
+                if form.instance.costcenter.account.type == 'E':
                     value = -wo.instance.value
                 else:
                     value = wo.instance.value
@@ -391,11 +405,14 @@ class FiEntryUpdateView(DashboardUpdateView):
                 new_balance = FiCurrentAccountBalance(
                     date=wo.instance.date,
                     value=value,
-                    record=form.instance.record,
+                    record=(form.instance.get_document_type_display() if not wo.instance.cheque else 'CHEQUE') + ': ' + form.instance.record,
                     balance=balance,
-                    write_off=wo_object
+                    write_off=wo_object,
+                    current_account=form.instance.current_account
                 )
                 balances_to_save.append(new_balance)
+                if oldest_date > wo.instance.date:
+                    oldest_date = wo.instance.date
 
         total = form.instance.value + form.instance.interest
         if total == balance and form.instance.costcenter.account.type == 'E':
@@ -412,16 +429,19 @@ class FiEntryUpdateView(DashboardUpdateView):
         for b in balances_to_save:
             obj = FiCurrentAccountBalance.objects.filter(write_off=b.write_off)
             if obj.exists():
-                b.id = obj.first().id
+                balance_obj = obj.first()
+                b.id = balance_obj.id
+                self.object.current_account.balance = self.object.current_account.balance - balance_obj.value
+                last_balance = b.get_previous()
+            else:
+                last_balance = FiCurrentAccountBalance.get_last_date_balance_for_account(b.current_account, b.date)
             b.entry = self.object
-            b.current_account = self.object.current_account
-            last_balance = FiCurrentAccountBalance.get_last_date_balance_for_account(b.current_account, b.date)
             b.balance = (0 if last_balance is None else last_balance.balance) + b.value
             b.save()
+            self.object.current_account.balance = self.object.current_account.balance + b.value
+            self.object.current_account.save()
 
-            oldest_date = (b.date if oldest_date > b.date else oldest_date)
-
-        FiCurrentAccountBalance.consolidate_balance(oldest_date)
+        FiCurrentAccountBalance.consolidate_balance(self.object.current_account, oldest_date)
 
         messages.success(self.request, _('Entry updated successfully'))
         return HttpResponseRedirect(self.get_success_url())
@@ -452,7 +472,12 @@ class FiChequeListView(DashboardListView):
             (_('Name'), 'get_cheque_name'),
             'cheque_number',
             ('Expiration Date', 'cheque_expiration_date'),
+            ('Value', 'get_formated_value'),
         ]
+    }
+    filters = {
+        'cheque_number',
+        (_('Expiration Date Range'),    'cheque_expiration_date',  'date_range'),
     }
 
     def get_column_Expiration_Date_data(self, instance, *args, **kwargs):

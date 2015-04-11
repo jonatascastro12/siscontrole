@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 11:05-0300\n"
+"POT-Creation-Date: 2015-04-11 14:38-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,250 +18,564 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\financial\models.py:13
-msgid "Document type name"
-msgstr "Tipo de documento"
+#: .\financial\forms.py:145 .\financial\forms.py:189 .\financial\models.py:190
+#: .\financial\models.py:236 .\financial\models.py:358
+#: .\financial\templates\financial\ficheque_detail.html:14
+#: .\financial\templates\financial\ficheque_detail.html:27
+#: .\financial\templates\financial\ficurrentaccount_detail.html:23
+#: .\financial\templates\financial\ficurrentaccount_detail.html:60
+#: .\financial\views.py:231
+msgid "Value"
+msgstr "Valor"
 
-#: .\financial\models.py:14
-msgid "Description"
-msgstr "Descrição"
+#: .\financial\forms.py:146 .\financial\models.py:174
+#: .\financial\models.py:213
+msgid "Cheque"
+msgstr "Cheque"
 
-#: .\financial\models.py:24
-msgid "Document Type"
-msgstr "Tipo de documento"
+#: .\financial\forms.py:147 .\financial\models.py:237
+msgid "Interest"
+msgstr "Juros"
 
-#: .\financial\models.py:25
-msgid "Document Types"
-msgstr "Tipo de documentos"
+#: .\financial\forms.py:172
+msgid "This CC doesn't exist."
+msgstr "Este centro de custo não existe."
 
-#: .\financial\models.py:28
-msgid "Account group name"
-msgstr "Nome do grupo"
+#: .\financial\forms.py:184
+msgid "Is Cheque?"
+msgstr "É cheque?"
 
-#: .\financial\models.py:41
-msgid "Account Group"
-msgstr "Grupo de conta"
+#: .\financial\forms.py:185 .\financial\models.py:189
+#: .\financial\templates\financial\fientry_form.html:107
+msgid "Number"
+msgstr "Número"
 
-#: .\financial\models.py:44 .\financial\models.py:125
-msgid "Account name"
-msgstr "Nome da conta"
+#: .\financial\forms.py:186
+#: .\financial\templates\financial\fientry_form.html:111
+#: .\financial\views.py:470
+msgid "Name"
+msgstr "Nome"
 
-#: .\financial\models.py:45 .\financial\models.py:55
-msgid "Expense"
-msgstr "Despesa"
-
-#: .\financial\models.py:45 .\financial\models.py:57
-msgid "Revenue"
-msgstr "Receita"
-
-#: .\financial\models.py:45
-msgid "Account type"
-msgstr "Tipo de conta"
-
-#: .\financial\models.py:64 .\financial\models.py:105
-msgid "Account"
-msgstr "Conta"
-
-#: .\financial\models.py:69
-msgid "Subaccount name"
-msgstr "Nome da subconta"
-
-#: .\financial\models.py:82 .\financial\models.py:87 .\financial\models.py:106
-msgid "Subaccount"
-msgstr "Subconta"
-
-#: .\financial\models.py:86
-msgid "Subaccount type name"
-msgstr "Tipo de subconta"
-
-#: .\financial\models.py:88
-msgid "Operational"
-msgstr "Operacional"
-
-#: .\financial\models.py:88
-msgid "One-off"
-msgstr "Extraordinário"
-
-#: .\financial\models.py:88
-msgid "Indirect"
-msgstr "Indireto"
-
-#: .\financial\models.py:88
-msgid "Subaccount type nature"
-msgstr "Natureza"
-
-#: .\financial\models.py:101
-msgid "Subaccount Type"
-msgstr "Tipo de subconta"
-
-#: .\financial\models.py:104
-msgid "Account group"
-msgstr "Grupo de conta"
-
-#: .\financial\models.py:107
-msgid "Subaccount type"
-msgstr "Tipo de subconta"
-
-#: .\financial\models.py:120
-msgid "Cost Center"
-msgstr "Centro de Custo"
-
-#: .\financial\models.py:121
-msgid "Cost Centers"
-msgstr "Centros de Custo"
-
-#: .\financial\models.py:126
+#: .\financial\forms.py:187 .\financial\models.py:145
+#: .\financial\models.py:185
+#: .\financial\templates\financial\ficheque_detail.html:10
+#: .\financial\templates\financial\ficurrentaccount_detail.html:9
 msgid "Bank"
 msgstr "Banco"
 
-#: .\financial\models.py:127
+#: .\financial\forms.py:187
+msgid "Select a bank"
+msgstr "Selecione um banco"
+
+#: .\financial\forms.py:188 .\financial\models.py:146
+#: .\financial\models.py:186
+#: .\financial\templates\financial\ficheque_detail.html:11
+#: .\financial\templates\financial\ficurrentaccount_detail.html:10
+#: .\financial\templates\financial\fientry_form.html:120
 msgid "Agency"
 msgstr "Agência"
 
-#: .\financial\models.py:128
+#: .\financial\forms.py:203
+msgid "Value can't be zero."
+msgstr "Valor não pode ser zero."
+
+#: .\financial\forms.py:213
+msgid "Complete cheque information properly."
+msgstr "Complete as informações do cheque corretamente."
+
+#: .\financial\forms.py:244 .\financial\models.py:182
+msgid "Person"
+msgstr "Pessoa"
+
+#: .\financial\forms.py:245
+msgid "Cheque already exists?"
+msgstr "Cheque já existe?"
+
+#: .\financial\forms.py:251 .\financial\forms.py:256 .\financial\models.py:217
+#: .\financial\models.py:356
+#: .\financial\templates\financial\ficheque_detail.html:23
+#: .\financial\templates\financial\ficheque_detail.html:49
+#: .\financial\templates\financial\ficurrentaccount_detail.html:21
+#: .\financial\templates\financial\ficurrentaccount_detail.html:56
+#: .\financial\views.py:224
+msgid "Date"
+msgstr "Data"
+
+#: .\financial\models.py:23
+msgid "Document type name"
+msgstr "Tipo de documento"
+
+#: .\financial\models.py:24
+msgid "Description"
+msgstr "Descrição"
+
+#: .\financial\models.py:34 .\financial\models.py:227 .\financial\views.py:242
+msgid "Document Type"
+msgstr "Tipo de documento"
+
+#: .\financial\models.py:35
+msgid "Document Types"
+msgstr "Tipo de documentos"
+
+#: .\financial\models.py:40
+msgid "Account group name"
+msgstr "Nome do grupo"
+
+#: .\financial\models.py:53
+msgid "Account Group"
+msgstr "Grupo de conta"
+
+#: .\financial\models.py:56 .\financial\models.py:144
+#: .\financial\templates\financial\ficurrentaccount_detail.html:8
+msgid "Account name"
+msgstr "Nome da conta"
+
+#: .\financial\models.py:57 .\financial\models.py:67 .\financial\models.py:73
+#: .\financial\views.py:533
+msgid "Expense"
+msgstr "Despesa"
+
+#: .\financial\models.py:57 .\financial\models.py:69 .\financial\models.py:75
+#: .\financial\views.py:535
+msgid "Revenue"
+msgstr "Receita"
+
+#: .\financial\models.py:57
+msgid "Account type"
+msgstr "Tipo de conta"
+
+#: .\financial\models.py:82 .\financial\models.py:123
+msgid "Account"
+msgstr "Conta"
+
+#: .\financial\models.py:87
+msgid "Subaccount name"
+msgstr "Nome da subconta"
+
+#: .\financial\models.py:100 .\financial\models.py:105
+#: .\financial\models.py:124
+msgid "Subaccount"
+msgstr "Subconta"
+
+#: .\financial\models.py:104
+msgid "Subaccount type name"
+msgstr "Tipo de subconta"
+
+#: .\financial\models.py:106
+msgid "Operational"
+msgstr "Operacional"
+
+#: .\financial\models.py:106
+msgid "One-off"
+msgstr "Extraordinário"
+
+#: .\financial\models.py:106
+msgid "Indirect"
+msgstr "Indireto"
+
+#: .\financial\models.py:106
+msgid "Subaccount type nature"
+msgstr "Natureza"
+
+#: .\financial\models.py:119
+msgid "Subaccount Type"
+msgstr "Tipo de subconta"
+
+#: .\financial\models.py:122
+msgid "Account group"
+msgstr "Grupo de conta"
+
+#: .\financial\models.py:125
+msgid "Subaccount type"
+msgstr "Tipo de subconta"
+
+#: .\financial\models.py:138 .\financial\models.py:220
+#: .\financial\templates\financial\fientry_form.html:25
+msgid "Cost Center"
+msgstr "Centro de Custo"
+
+#: .\financial\models.py:139
+msgid "Cost Centers"
+msgstr "Centros de Custo"
+
+#: .\financial\models.py:147
+#: .\financial\templates\financial\ficurrentaccount_detail.html:11
 msgid "Account number"
 msgstr "Número da conta"
 
-#: .\financial\models.py:131
+#: .\financial\models.py:150 .\financial\models.py:359
+#: .\financial\templates\financial\ficurrentaccount_detail.html:24
+#: .\financial\views.py:57
 msgid "Balance"
 msgstr "Saldo"
 
-#: .\financial\models.py:137
+#: .\financial\models.py:156 .\financial\models.py:187
 msgid "Current account"
 msgstr "Conta corrente"
 
-#: .\financial\models.py:138
+#: .\financial\models.py:157
 msgid "Current accounts"
 msgstr "Contas corrente"
 
-#: .\financial\models.py:158
+#: .\financial\models.py:173
+msgid "Invoice"
+msgstr "Nota fiscal"
+
+#: .\financial\models.py:175
+#, fuzzy
+msgid "Receipt"
+msgstr "Recebido"
+
+#: .\financial\models.py:176
+msgid "Duplicate"
+msgstr "Duplicata"
+
+#: .\financial\models.py:177
+msgid "Promissory Note"
+msgstr "Nota promissória"
+
+#: .\financial\models.py:178 .\financial\models.py:228
+msgid "Other"
+msgstr "Outro"
+
+#: .\financial\models.py:183
+msgid "Person Name"
+msgstr "Nome da Pessoa"
+
+#: .\financial\models.py:184
+#: .\financial\templates\financial\ficheque_detail.html:15
+msgid "Destiny"
+msgstr "Destino"
+
+#: .\financial\models.py:188 .\financial\models.py:218
+#: .\financial\templates\financial\ficheque_detail.html:13
+msgid "Expiration Date"
+msgstr "Vencimento"
+
+#: .\financial\models.py:221
+#: .\financial\templates\financial\ficheque_detail.html:12
+msgid "Current Account"
+msgstr "Conta corrente"
+
+#: .\financial\models.py:229
+msgid "Document Number"
+msgstr "Número do documento"
+
+#: .\financial\models.py:233
+msgid "Department"
+msgstr "Departamento"
+
+#: .\financial\models.py:234 .\financial\views.py:226
+msgid "Customer/Supplier"
+msgstr "Cliente/Fornecedor"
+
+#: .\financial\models.py:235 .\financial\models.py:357
+msgid "Story"
+msgstr "Histórico"
+
+#: .\financial\models.py:239
 msgid "Receivable"
 msgstr "A receber"
 
-#: .\financial\models.py:158
+#: .\financial\models.py:239
 msgid "Payable"
 msgstr "A pagar"
 
-#: .\financial\models.py:158
+#: .\financial\models.py:239
 msgid "Received"
 msgstr "Recebido"
 
-#: .\financial\models.py:159
+#: .\financial\models.py:240
 msgid "Paid"
 msgstr "Pago"
 
-#: .\financial\models.py:164
+#: .\financial\models.py:274 .\financial\models.py:276
+msgid "Wrote off"
+msgstr "Baixa"
+
+#: .\financial\models.py:285
 msgid "Entry"
 msgstr "Lançamento"
 
-#: .\financial\models.py:175
+#: .\financial\models.py:336
 msgid "Write off"
 msgstr "Baixa"
 
-#: .\financial\urls.py:13
+#: .\financial\models.py:346 .\financial\models.py:350
+msgid "Last Balance"
+msgstr "Último Saldo"
+
+#: .\financial\templates\filters\write_off.html:7
+msgid "Wrote-off"
+msgstr "Com baixa"
+
+#: .\financial\templates\filters\write_off.html:11
+msgid "Partially Wrote-off"
+msgstr "Com baixa parcial"
+
+#: .\financial\templates\filters\write_off.html:15
+msgid "No Wrote-off"
+msgstr "Sem baixa"
+
+#: .\financial\templates\financial\ficheque_detail.html:8
+#: .\financial\templates\financial\ficheque_detail.html:9
+msgid "Person name"
+msgstr "Nome da conta"
+
+#: .\financial\templates\financial\ficheque_detail.html:19
+msgid "Related entries"
+msgstr "Lançamentos relacionadas"
+
+#: .\financial\templates\financial\ficheque_detail.html:24
+#: .\financial\templates\financial\ficurrentaccount_detail.html:57
+msgid "Client/Supplier"
+msgstr "Cliente/Fornecedor"
+
+#: .\financial\templates\financial\ficheque_detail.html:25
+#: .\financial\templates\financial\ficurrentaccount_detail.html:22
+#: .\financial\templates\financial\ficurrentaccount_detail.html:58
+msgid "Record"
+msgstr "Histórico"
+
+#: .\financial\templates\financial\ficheque_detail.html:26
+#: .\financial\templates\financial\ficurrentaccount_detail.html:59
+#, fuzzy
+msgid "Group/Account"
+msgstr "Conta"
+
+#: .\financial\templates\financial\ficheque_detail.html:45
+msgid "Related write-offs"
+msgstr "Baixas relacionadas"
+
+#: .\financial\templates\financial\ficheque_detail.html:50
+msgid "Related entry"
+msgstr "Lançamento relacionado"
+
+#: .\financial\templates\financial\ficurrentaccount_detail.html:12
+#, fuzzy
+msgid "Current account related"
+msgstr "Conta corrente"
+
+#: .\financial\templates\financial\ficurrentaccount_detail.html:17
+#: .\financial\templates\financial\ficurrentaccount_detail.html:52
+msgid "Last related entries"
+msgstr "Últimos lançamentos"
+
+#: .\financial\templates\financial\ficurrentaccount_detail.html:40
+msgid "TOTAL BALANCE"
+msgstr "SALDO TOTAL"
+
+#: .\financial\templates\financial\fientry_form.html:52
+msgid "Cheque information"
+msgstr "Informações do cheque"
+
+#: .\financial\templates\financial\fientry_form.html:79
+#, fuzzy
+msgid "Write-off"
+msgstr "Baixa"
+
+#: .\financial\templates\financial\fientry_list.html:8
+msgid "Multiple selection action"
+msgstr "Ação da seleção múltipla"
+
+#: .\financial\templates\financial\fientry_list.html:13
+msgid "Remove"
+msgstr "Remover"
+
+#: .\financial\templates\financial\fientry_list.html:15
+msgid "Update Status"
+msgstr "Atualizar status"
+
+#: .\financial\templates\financial\fientry_list.html:36
+msgid "Do you really want to delete:"
+msgstr "Você deseja mesmo remover?"
+
+#: .\financial\templates\financial\fientry_list.html:51
+msgid "Deleting..."
+msgstr "Excluindo..."
+
+#: .\financial\templates\financial\fientry_list.html:55
+msgid "Some error occurred."
+msgstr "Ocorreu algum erro."
+
+#: .\financial\urls.py:15
 msgid "^/document_type$"
 msgstr "^/tipo_de_documento$"
 
-#: .\financial\urls.py:14
+#: .\financial\urls.py:16
 msgid "^/document_type/add$"
 msgstr "^/tipo_de_documento/novo$$"
 
-#: .\financial\urls.py:15
+#: .\financial\urls.py:17
 msgid "^/document_type/(?P<pk>[0-9]+)"
 msgstr "^/tipo_de_documento/(?P<pk>[0-9]+)"
 
-#: .\financial\urls.py:16 .\financial\urls.py:22 .\financial\urls.py:28
-#: .\financial\urls.py:34 .\financial\urls.py:40 .\financial\urls.py:46
-#: .\financial\urls.py:52
+#: .\financial\urls.py:18 .\financial\urls.py:24 .\financial\urls.py:30
+#: .\financial\urls.py:36 .\financial\urls.py:42 .\financial\urls.py:48
+#: .\financial\urls.py:54 .\financial\urls.py:60 .\financial\urls.py:66
 msgid "/edit$"
 msgstr "/editar$"
 
-#: .\financial\urls.py:18
+#: .\financial\urls.py:20
 msgid "^/current_account$"
 msgstr "^/conta_corrente$"
 
-#: .\financial\urls.py:19
+#: .\financial\urls.py:21
 msgid "^/current_account/add$"
 msgstr "^/conta_corrente/novo$"
 
-#: .\financial\urls.py:20
+#: .\financial\urls.py:22
 msgid "^/current_account/(?P<pk>[0-9]+)"
 msgstr "^/conta_corrente/(?P<pk>[0-9]+)"
 
-#: .\financial\urls.py:21 .\financial\urls.py:27 .\financial\urls.py:33
-#: .\financial\urls.py:39 .\financial\urls.py:45 .\financial\urls.py:51
+#: .\financial\urls.py:23 .\financial\urls.py:29 .\financial\urls.py:35
+#: .\financial\urls.py:41 .\financial\urls.py:47 .\financial\urls.py:53
+#: .\financial\urls.py:59 .\financial\urls.py:65
 msgid "[/]$"
 msgstr "[/]$"
 
-#: .\financial\urls.py:24
+#: .\financial\urls.py:26
 msgid "^/account_group$"
 msgstr "^/grupo_de_conta$"
 
-#: .\financial\urls.py:25
+#: .\financial\urls.py:27
 msgid "^/account_group/add$"
 msgstr "^/grupo_de_conta/novo$"
 
-#: .\financial\urls.py:26
+#: .\financial\urls.py:28
 msgid "^/account_group/(?P<pk>[0-9]+)"
 msgstr "^/grupo_de_conta/(?P<pk>[0-9]+)"
 
-#: .\financial\urls.py:30
+#: .\financial\urls.py:32
 msgid "^/account$"
 msgstr "^/conta$"
 
-#: .\financial\urls.py:31
+#: .\financial\urls.py:33
 msgid "^/account/add$"
 msgstr "^/conta/nova$"
 
-#: .\financial\urls.py:32
+#: .\financial\urls.py:34
 msgid "^/account/(?P<pk>[0-9]+)"
 msgstr "^/conta/(?P<pk>[0-9]+)"
 
-#: .\financial\urls.py:36
+#: .\financial\urls.py:38
 msgid "^/subaccount$"
 msgstr "^/subconta$"
 
-#: .\financial\urls.py:37
+#: .\financial\urls.py:39
 msgid "^/subaccount/add$"
 msgstr "^/subaccount/nova$"
 
-#: .\financial\urls.py:38
+#: .\financial\urls.py:40
 msgid "^/subaccount/(?P<pk>[0-9]+)"
 msgstr "^/subconta/(?P<pk>[0-9]+)"
 
-#: .\financial\urls.py:42
+#: .\financial\urls.py:44
 msgid "^/subaccount_type$"
 msgstr "^/tipo_de_subconta$"
 
-#: .\financial\urls.py:43
+#: .\financial\urls.py:45
 msgid "^/subaccount_type/add$"
 msgstr "^/tipo_de_subconta/add$"
 
-#: .\financial\urls.py:44
+#: .\financial\urls.py:46
 msgid "^/subaccount_type/(?P<pk>[0-9]+)"
 msgstr "^/tipo_de_subconta/(?P<pk>[0-9]+)"
 
-#: .\financial\urls.py:48
+#: .\financial\urls.py:50
 msgid "^/cost_center$"
 msgstr "^/centro_de_custo$"
 
-#: .\financial\urls.py:49
+#: .\financial\urls.py:51
 msgid "^/cost_center/add$"
 msgstr "^/centro_de_custo/novo$"
 
-#: .\financial\urls.py:50
+#: .\financial\urls.py:52
 msgid "^/cost_center/(?P<pk>[0-9]+)"
 msgstr "^/centro_de_custo/(?P<pk>[0-9]+)"
 
-#: .\financial\views.py:75 .\financial\views.py:100 .\financial\views.py:126
-#: .\financial\views.py:151 .\financial\views.py:178
+#: .\financial\urls.py:56
+msgid "^/cheque$"
+msgstr "^/cheque$"
+
+#: .\financial\urls.py:57
+#, fuzzy
+msgid "^/cheque/add$"
+msgstr "^/cheque/novo$"
+
+#: .\financial\urls.py:58
+msgid "^/cheque/(?P<pk>[0-9]+)"
+msgstr "^/cheque/(?P<pk>[0-9]+)"
+
+#: .\financial\urls.py:62
+msgid "^/entry$"
+msgstr "^/lancamento$"
+
+#: .\financial\urls.py:63
+msgid "^/entry/add$"
+msgstr "^/lancamento/novo$"
+
+#: .\financial\urls.py:64
+msgid "^/entry/(?P<pk>[0-9]+)"
+msgstr "^/lancamento/(?P<pk>[0-9]+)"
+
+#: .\financial\urls.py:68
+msgid "^/get_value_for_key"
+msgstr ""
+
+#: .\financial\urls.py:69
+msgid "^/get_account_type"
+msgstr ""
+
+#: .\financial\views.py:91 .\financial\views.py:116 .\financial\views.py:142
+#: .\financial\views.py:167 .\financial\views.py:194
 msgid "Code"
 msgstr "Código"
 
-#: .\financial\views.py:102
+#: .\financial\views.py:118
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
-#: .\financial\views.py:154
+#: .\financial\views.py:170
 msgid "Nature"
 msgstr "Natureza"
+
+#: .\financial\views.py:230
+msgid "Doc"
+msgstr "Doc"
+
+#: .\financial\views.py:232
+msgid "Exp. Date"
+msgstr "Vencimento"
+
+#: .\financial\views.py:240
+msgid "Date Range"
+msgstr "Data"
+
+#: .\financial\views.py:241 .\financial\views.py:478
+msgid "Expiration Date Range"
+msgstr "Vencimento"
+
+#: .\financial\views.py:243
+msgid "Status"
+msgstr "Status"
+
+#: .\financial\views.py:339
+msgid "Entry created successfully"
+msgstr "Lançamento efetuado com sucesso"
+
+#: .\financial\views.py:444
+msgid "Entry updated successfully"
+msgstr "Lançamento atualizado com sucesso"
+
+#: .\financial\views.py:467
+msgid "#"
+msgstr "#"
+
+#: .\financial\views.py:504
+msgid "Something went wrong."
+msgstr "Alguma coisa deu errado."
+
+#: .\financial\views.py:516
+msgid "not found"
+msgstr "não encontrado"

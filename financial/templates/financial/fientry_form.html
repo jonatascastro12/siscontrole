@@ -92,6 +92,8 @@
                 {% for hidden in f.hidden_fields %}
                     {{ hidden }}
                 {% endfor %}
+                <input id="id_{{ f.prefix }}-{{ f.cheque.name }}" name="{{ f.prefix }}-{{ f.cheque.name }}"
+                                type="hidden" value="{{ f.cheque.value|default:"" }}">
                 <div class="row form-item">
                     <div class="col-md-2 col-xs-6">
                         {{ f.date|add_class:"form-control input-sm" }}
@@ -228,7 +230,9 @@
             var today = new Date();
 
             var id_date = $('#id_date');
-            id_date.val(printDate(today));
+            if (id_date.val() == '') {
+                id_date.val(printDate(today));
+            }
             id_date.focus();
 
             var selects = $('select');

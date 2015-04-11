@@ -35,8 +35,6 @@ menu_dict = [
                 [
                     {'name': 'document_type', 'verbose_name': _('Document type'),
                      'link': reverse_lazy('financial_documenttype')},
-                    {'name': 'current_account', 'verbose_name': _('Current account'),
-                     'link': reverse_lazy('financial_currentaccount')},
                     {'name': 'account_groups', 'verbose_name': _('Account groups'),
                      'link': reverse_lazy('financial_accountgroup')},
                     {'name': 'account', 'verbose_name': _('Account'), 'link': reverse_lazy('financial_account')},
@@ -48,6 +46,8 @@ menu_dict = [
                      'link': reverse_lazy('financial_costcenter')},
                 ]},
             {'name': 'entry', 'verbose_name': _('Entry'), 'link': reverse_lazy('financial_entry')},
+            {'name': 'current_account', 'verbose_name': _('Current account'),
+             'link': reverse_lazy('financial_currentaccount')},
             {'name': 'cheque', 'verbose_name': _('Cheque'), 'link': reverse_lazy('financial_cheque')},
         ]
      },

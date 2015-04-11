@@ -3,6 +3,8 @@ from django.contrib import admin
 from . import views
 from django.conf import settings
 from dashboard_view.views import DashboardOverviewView, DashboardProfileView
+from django.utils.translation import ugettext_lazy as _
+
 
 urlpatterns = patterns('',
     # Examples:
@@ -16,8 +18,8 @@ urlpatterns = patterns('',
     url(r'^profile$', DashboardProfileView.as_view(), name="user_profile"),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('crop_image.urls')),
-    url(r'^main', include('main.urls'),),
-    url(r'^financial', include('financial.urls'),),
+    url(_(r'^main'), include('main.urls'),),
+    url(_(r'^financial'), include('financial.urls'),),
 )
 
 if settings.DEBUG :

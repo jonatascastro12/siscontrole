@@ -14,7 +14,7 @@
         {% if object.cheque_value %}<p><strong>{% trans "Value" %}:</strong> {{ object.get_formated_value }}</p>{% endif %}
         {% if object.cheque_destiny %}<p><strong>{% trans "Destiny" %}:</strong> {{ object.cheque_destiny }}</p>{% endif %}
         &nbsp;
-        {% if object.fientry_set %}
+        {% if object.fientry_set.all %}
             <div class="panel panel-default">
                 <div class="panel-heading">{% trans "Related entries" %}</div>
                     <table class="table">
@@ -34,6 +34,26 @@
                                 <td><a href="{{ entry.get_absolute_url }}">{{ entry.record }}</a></td>
                                 <td><a href="{{ entry.get_absolute_url }}">{{ entry.costcenter.account_group.name }} > {{ entry.costcenter.account.name }}</a></td>
                                 <td><a href="{{ entry.get_absolute_url }}">{{ entry.get_formated_value }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+            </div>
+        {% endif %}
+
+        {% if object.fiwriteoff_set.all %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "Related write-offs" %}</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'Date' %}</th>
+                                <th>{% trans 'Related entry' %}</th>
+                            </tr>
+                        </thead>
+                        {% for wo in object.fiwriteoff_set.all %}
+                            <tr>
+                                <td><a href="{{ wo.entry.get_absolute_url }}">{{ wo.date|date:"SHORT_DATE_FORMAT" }}</a></td>
+                                <td><a href="{{ wo.entry.get_absolute_url }}">{{ wo.entry.get_document_type_display }}: {{ wo.entry.record }} - {{ wo.entry.customer_supplier }}</a></td>
                             </tr>
                         {% endfor %}
                     </table>

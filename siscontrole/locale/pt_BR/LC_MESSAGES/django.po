@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 11:05-0300\n"
+"POT-Creation-Date: 2015-04-11 14:38-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,6 +34,14 @@ msgstr ""
 msgid "Get request is not permitted."
 msgstr ""
 
+#: .\siscontrole\urls.py:21
+msgid "^main"
+msgstr "^principal"
+
+#: .\siscontrole\urls.py:22
+msgid "^financial"
+msgstr "^financeiro"
+
 #: .\siscontrole\utils.py:14
 msgid "Well done! Member added successfully!"
 msgstr ""
@@ -46,118 +54,114 @@ msgstr ""
 msgid "Well done! Members removed successfully!"
 msgstr ""
 
-#: .\siscontrole\views.py:38
+#: .\siscontrole\views.py:10
 msgid "Overview"
 msgstr "Visão Geral"
 
-#: .\siscontrole\views.py:40
+#: .\siscontrole\views.py:12
 msgid "Main"
 msgstr "Principal"
 
-#: .\siscontrole\views.py:42
+#: .\siscontrole\views.py:14
 msgid "Person"
 msgstr "Pessoa"
 
-#: .\siscontrole\views.py:43
+#: .\siscontrole\views.py:15
 msgid "Employee"
 msgstr "Funcionário"
 
-#: .\siscontrole\views.py:44
+#: .\siscontrole\views.py:16
 msgid "Customer/Supplier"
 msgstr "Cliente/Fornecedor"
 
-#: .\siscontrole\views.py:46
+#: .\siscontrole\views.py:18
 msgid "Equipment"
-msgstr ""
+msgstr "Equipamento"
 
-#: .\siscontrole\views.py:47 .\siscontrole\views.py:62
+#: .\siscontrole\views.py:19 .\siscontrole\views.py:34
 msgid "Maintenance"
 msgstr "Manutenção"
 
-#: .\siscontrole\views.py:49
+#: .\siscontrole\views.py:21
 msgid "Department"
 msgstr "Departamento"
 
-#: .\siscontrole\views.py:51
+#: .\siscontrole\views.py:23
 msgid "Employee Function"
 msgstr "Função de funcionário"
 
-#: .\siscontrole\views.py:53
-#, fuzzy
+#: .\siscontrole\views.py:25
 msgid "Employee Type"
-msgstr "Funcionário"
+msgstr "Tipo de Funcionário"
 
-#: .\siscontrole\views.py:55
+#: .\siscontrole\views.py:27
 msgid "Bank"
 msgstr "Banco"
 
-#: .\siscontrole\views.py:60
+#: .\siscontrole\views.py:32
 msgid "Financial"
 msgstr "Financeiro"
 
-#: .\siscontrole\views.py:64
+#: .\siscontrole\views.py:36
 msgid "Document type"
 msgstr "Tipo de documento"
 
-#: .\siscontrole\views.py:66
-msgid "Current account"
-msgstr "Conta corrente"
-
-#: .\siscontrole\views.py:68
+#: .\siscontrole\views.py:38
 msgid "Account groups"
 msgstr "Grupo de conta"
 
-#: .\siscontrole\views.py:70
+#: .\siscontrole\views.py:40
 msgid "Account"
 msgstr "Conta"
 
-#: .\siscontrole\views.py:71
+#: .\siscontrole\views.py:41
 msgid "Subaccount"
 msgstr "Subconta"
 
-#: .\siscontrole\views.py:72
+#: .\siscontrole\views.py:43
 msgid "Subaccount Type"
 msgstr "Tipo de subconta"
 
-#: .\siscontrole\views.py:74
+#: .\siscontrole\views.py:45
 msgid "Cost center"
 msgstr "Centro de custo"
 
-#: .\siscontrole\views.py:76
+#: .\siscontrole\views.py:48
 msgid "Entry"
 msgstr "Lançamento"
 
-#: .\siscontrole\views.py:165
-msgctxt "female"
-msgid "New"
-msgstr "Nova"
+#: .\siscontrole\views.py:49
+msgid "Current account"
+msgstr "Conta corrente"
 
-#: .\siscontrole\views.py:166
-msgctxt "male"
-msgid "New"
-msgstr "Novo"
+#: .\siscontrole\views.py:51
+msgid "Cheque"
+msgstr ""
 
-#: .\siscontrole\views.py:172
-msgid "Editing"
-msgstr "Editando"
+#~ msgctxt "female"
+#~ msgid "New"
+#~ msgstr "Nova"
 
-#: .\siscontrole\views.py:178
+#~ msgctxt "male"
+#~ msgid "New"
+#~ msgstr "Novo"
+
+#~ msgid "Editing"
+#~ msgstr "Editando"
+
 #, fuzzy
-msgid "Editar"
-msgstr "Editando"
+#~ msgid "Editar"
+#~ msgstr "Editando"
 
-#: .\siscontrole\views.py:246
 #, fuzzy
-msgid "Deleted successfully!"
-msgstr "criado com sucesso!"
+#~ msgid "Deleted successfully!"
+#~ msgstr "criado com sucesso!"
 
-#: .\siscontrole\views.py:268
-msgid "created successfully!"
-msgstr "criado com sucesso!"
+#~ msgid "created successfully!"
+#~ msgstr "criado com sucesso!"
 
-#: .\siscontrole\views.py:281
-msgid " updated successfully!"
-msgstr " atualizado com sucesso!"
+#~ msgid " updated successfully!"
+#~ msgstr " atualizado com sucesso!"
 
 #~ msgid "Dolar"
 #~ msgstr "Dólar"

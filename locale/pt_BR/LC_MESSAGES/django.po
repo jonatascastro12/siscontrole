@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 11:05-0300\n"
+"POT-Creation-Date: 2015-04-11 14:38-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,58 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#: .\bootstrap_form\templates\bootstrap_form\formset_fields.html:21
-#: .\bootstrap_form\templates\bootstrap_form\formset_fields.html:63
-msgid "Display help text"
-msgstr "Mostrar mensagem de ajuda"
-
-#: .\bootstrap_form\templatetags\bootstrap_form.py:28
-msgid "Save"
-msgstr "Salvar"
-
-#: .\bootstrap_form\templatetags\bootstrap_form.py:28
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:12
-msgid "Larger size permitted: 500Kb"
-msgstr "Tamanho máximo permitido: 500kb"
-
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:35
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:40
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:45
-#: .\templates\generics\dashboard_list.html:145
-msgid "Loading"
-msgstr "Carregando"
-
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:36
-msgid "Change photo"
-msgstr "Alterar foto"
-
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:40
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:45
-msgid "Successful!"
-msgstr "Sucesso!"
-
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:41
-msgid "Change crop"
-msgstr "Alterar corte"
-
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:46
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:274
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:304
-msgid "Define photo"
-msgstr "Definir foto"
-
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:138
-msgid "Only .jpg extension is permitted."
-msgstr "Apenas extensão .jpg é permitida."
-
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:140
-#: .\crop_image\templates\jcrop\jcrop_image_widget.html:205
-msgid "Alert"
-msgstr "Alerta"
 
 #: .\templates\admin\base.html:30
 msgid "Welcome,"
@@ -98,103 +46,107 @@ msgstr ""
 msgid "SisContole"
 msgstr ""
 
-#: .\templates\generics\dashboard_list.html:47
-#: .\templates\includes\group-multiple-selection.html:6
-msgid "Multiple selection action"
-msgstr "Ações da seleção"
+#~ msgid "Display help text"
+#~ msgstr "Mostrar mensagem de ajuda"
 
-#: .\templates\generics\dashboard_list.html:52
-#: .\templates\includes\group-multiple-selection.html:11
-msgid "Remove"
-msgstr "Remover"
+#~ msgid "Save"
+#~ msgstr "Salvar"
 
-#: .\templates\generics\dashboard_list.html:54
-#: .\templates\includes\group-multiple-selection.html:13
-msgid "Print ID Cards"
-msgstr "Imprimir ID card"
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
 
-#: .\templates\generics\dashboard_list.html:100
-msgid "Confirm deletion"
-msgstr "Confirmar exclusão"
+#~ msgid "Larger size permitted: 500Kb"
+#~ msgstr "Tamanho máximo permitido: 500kb"
 
-#: .\templates\generics\dashboard_list.html:103
-msgid "Do you really want to delete "
-msgstr "Você deseja mesmo apagar "
+#~ msgid "Loading"
+#~ msgstr "Carregando"
 
-#: .\templates\generics\dashboard_list.html:106
-msgid "No"
-msgstr "Não"
+#~ msgid "Change photo"
+#~ msgstr "Alterar foto"
 
-#: .\templates\generics\dashboard_list.html:107
-msgid "Confirm"
-msgstr "Confimar"
+#~ msgid "Successful!"
+#~ msgstr "Sucesso!"
 
-#: .\templates\generics\dashboard_list.html:136
-msgid "No data available in table"
-msgstr "Nenhum registro disponível"
+#~ msgid "Change crop"
+#~ msgstr "Alterar corte"
 
-#: .\templates\generics\dashboard_list.html:137
-#: .\templates\generics\dashboard_list.html:138
-msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr "Mostranto _START_ a _END_ de _TOTAL_ registros"
+#~ msgid "Define photo"
+#~ msgstr "Definir foto"
 
-#: .\templates\generics\dashboard_list.html:139
-msgid "Showing 0 to 0 of 0 entries"
-msgstr "Mostrando 0 a 0 de 0 registros"
+#~ msgid "Only .jpg extension is permitted."
+#~ msgstr "Apenas extensão .jpg é permitida."
 
-#: .\templates\generics\dashboard_list.html:140
-#: .\templates\generics\dashboard_list.html:141
-msgid "filtered from _MAX_ total entries"
-msgstr "filtrado de _MAX_ registros"
+#~ msgid "Alert"
+#~ msgstr "Alerta"
 
-#: .\templates\generics\dashboard_list.html:144
-msgid "Show _MENU_ entries"
-msgstr "Mostrar _MENU_ registros"
+#~ msgid "Multiple selection action"
+#~ msgstr "Ações da seleção"
 
-#: .\templates\generics\dashboard_list.html:146
-msgid "Processing"
-msgstr "Processando"
+#~ msgid "Remove"
+#~ msgstr "Remover"
 
-#: .\templates\generics\dashboard_list.html:147
-msgid "Search"
-msgstr "Pesquisar"
+#~ msgid "Print ID Cards"
+#~ msgstr "Imprimir ID card"
 
-#: .\templates\generics\dashboard_list.html:148
-msgid "No matching records found"
-msgstr "Nenhum registro encontrado"
+#~ msgid "Confirm deletion"
+#~ msgstr "Confirmar exclusão"
 
-#: .\templates\generics\dashboard_list.html:150
-msgid "First"
-msgstr "Primeiro"
+#~ msgid "Do you really want to delete "
+#~ msgstr "Você deseja mesmo apagar "
 
-#: .\templates\generics\dashboard_list.html:151
-msgid "Last"
-msgstr "Último"
+#~ msgid "No"
+#~ msgstr "Não"
 
-#: .\templates\generics\dashboard_list.html:152
-msgid "Next"
-msgstr "Próximo"
+#~ msgid "Confirm"
+#~ msgstr "Confimar"
 
-#: .\templates\generics\dashboard_list.html:153
-msgid "Previous"
-msgstr "Anterior"
+#~ msgid "No data available in table"
+#~ msgstr "Nenhum registro disponível"
 
-#: .\templates\generics\dashboard_list.html:156
-msgid "activate to sort column ascending"
-msgstr "Ativar ordenação ascendente"
+#~ msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+#~ msgstr "Mostranto _START_ a _END_ de _TOTAL_ registros"
 
-#: .\templates\generics\dashboard_list.html:157
-msgid "activate to sort column descending"
-msgstr "Ativar ordenação descendente"
+#~ msgid "Showing 0 to 0 of 0 entries"
+#~ msgstr "Mostrando 0 a 0 de 0 registros"
 
-#: .\templates\generics\dashboard_list.html:255
-msgid "Do you really want to delete:"
-msgstr "Você deseja mesmo apagar:"
+#~ msgid "filtered from _MAX_ total entries"
+#~ msgstr "filtrado de _MAX_ registros"
 
-#: .\templates\generics\dashboard_list.html:270
-msgid "Deleting..."
-msgstr "Apagando..."
+#~ msgid "Show _MENU_ entries"
+#~ msgstr "Mostrar _MENU_ registros"
 
-#: .\templates\generics\dashboard_list.html:274
-msgid "Some error occurred."
-msgstr "Ocorreu algum erro."
+#~ msgid "Processing"
+#~ msgstr "Processando"
+
+#~ msgid "Search"
+#~ msgstr "Pesquisar"
+
+#~ msgid "No matching records found"
+#~ msgstr "Nenhum registro encontrado"
+
+#~ msgid "First"
+#~ msgstr "Primeiro"
+
+#~ msgid "Last"
+#~ msgstr "Último"
+
+#~ msgid "Next"
+#~ msgstr "Próximo"
+
+#~ msgid "Previous"
+#~ msgstr "Anterior"
+
+#~ msgid "activate to sort column ascending"
+#~ msgstr "Ativar ordenação ascendente"
+
+#~ msgid "activate to sort column descending"
+#~ msgstr "Ativar ordenação descendente"
+
+#~ msgid "Do you really want to delete:"
+#~ msgstr "Você deseja mesmo apagar:"
+
+#~ msgid "Deleting..."
+#~ msgstr "Apagando..."
+
+#~ msgid "Some error occurred."
+#~ msgstr "Ocorreu algum erro."

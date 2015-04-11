@@ -1,11 +1,12 @@
 from decimal import Decimal
 from locale import currency
 import locale
+from datetime import timedelta
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.db import models
+from django.db import models, transaction
 
 # Create your models here.
 from django.db.models import permalink
@@ -14,6 +15,7 @@ from django.db.models.manager import Manager
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, pgettext as p_
 from simple_history.models import HistoricalRecords
+from dashboard_view.utils import format_currency
 from main.models import MaDepartment, MaCustomerSupplier, MaBank, MaBankAccount, MaPerson
 
 
@@ -138,6 +140,7 @@ class FiCostCenter(Model):
         unique_together = ('account_group', 'account', 'subaccount', 'subaccount_type')
 
 class FiCurrentAccount(Model):
+    creation_date = models.DateField(auto_now=True, auto_now_add=True)
     name = models.CharField(max_length=100, verbose_name=_('Account name'))
     bank = models.ForeignKey(MaBank, verbose_name=_('Bank'))
     agency = models.CharField(max_length=20, verbose_name=_('Agency'))
@@ -153,6 +156,12 @@ class FiCurrentAccount(Model):
         verbose_name = _("Current account")
         verbose_name_plural = _("Current accounts")
         gender = 'F'
+
+
+    def get_formated_balance(self):
+        if self.balance is None:
+            return ''
+        return format_currency(self.balance)
 
     @permalink
     def get_absolute_url(self):
@@ -252,12 +261,8 @@ class FiEntry(Model):
         return self.expiration_date.strftime("%d/%m/%Y")
 
     def get_formated_value(self):
-        locale.setlocale(locale.LC_MONETARY, '')
-        if self.costcenter.account.type == 'R':
-            class_type = 'text-success'
-        else:
-            class_type = 'text-danger'
-        return mark_safe('<span class="%s">%s</span>' % (class_type,  locale.currency(self.value)))
+        value = self.value if self.costcenter.account.type == 'R' else self.value*-1
+        return format_currency(value)
 
     def get_info_icons(self):
         write_off = ''
@@ -333,21 +338,22 @@ class FiWriteOff(Model):
 
 
 class FiLastCurrentAccountBalance(Manager):
-    def last_balances(self, current_account):
-        set = super(FiLastCurrentAccountBalance, self).get_queryset().filter(current_account=current_account).order_by('-date')[:11]
+    def last_balances(self, current_account, number):
+        set = super(FiLastCurrentAccountBalance, self).get_queryset().filter(current_account=current_account).order_by('-date')[:number+1]
         new_list = list(set)
-        if len(set) == 1:
-            new_list.insert(0, FiCurrentAccountBalance(date=set[0].date, record=_('Last Balance'), value=None, balance=0))
+        new_list.reverse()
+        if len(set) <= number:
+            new_list.insert(0, FiCurrentAccountBalance(date=current_account.creation_date, record=_('Last Balance'), value=None, balance=0))
         else:
-            last = set.last()
-            new_list.remove(new_list[len(new_list)-1])
+            last = new_list[0]
+            new_list.remove(last)
             new_list.insert(0, FiCurrentAccountBalance(date=last.date, record=_('Last Balance'), value=None, balance=last.balance))
 
         return new_list
 
 
 class FiCurrentAccountBalance(Model):
-    date = models.DateTimeField(verbose_name=_('Data'), db_index=True)
+    date = models.DateField(verbose_name=_('Date'), db_index=True)
     record = models.CharField(max_length=255, verbose_name=_('Story'))
     value = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Value'))
     balance = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Balance'))
@@ -358,28 +364,17 @@ class FiCurrentAccountBalance(Model):
     objects = FiLastCurrentAccountBalance()
 
     def get_formated_value(self):
-        locale.setlocale(locale.LC_MONETARY, '')
-
         if self.value is None:
             return ''
-
-        if self.value >= 0:
-            result = '<span class="text-success">%s</span> <span class="text-success fa fa-plus"></span>'
-        else:
-            result = '<span class="text-danger">%s</span> <span class="text-success fa fa-minus"></span>'
-
-        return mark_safe(result % locale.currency(self.value))
+        return format_currency(self.value)
 
     def get_formated_balance(self):
-        locale.setlocale(locale.LC_MONETARY, '')
+        if self.balance is None:
+            return ''
+        return format_currency(self.balance)
 
-        if self.balance >= 0:
-            result = '<span class="text-success">%s</span> <span class="text-success fa fa-plus"></span>'
-        else:
-            result = '<span class="text-danger">%s</span> <span class="text-success fa fa-minus"></span>'
-
-        return mark_safe(result % locale.currency(self.balance))
-
+    def get_previous(self):
+        return self._meta.model.objects.filter(current_account=self.current_account, date__lte=self.date).exclude(id=self.id).order_by('date').last()
 
     @staticmethod
     def get_last_balance_for_account(account):
@@ -387,8 +382,24 @@ class FiCurrentAccountBalance(Model):
 
     @staticmethod
     def get_last_date_balance_for_account(account, date):
-        return FiCurrentAccountBalance.objects.filter(current_account=account, date=date).order_by('-date').last()
+        return FiCurrentAccountBalance.objects.filter(current_account=account, date__lte=date).order_by('date').last()
+
 
     @staticmethod
-    def consolidate_balance(oldest_date):
-        pass
+    @transaction.atomic
+    def consolidate_balance(account, oldest_date=None):
+        if oldest_date:
+            objs = FiCurrentAccountBalance.objects.filter(current_account=account, date__gte=(oldest_date-timedelta(days=1))).order_by('date').all()
+        else:
+            objs = FiCurrentAccountBalance.objects.filter(current_account=account).order_by('date').all()
+        previous = None
+        for o in objs:
+            if previous == None:
+                previous = o
+            else:
+                o.balance = previous.balance + o.value
+                previous = o
+                o.save()
+
+        previous.current_account.balance = previous.balance
+        previous.current_account.save()
