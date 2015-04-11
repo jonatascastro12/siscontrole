@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from threading import Thread
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -441,7 +442,8 @@ class FiEntryUpdateView(DashboardUpdateView):
             self.object.current_account.balance = self.object.current_account.balance + b.value
             self.object.current_account.save()
 
-        FiCurrentAccountBalance.consolidate_balance(self.object.current_account, oldest_date)
+        thread = Thread(target=FiCurrentAccountBalance.consolidate_balance, args=(self.object.current_account, ))
+        thread.start()
 
         messages.success(self.request, _('Entry updated successfully'))
         return HttpResponseRedirect(self.get_success_url())

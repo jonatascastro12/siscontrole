@@ -339,7 +339,7 @@ class FiWriteOff(Model):
 
 class FiLastCurrentAccountBalance(Manager):
     def last_balances(self, current_account, number):
-        set = super(FiLastCurrentAccountBalance, self).get_queryset().filter(current_account=current_account).order_by('-date')[:number+1]
+        set = super(FiLastCurrentAccountBalance, self).get_queryset().filter(current_account=current_account).order_by('-consolidation_order')[:number+1]
         new_list = list(set)
         new_list.reverse()
         if len(set) <= number:
@@ -357,6 +357,7 @@ class FiCurrentAccountBalance(Model):
     record = models.CharField(max_length=255, verbose_name=_('Story'))
     value = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Value'))
     balance = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Balance'))
+    consolidation_order = models.IntegerField(null=True)
     current_account = models.ForeignKey(FiCurrentAccount)
     write_off = models.ForeignKey(FiWriteOff)
     entry = models.ForeignKey(FiEntry)
@@ -388,18 +389,23 @@ class FiCurrentAccountBalance(Model):
     @staticmethod
     @transaction.atomic
     def consolidate_balance(account, oldest_date=None):
-        if oldest_date:
+        if oldest_date is not None:
             objs = FiCurrentAccountBalance.objects.filter(current_account=account, date__gte=(oldest_date-timedelta(days=1))).order_by('date').all()
         else:
             objs = FiCurrentAccountBalance.objects.filter(current_account=account).order_by('date').all()
         previous = None
+        i = 0
         for o in objs:
             if previous == None:
                 previous = o
+                o.balance = o.value
+                o.consolidation_order = i
             else:
+                o.consolidation_order = i
                 o.balance = previous.balance + o.value
                 previous = o
-                o.save()
+            o.save()
+            i += 1
 
         previous.current_account.balance = previous.balance
         previous.current_account.save()
