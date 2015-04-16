@@ -135,7 +135,7 @@ class MaChequeChoices(AutoModelSelect2Field):
 
     def get_results(self, request, term, page, context):
         objects = self.queryset.filter((Q(cheque_number__icontains=term))).order_by('cheque_number')
-        res = [(obj.id, "%s (%s, A: %s, C/C: %s) de %s" % (obj.id, obj.cheque_bank.name, obj.cheque_agency, obj.cheque_current_account, obj.cheque_person)) for obj in objects]
+        res = [(obj.id, "%s (%s)" % (obj.id, obj.cheque_number)) for obj in objects]
         return (NO_ERR_RESP, False, res, ) # Any error response, Has more results, options list
 
 

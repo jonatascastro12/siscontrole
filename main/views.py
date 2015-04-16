@@ -62,8 +62,9 @@ class MaBankListView(DashboardListView):
         'columns': [
             'id',
             'name',
-            (_('Code'), 'get_code'),
-        ]
+            (_('Code'), 'number'),
+        ],
+        'searches': ['name', 'number']
     }
 
 class MaBankCreateView(DashboardCreateView):

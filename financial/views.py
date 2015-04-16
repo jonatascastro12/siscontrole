@@ -247,7 +247,7 @@ class FiEntryListView(DashboardListView):
     filter_class = FiEntryFilter
 
     actions = [
-        'remove_object',
+        'remove',
         'print_individual',
         'auto_writeoff'
     ]
@@ -309,13 +309,12 @@ class FiEntryCreateView(DashboardCreateView):
                     date=wo.instance.date,
                     value=value,
                     record=(form.instance.get_document_type_display() if not wo.instance.cheque else 'CHEQUE') + ': ' + form.instance.record,
-                    balance=balance,
                     write_off=wo_object,
                     current_account=form.instance.current_account
                 )
                 balances_to_save.append(new_balance)
-            else:
-                return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
+            #else:
+                #return self.form_invalid(form, costcenter_form, writeoff_formset, entry_cheque_form)
 
         total = self.object.value + self.object.interest
         if total == balance and self.object.costcenter.account.type == 'E':
@@ -332,7 +331,6 @@ class FiEntryCreateView(DashboardCreateView):
         for b in balances_to_save:
             last_balance = FiCurrentAccountBalance.get_last_date_balance_for_account(b.current_account, b.date)
             b.entry = self.object
-            b.balance = (0 if last_balance is None else last_balance.balance) + b.value
             b.save()
             self.object.current_account.balance = self.object.current_account.balance + b.value
             self.object.current_account.save()
@@ -433,11 +431,7 @@ class FiEntryUpdateView(DashboardUpdateView):
                 balance_obj = obj.first()
                 b.id = balance_obj.id
                 self.object.current_account.balance = self.object.current_account.balance - balance_obj.value
-                last_balance = b.get_previous()
-            else:
-                last_balance = FiCurrentAccountBalance.get_last_date_balance_for_account(b.current_account, b.date)
             b.entry = self.object
-            b.balance = (0 if last_balance is None else last_balance.balance) + b.value
             b.save()
             self.object.current_account.balance = self.object.current_account.balance + b.value
             self.object.current_account.save()

@@ -19,6 +19,7 @@ from dashboard_view.utils import format_currency
 from main.models import MaDepartment, MaCustomerSupplier, MaBank, MaBankAccount, MaPerson
 
 
+
 class FiDocumentType(Model):
     name = models.CharField(max_length=255, verbose_name=_('Document type name'))
     description = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Description'))
@@ -190,7 +191,7 @@ class FiCheque(Model):
     cheque_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, verbose_name=_('Value'))
 
     def __unicode__(self):
-        return str(self.id)
+        return str(self.id) + ': ' + self.cheque_number
 
     def get_formated_value(self):
         locale.setlocale(locale.LC_MONETARY, '')
@@ -234,7 +235,11 @@ class FiEntry(Model):
     customer_supplier = models.ForeignKey(MaCustomerSupplier, null=True, blank=True, verbose_name=_('Customer/Supplier'))
     record = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Story'))
     value = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Value'), default=0)
+
     interest = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Interest'), default=0)
+    related_interest_entry = models.ForeignKey('self', null=True, blank=True)
+    is_interest = models.BooleanField(default=False)
+
     category = models.CharField(max_length=1, blank=True, null=True, choices=(('1', 'ONE'), ('2', 'TWO')))
     status = models.CharField(max_length=2, blank=True, choices=(('R', _('Receivable')), ('P', _('Payable')), ('RR', _('Received')),
                                                      ('PP', _('Paid'))))
@@ -246,7 +251,6 @@ class FiEntry(Model):
 
     def update_status(self):
         pass
-
 
     def get_costcenter_code(self):
         return self.costcenter.get_code()
@@ -280,6 +284,12 @@ class FiEntry(Model):
     @permalink
     def get_absolute_url(self):
         return ('financial_entry_detail', (), {'pk': self.id})
+
+    def delete(self, using=None):
+        return super(FiEntry, self).delete(using)
+
+
+
 
     class Meta:
         verbose_name = _('Entry')
@@ -409,3 +419,14 @@ class FiCurrentAccountBalance(Model):
 
         previous.current_account.balance = previous.balance
         previous.current_account.save()
+
+class FiConfigManager(Manager):
+    def the_config(self):
+        return FiConfig.objects.first()
+
+
+class FiConfig(Model):
+    active_interest_cc = models.ForeignKey(FiCostCenter, related_name="active_interest_cc_config")
+    passive_interest_cc = models.ForeignKey(FiCostCenter, related_name="passive_interest_cc_config")
+
+    objects = FiConfigManager()
